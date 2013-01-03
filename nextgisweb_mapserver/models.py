@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
+from StringIO import StringIO
+from PIL import Image
 
 from nextgisweb.style import Style
 
@@ -10,7 +12,7 @@ class MapserverStyle(Style):
     __tablename__ = 'mapserver_style'
 
     identity = __tablename__
-    cls_display_name = u"Mapserver"
+    cls_display_name = u"Стиль Mapserver"
 
     style_id = sa.Column(sa.Integer, sa.ForeignKey('style.id'), primary_key=True)
     opacity = sa.Column(sa.Integer, nullable=False, default=100)
@@ -67,7 +69,14 @@ class MapserverStyle(Style):
 
         mapobj.loadOWSParameters(req)
 
-        img = mapobj.draw()
+        gdimg = mapobj.draw()
+
+        # конвертируем изображение в PIL
+        buf = StringIO()
+        buf.write(gdimg.getBytes())
+        buf.seek(0)
+
+        img = Image.open(buf)
         return img
 
     def _mapfile(self, settings):
