@@ -6,6 +6,7 @@ from PIL import Image
 
 from nextgisweb.style import Style
 
+
 def include(comp):
 
     @Style.registry.register
@@ -174,7 +175,4 @@ def include(comp):
 
             return result
 
-        @classmethod
-        def widget_config(cls, layer):
-            result = Style.widget_config(layer)
-            return result
+    comp.MapserverStyle = MapserverStyle

@@ -1,9 +1,9 @@
 define([
     "dojo/_base/declare",
-    "dijit/_WidgetBase",
+    "ngw/modelWidget/Widget",
+    "ngw/modelWidget/ErrorDisplayMixin",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
-    "style/StyleWidgetBase",
     "dojo/text!./templates/Widget.html",
     "dojox/layout/TableContainer",
     "dijit/layout/TabContainer",
@@ -12,30 +12,32 @@ define([
     "dijit/form/NumberSpinner"
 ], function (
     declare,
-    _WidgetBase,
+    Widget,
+    ErrorDisplayMixin,
     _TemplatedMixin,
     _WidgetsInTemplateMixin,
-    StyleWidgetBase,
     template
 ) {
-    return declare("style.Widget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StyleWidgetBase], {
+    return declare([Widget, ErrorDisplayMixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: template,
         identity: "mapserver_style",
+        title: "Стиль Mapserver",
 
-        postCreate: function () {
-            if (this.iData.opacity) { this.opacityWidget.set("value", this.iData.opacity) };
-            if (this.iData.stroke_width) { this.strokeWidthWidget.set("value", this.iData.stroke_width) };
-            if (this.iData.stroke_color) { this.strokeColorWidget.set("value", "#" + this.iData.stroke_color) };
-            if (this.iData.fill_color) { this.fillColorWidget.set("value", "#" + this.iData.fill_color) };
+        _getValueAttr: function () {
+            return {
+                opacity: this.wOpacity.get("value"),
+                stroke_width: this.wStrokeWidth.get("value"),
+                stroke_color: this.wStrokeColor.get("value").substring(1),
+                fill_color: this.wFillColor.get("value").substring(1)
+            };
         },
 
-        getIData: function () {
-            return {
-                opacity: this.opacityWidget.get("value"),
-                stroke_width: this.strokeWidthWidget.get("value"),
-                stroke_color: this.strokeColorWidget.get("value").substring(1),
-                fill_color: this.fillColorWidget.get("value").substring(1)
-            };
+        _setValueAttr: function (value) {
+            this.inherited(arguments);
+            this.wOpacity.set("value", value.opacity);
+            this.wStrokeWidth.set("value", value.stroke_width);
+            this.wStrokeColor.set("value", '#' + value.stroke_color);
+            this.wFillColor.set("value", '#' + value.fill_color);
         }
     });
 })
