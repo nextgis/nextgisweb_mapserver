@@ -6,6 +6,7 @@ version = '0.0'
 requires = (
     'nextgisweb',
     'mapscript',
+    'geojson',
 )
 
 entry_points = {

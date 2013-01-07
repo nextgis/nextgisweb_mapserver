@@ -3,9 +3,13 @@ import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from StringIO import StringIO
 from PIL import Image
+import geojson
+from tempfile import NamedTemporaryFile
+import mapscript
 
+from nextgisweb.geometry import box
 from nextgisweb.style import Style
-
+from nextgisweb.feature_layer import IFeatureLayer
 
 def include(comp):
 
@@ -25,8 +29,6 @@ def include(comp):
         __mapper_args__ = dict(
             polymorphic_identity=identity,
         )
-
-        widget_module = 'mapserver_style/Widget'
 
         def to_dict(self):
             result = Style.to_dict(self)
@@ -51,29 +53,39 @@ def include(comp):
 
         @classmethod
         def is_layer_supported(cls, layer):
-            return layer.cls == 'vector_layer'
+            return IFeatureLayer.providedBy(layer)
 
         def render_image(self, extent, img_size, settings):
-            mapfile = self._mapfile(settings)
-            import mapscript
+            # Выбираем объекты по экстенту
+            feature_query = self.layer.feature_query()
+            feature_query.intersects(box(*extent, srid=self.layer.srs_id))
+            features = feature_query()
 
+            # Выгружаем их во временный GeoJSON-файл.
+            # GeoJSON выбран исключительно из-за простоты.
+            tempfile = NamedTemporaryFile()
+            tempfile.write(geojson.dumps(features))
+            tempfile.flush()
+
+            # Создаем объект mapscript из строки
+            mapfile = self._mapfile(tempfile.name)
             mapobj = mapscript.fromstring(mapfile)
 
+            # Получаем картинку эмулируя WMS запрос
             req = mapscript.OWSRequest()
-            req.setParameter("bbox", ','.join([str(i) for i in extent]))
+            req.setParameter("bbox", ','.join(map(str, extent)))
             req.setParameter("width", str(img_size[0]))
             req.setParameter("height", str(img_size[1]))
-            req.setParameter("srs", 'epsg:3857')
+            req.setParameter("srs", 'EPSG:%d' % self.layer.srs_id)
             req.setParameter("format", 'image/png')
             req.setParameter("layers", 'main')
             req.setParameter("request", "GetMap")
             req.setParameter('transparent', 'TRUE')
 
             mapobj.loadOWSParameters(req)
-
             gdimg = mapobj.draw()
 
-            # конвертируем изображение в PIL
+            # Преобразуем изображение из PNG в объект PIL
             buf = StringIO()
             buf.write(gdimg.getBytes())
             buf.seek(0)
@@ -81,7 +93,7 @@ def include(comp):
             img = Image.open(buf)
             return img
 
-        def _mapfile(self, settings):
+        def _mapfile(self, geojson_filename):
             template = """
                 MAP
                     SIZE 800 600
@@ -116,11 +128,9 @@ def include(comp):
 
                     LAYER
                         NAME "main"
-                        CONNECTION "%(connection)s"
-                        CONNECTIONTYPE postgis
-                        PROCESSING "CLOSE_CONNECTION=DEFER"
+                        CONNECTIONTYPE OGR
+                        CONNECTION "%(geojson_filename)s"
                         PROCESSING "APPROXIMATION_SCALE=FULL"
-                        DATA "geom from (select fid, ST_Transform(ST_SetSRID(geom, 4326), 3857) as geom from %(table)s) as sub using unique fid using srid=3857"
                         TYPE %(type)s
                         DUMP TRUE
                         TEMPLATE dummy.html
@@ -135,19 +145,9 @@ def include(comp):
                 END
             """
 
-            connection = [
-                'user=%s' % comp.env.core.settings['database.user'],
-                'host=%s' % comp.env.core.settings['database.host'],
-                'dbname=%s' % comp.env.core.settings['database.name'],
-            ]
-
-            if 'database.password' in comp.env.core.settings:
-                connection.append('password=%s' % comp.env.core.settings['database.password'])
-
             return template % dict(
-                connection=' '.join(connection),
-                type={"Point": 'point', 'Linestring': 'line', 'Polygon': 'polygon'}[self.layer.geom_type],
-                table='vector_layer.id%04d' % self.layer.id,
+                geojson_filename=geojson_filename,
+                type={"POINT": 'point', 'LINESTRING': 'line', 'POLYGON': 'polygon'}[self.layer.geometry_type],
                 mapfile_class=self._mapfile_class(),
             )
 
