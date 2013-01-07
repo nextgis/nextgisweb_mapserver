@@ -63,7 +63,7 @@ def include(comp):
 
             # Выгружаем их во временный GeoJSON-файл.
             # GeoJSON выбран исключительно из-за простоты.
-            tempfile = NamedTemporaryFile()
+            tempfile = NamedTemporaryFile(suffix='.geojson')
             tempfile.write(geojson.dumps(features))
             tempfile.flush()
 
