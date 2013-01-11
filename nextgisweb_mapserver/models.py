@@ -59,6 +59,7 @@ def include(comp):
             # Выбираем объекты по экстенту
             feature_query = self.layer.feature_query()
             feature_query.intersects(box(*extent, srid=self.layer.srs_id))
+            feature_query.geom()
             features = feature_query()
 
             # Выгружаем их во временный GeoJSON-файл.
