@@ -8,10 +8,11 @@ from tempfile import NamedTemporaryFile
 import mapscript
 
 from nextgisweb.geometry import box
-from nextgisweb.style import Style
 from nextgisweb.feature_layer import IFeatureLayer
 
 def include(comp):
+
+    Style = comp.env.style.Style
 
     @Style.registry.register
     class MapserverStyle(Style):
