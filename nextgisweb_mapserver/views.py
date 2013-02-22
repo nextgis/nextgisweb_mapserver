@@ -8,6 +8,9 @@ def setup_pyramid(comp, config):
     class MapserverStyleObjectWidget(ObjectWidget):
         model_attributes = ('opacity', 'stroke_width', 'stroke_color', 'fill_color')
 
+        def is_applicable(self):
+            return self.operation in ('create', 'edit')
+
         def populate_obj(self):
             ObjectWidget.populate_obj(self)
 
