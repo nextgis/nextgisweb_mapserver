@@ -1,22 +1,18 @@
 <div class="${baseClass}" data-dojo-attach-point="focusNode" style="width: 100%;" >
-    <div data-dojo-type="dijit/layout/TabContainer" style="width: 100%;" doLayout="false">
-        <div data-dojo-type="dijit/layout/ContentPane" title="Общее" selected="true">
-            <div data-dojo-type="dojox/layout/TableContainer" data-dojo-props="cols:1">
-                <div data-dojo-type="dijit/form/NumberSpinner" data-dojo-attach-point="wOpacity" title="Насыщенность" data-dojo-props="value: 100, constraints: {min: 0, max: 100, places: 0}"></div>
-            </div>
-        </div>
 
-        <div data-dojo-type="dijit/layout/ContentPane" title="Контур">
-            <div data-dojo-type="dojox/layout/TableContainer" data-dojo-props="cols:1">
-                <div data-dojo-type="dijit/form/NumberSpinner"  data-dojo-attach-point="wStrokeWidth" title="Толщина" data-dojo-props="value: 1, constraints: {min: 0, max: 10, places: 0}"></div>
-                <div data-dojo-type="dijit/ColorPalette"  data-dojo-attach-point="wStrokeColor" title="Цвет" data-dojo-props="value: '#000000', palette:'7x10'"></div>
-            </div>
+    <div data-dojo-type="dijit/_WidgetBase" style="padding-bottom: 1ex;">
+        <div data-dojo-type="dijit/form/Button"
+            data-dojo-props="disabled: true">
+            Импорт стиля QuantumGIS
         </div>
-
-        <div data-dojo-type="dijit/layout/ContentPane" title="Заливка">
-            <div data-dojo-type="dojox/layout/TableContainer" data-dojo-props="cols:1">
-                <div data-dojo-type="dijit/ColorPalette"  data-dojo-attach-point="wFillColor"  title="Цвет" data-dojo-props="value: '#ffffff', palette:'7x10'"></div>
-            </div>
+        <div data-dojo-type="dijit/form/Button"
+            data-dojo-props="disabled: true">
+            Импорт стиля SLD
         </div>
     </div>
+
+    <textarea data-dojo-attach-point="xml"
+        data-dojo-type="dijit/form/Textarea"
+        style="min-height: 100px"></textarea>
+
 </div>

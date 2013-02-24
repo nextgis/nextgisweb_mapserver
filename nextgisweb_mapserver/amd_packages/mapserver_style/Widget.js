@@ -5,6 +5,11 @@ define([
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
     "dojo/text!./templates/Widget.html",
+    // template
+    "dijit/layout/BorderContainer",
+    "dijit/form/Textarea",
+    "dijit/Toolbar",
+    "dijit/form/Button",
     "dojox/layout/TableContainer",
     "dijit/layout/TabContainer",
     "dijit/form/TextBox",
@@ -21,23 +26,17 @@ define([
     return declare([Widget, ErrorDisplayMixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: template,
         identity: "mapserver_style",
-        title: "Стиль Mapserver",
+        title: "Стиль MapServer",
 
         _getValueAttr: function () {
             return {
-                opacity: this.wOpacity.get("value"),
-                stroke_width: this.wStrokeWidth.get("value"),
-                stroke_color: this.wStrokeColor.get("value").substring(1),
-                fill_color: this.wFillColor.get("value").substring(1)
+                xml: this.xml.get("value")
             };
         },
 
         _setValueAttr: function (value) {
             this.inherited(arguments);
-            this.wOpacity.set("value", value.opacity);
-            this.wStrokeWidth.set("value", value.stroke_width);
-            this.wStrokeColor.set("value", '#' + value.stroke_color);
-            this.wFillColor.set("value", '#' + value.fill_color);
+            this.xml.set("value", value.xml);
         }
     });
 })
