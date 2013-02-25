@@ -1,3 +1,4 @@
+/*global define*/
 define([
     "dojo/_base/declare",
     "ngw/modelWidget/Widget",
@@ -8,7 +9,7 @@ define([
     // template
     "dijit/layout/BorderContainer",
     "dijit/form/Textarea",
-    "dijit/Toolbar",
+    "ngw/form/CodeMirror",
     "dijit/form/Button",
     "dojox/layout/TableContainer",
     "dijit/layout/TabContainer",
@@ -39,4 +40,4 @@ define([
             this.xml.set("value", value.xml);
         }
     });
-})
+});
