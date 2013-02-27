@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
-from StringIO import StringIO
 
 from nextgisweb.object_widget import ObjectWidget
 
-from .xmlmapfile import element_to_mapfile
+from .mapfile import schema
+from .extmapfile import Map
 
 
 def setup_pyramid(comp, config):
@@ -26,11 +26,8 @@ def setup_pyramid(comp, config):
             try:
                 layer = etree.fromstring(self.data['xml'])
 
-                schema = etree.RelaxNG(comp.rng)
-                schema.assertValid(layer)
-
-                b = StringIO()
-                element_to_mapfile(layer, b)
+                relaxng = schema(Map)
+                relaxng.assertValid(layer)
 
             except etree.XMLSyntaxError as e:
                 result = err(u"Синтаксическая ошибка XML: %s" % e.message)

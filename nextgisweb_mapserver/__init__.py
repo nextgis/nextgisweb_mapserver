@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from pkg_resources import resource_string
-from lxml import etree
-
 from nextgisweb.component import Component, require
 
 
@@ -16,8 +13,6 @@ class MapserverStyleComponent(Component):
         from . import models
         models.initialize(self)
 
-        self.rng = etree.fromstring(_resource('schema.rng'))
-
     def setup_pyramid(self, config):
         super(MapserverStyleComponent, self).setup_pyramid(config)
 
@@ -30,10 +25,6 @@ class MapserverStyleComponent(Component):
 
 
 def amd_packages():
-    return (
-        ('mapserver_style', 'nextgisweb_mapserver:amd_packages/mapserver_style'),
-    )
-
-
-def _resource(path):
-    return resource_string('nextgisweb_mapserver', path)
+    return ((
+        'mapserver_style', 'nextgisweb_mapserver:amd_packages/mapserver_style'
+    ),)

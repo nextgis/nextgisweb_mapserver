@@ -16,7 +16,7 @@ import mapscript
 from nextgisweb.geometry import box
 from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
 
-from .xmlmapfile import element_to_mapfile
+from .mapfile import Map, mapfile
 
 # Палитра из 12 цветов ColorBrewer
 _RNDCOLOR = (
@@ -128,11 +128,11 @@ def initialize(comp):
 
             # Создаем объект mapscript из строки
             tmapfile = NamedTemporaryFile(suffix='.map')
-            mapfile = codecs.open(tmapfile.name, 'w', 'utf-8')
-            self._mapfile(features, mapfile)
-            mapfile.flush()
+            buf = codecs.open(tmapfile.name, 'w', 'utf-8')
+            self._mapfile(features, buf)
+            buf.flush()
 
-            mapobj = mapscript.mapObj(mapfile.name)
+            mapobj = mapscript.mapObj(buf.name)
 
             # Получаем картинку эмулируя WMS запрос
             req = mapscript.OWSRequest()
@@ -167,29 +167,44 @@ def initialize(comp):
             emap = etree.fromstring(self.xml)
 
             map_setup = [
-                E.size('800 600'),
-                E.maxSize('4096'),
-                E.imageColor(red='255', green='255', blue='255'),
-                E.imageType('PNG'),
-                E.OutputFormat(
+                E.size(width='800', height='600'),
+                E.maxsize('4096'),
+                E.imagecolor(red='255', green='255', blue='255'),
+                E.imagetype('PNG'),
+                E.outputformat(
                     E.name('png'),
                     E.extension('png'),
-                    E.mimeType('image/png'),
+                    E.mimetype('image/png'),
                     E.driver('AGG/PNG'),
-                    E.imageMode('RGBA'),
-                    E.formatOption('INTERLACE=OFF')
+                    E.imagemode('RGBA'),
+                    E.formatoption('INTERLACE=OFF')
                 ),
-                E.Web(
-                    E.MetaData(
-                        E.wms_onlineresource('http://localhost/'),
-                        E.wfs_onlineresource('http://localhost/'),
-                        E.ows_title('nextgisweb'),
-                        E.wms_enable_request('*'),
-                        E.wms_srs('EPSG:3857')
+                E.web(
+                    E.metadata(
+                        E.item(
+                            key='wms_onlineresource',
+                            value='http://localhost/'
+                        ),
+                        E.item(
+                            key='wfs_onlineresource',
+                            value='http://localhost/'
+                        ),
+                        E.item(
+                            key='ows_title',
+                            value='nextgisweb'
+                        ),
+                        E.item(
+                            key='wms_enable_request',
+                            value='*'
+                        ),
+                        E.item(
+                            key='wms_srs',
+                            value='EPSG:3857'
+                        )
                     )
                 ),
-                E.extent('-180 -90 180 90'),
-                E.projection(epsg='4326'),
+                E.extent(minx='-180', miny='-90', maxx='180', maxy='90'),
+                E.projection("+init=epsg:4326"),
                 E.fontset(comp.settings['fontset']),
             ]
 
@@ -210,35 +225,41 @@ def initialize(comp):
                     'POLYGON': 'polygon'
                 }[self.layer.geometry_type]),
                 E.template('dummy.html'),
-                E.projection(epsg="3857"),
-                E.extent('-20037508.34 -20037508.34 20037508.34 20037508.34'),
+                E.projection("+init=epsg:3857"),
+                E.extent(
+                    minx='-20037508.34',
+                    miny='-20037508.34',
+                    maxx='20037508.34',
+                    maxy='20037508.34'
+                ),
             ]
 
             for e in reversed(layer_setup):
                 elayer.insert(0, e)
 
-            # SVG-маркеры: находим элементы <symbol type="svg">
-            # и заменяем элемент <marker>keyname</marker> на
-            # <image>filename</image>
-            for esymbol in emap.iterfind('./symbol'):
-                if esymbol.get('type', None) != 'svg':
+            # SVG-маркеры: подставляем путь к файлу в SYMBOL c TYPE == 'SVG'
+            for type_elem in emap.iterfind('./symbol/type'):
+                if type_elem.text != 'svg':
                     continue
 
-                emarker = esymbol.find('./marker')
+                symbol = type_elem.getparent()
+                image = symbol.find('./image')
 
                 try:
                     marker = marker_library.Marker.filter_by(
-                        keyname=emarker.text
+                        keyname=image.text
                     ).one()
 
-                    emarker.text = file_storage.filename(marker.fileobj)
-                    emarker.tag = 'image'
+                    image.text = file_storage.filename(marker.fileobj)
 
                 except orm_exc.NoResultFound:
-                    # Если маркера не нашлось, то заменяем symbol на окружность
-                    esymbol.set('type', 'ellipse')
-                    emarker.tag = 'points'
-                    emarker.text = '1 1'
+                    # Если маркера не нашлось, то заменяем symbol на квадрат
+                    type_elem.text = 'vector'
+
+                    image.tag = 'points'
+                    image.text = '-1 1 1 1 1 -1 -1 -1 -1 1'
+
+                    symbol.append(E.filled('true'))
 
             # Добавляем данные в виде элементов feature в конец слоя
             for f in features:
@@ -252,7 +273,8 @@ def initialize(comp):
                     )
                 ))
 
-            # Пишем получившийся mapfile в буфер
-            element_to_mapfile(emap, buf)
+            obj = Map().from_xml(emap)
+
+            mapfile(obj, buf)
 
     comp.MapserverStyle = MapserverStyle
