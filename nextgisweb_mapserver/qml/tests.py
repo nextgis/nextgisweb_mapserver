@@ -7,6 +7,7 @@ QML_FILES = (
     # Точка
     'point_simple_marker',
     # Линия
+    'line_marker_line_multiple',
     'line_highway_cycleway',
     'line_highway_ford',
     'line_highway_steps',
@@ -29,6 +30,7 @@ QML_FILES = (
     'polygon_simple_fill_opacity',
     'polygon_simple_fill_outline_dash',
     'polygon_simple_fill_outline_empty',
+    'polygon_simple_fill_outline_solid_dash',
     'polygon_simple_fill_solid',
     'polygon_simple_fill_vertical',
     # Рендерер

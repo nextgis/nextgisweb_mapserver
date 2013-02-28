@@ -264,8 +264,16 @@ def layer_marker_line(src, dst=None, root=None, warn=warn):
             u"Остались необработанные атрибуты: %s" % (', '.join(unknown))
         )
 
+    first = True
     for lr in src.iterfind('./symbol/layer'):
-        layer(lr, dst, root=root, warn=warn)
+        if first:
+            layer(lr, dst, root=root, warn=warn)
+            first = False
+        else:
+            warn(
+                lr, dst,
+                u"Маркерные линии из нескольких маркеров не поддерживаются!"
+            )
 
     return dst
 
@@ -299,9 +307,38 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
                 known.add(k)
 
         elif k == 'style_border':
-            # TODO: Сложности с сложными outline
             if v == 'solid' or v == 'no':
                 known.add(k)
+
+            elif props.get('style', None) == 'no':
+                # PATTERN будет работать только если нет заливки,
+                # в противном случае MS игнорирует PATTERN почему-то
+
+                pattern = None
+                if v == 'dash':
+                    pattern = (4, 2)
+                elif v == 'dot':
+                    pattern = (1, 2)
+                elif v == 'dash dot':
+                    pattern = (4, 2, 1, 2)
+                elif v == 'dash dot dot':
+                    pattern = (4, 2, 1, 2, 1, 2)
+
+                if pattern is not None:
+                    width = mm2px(props.get('width_border', 0))
+                    pattern = map(lambda x: str(x * width), pattern)
+                    dst.append(E.pattern(' '.join(pattern)))
+                    known.add(k)
+
+            else:
+                warn(
+                    src, dst,
+                    u"Совместное использование заливки и стиля невозможно!"
+                )
+                warn(
+                    src, dst,
+                    u"Используйте составной символ QuantumGIS.            "
+                )
 
         elif k == 'width_border':
             if props.get('style_border', None) != 'no':
