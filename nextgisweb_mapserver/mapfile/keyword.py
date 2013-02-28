@@ -105,11 +105,40 @@ class Points(BlockDirective):
 
 
 @register
+class Pattern(BlockDirective):
+    name = 'PATTERN'
+
+    def from_xml(self, e):
+        self.value = map(float, e.text.split(' '))
+
+    def to_mapfile(self, buf):
+        buf.write('PATTERN %s END\n' % ' '.join(map(str, self.value)))
+
+    @classmethod
+    def element_schema(cls):
+        return RNG.element(
+            RNG.text(),
+            name=cls.name.lower()
+        )
+
+
+@register
 class Style(CompositeDirective):
+    class Angle(SimpleKeyword):
+
+        def from_string(self, t):
+            if t == 'auto':
+                self.value = 'auto'
+            else:
+                self.value = float(t)
+
+        def to_string(self):
+            return str(self.value)
+
     name = 'STYLE'
     members = (
-        # ANGLE [double|attribute|AUTO]
-        Float.subclass('ANGLE'),
+        # ANGLE [double|attribute|auto]
+        Angle.subclass('ANGLE'),
 
         # ANTIALIAS [true|false]
         Boolean.subclass('ANTIALIAS'),
@@ -174,6 +203,8 @@ class Style(CompositeDirective):
         Float.subclass('OUTLINEWIDTH'),
 
         # PATTERN [double on] [double off] [double on] [double off] ... END
+        Pattern.subclass('PATTERN'),
+
         # POLAROFFSET [double|attribute] [double|attribute]
 
         # SIZE [double|attribute]

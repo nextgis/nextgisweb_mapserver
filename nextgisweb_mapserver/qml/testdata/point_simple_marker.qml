@@ -1,136 +1,48 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
 <qgis version="1.9.0-Master" minimumScale="-4.65661e-10" maximumScale="1e+08" hasScaleBasedVisibilityFlag="0">
   <transparencyLevelInt>255</transparencyLevelInt>
-  <renderer-v2 attr="STATUS" symbollevels="0" type="categorizedSymbol">
-    <categories>
-      <category symbol="0" value="аул" label="аул"/>
-      <category symbol="1" value="город" label="город"/>
-      <category symbol="2" value="железнодорожная станция" label="железнодорожная станция"/>
-      <category symbol="3" value="населенный пункт" label="населенный пункт"/>
-      <category symbol="4" value="поселок" label="поселок"/>
-      <category symbol="5" value="поселок городского типа" label="поселок городского типа"/>
-      <category symbol="6" value="село" label="село"/>
-      <category symbol="7" value="слобода" label="слобода"/>
-      <category symbol="8" value="станица" label="станица"/>
-      <category symbol="9" value="" label=""/>
-    </categories>
+  <renderer-v2 symbollevels="0" type="singleSymbol">
     <symbols>
       <symbol outputUnit="MM" alpha="1" type="marker" name="0">
         <layer pass="0" class="SimpleMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="247,251,255,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="circle"/>
+          <prop k="color" v="255,255,0,255"/>
+          <prop k="color_border" v="170,0,127,255"/>
+          <prop k="name" v="cross2"/>
           <prop k="offset" v="0,0"/>
           <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
+          <prop k="size" v="12"/>
         </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="1">
         <layer pass="0" class="SimpleMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="225,237,248,255"/>
+          <prop k="color" v="255,0,0,255"/>
+          <prop k="color_border" v="0,170,0,255"/>
+          <prop k="name" v="cross"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="scale_method" v="area"/>
+          <prop k="size" v="12"/>
+        </layer>
+        <layer pass="0" class="SimpleMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="0,0,255,255"/>
+          <prop k="color_border" v="0,0,0,255"/>
+          <prop k="name" v="diamond"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="scale_method" v="area"/>
+          <prop k="size" v="8"/>
+        </layer>
+        <layer pass="0" class="SimpleMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="0,170,0,255"/>
           <prop k="color_border" v="0,0,0,255"/>
           <prop k="name" v="rectangle"/>
           <prop k="offset" v="0,0"/>
           <prop k="scale_method" v="area"/>
           <prop k="size" v="4"/>
         </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="2">
         <layer pass="0" class="SimpleMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="204,223,241,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="diamond"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="3">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="175,209,231,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="pentagon"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="4">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="136,190,220,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="cross"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="5">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="95,166,209,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="cross2"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="6">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="61,141,195,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="equilateral_triangle"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="7">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="33,113,181,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="line"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="8">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="10,83,158,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="arrowhead"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="9">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="8,48,107,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="filled_arrowhead"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="4"/>
-        </layer>
-      </symbol>
-    </symbols>
-    <source-symbol>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="0">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="161,255,164,255"/>
+          <prop k="color" v="255,0,0,255"/>
           <prop k="color_border" v="0,0,0,255"/>
           <prop k="name" v="circle"/>
           <prop k="offset" v="0,0"/>
@@ -138,15 +50,9 @@
           <prop k="size" v="2"/>
         </layer>
       </symbol>
-    </source-symbol>
-    <colorramp type="gradient" name="[source]">
-      <prop k="color1" v="247,251,255,255"/>
-      <prop k="color2" v="8,48,107,255"/>
-      <prop k="discrete" v="0"/>
-      <prop k="stops" v="0.13;222,235,247,255:0.26;198,219,239,255:0.39;158,202,225,255:0.52;107,174,214,255:0.65;66,146,198,255:0.78;33,113,181,255:0.9;8,81,156,255"/>
-    </colorramp>
+    </symbols>
     <rotation field=""/>
-    <sizescale field="" scalemethod="area"/>
+    <sizescale field="" scalemethod=""/>
   </renderer-v2>
   <customproperties>
     <property key="labeling" value="pal"/>
@@ -238,7 +144,7 @@
     <property key="labeling/yOffset" value="0"/>
     <property key="labeling/yQuadOffset" value="0"/>
   </customproperties>
-  <displayfield>ID</displayfield>
+  <displayfield>id</displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
@@ -261,13 +167,7 @@
     <selectedonly on=""/>
   </labelattributes>
   <edittypes>
-    <edittype type="0" name="ID"/>
-    <edittype type="0" name="KLADR"/>
-    <edittype type="0" name="NAME"/>
-    <edittype type="0" name="N_OSM_ID"/>
-    <edittype type="0" name="OKATO"/>
-    <edittype type="0" name="P_OSM_ID"/>
-    <edittype type="0" name="STATUS"/>
+    <edittype type="0" name="id"/>
   </edittypes>
   <editform></editform>
   <editforminit></editforminit>

@@ -3,15 +3,16 @@
   <transparencyLevelInt>255</transparencyLevelInt>
   <renderer-v2 symbollevels="0" type="singleSymbol">
     <symbols>
-      <symbol outputUnit="MM" alpha="1" type="marker" name="0">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="105,125,225,255"/>
-          <prop k="color_border" v="0,0,0,255"/>
-          <prop k="name" v="circle"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="scale_method" v="area"/>
-          <prop k="size" v="2"/>
+      <symbol outputUnit="MM" alpha="1" type="line" name="0">
+        <layer pass="0" class="SimpleLine" locked="0">
+          <prop k="capstyle" v="square"/>
+          <prop k="color" v="181,210,214,255"/>
+          <prop k="customdash" v="5;2"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0"/>
+          <prop k="penstyle" v="solid"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width" v="1"/>
         </layer>
       </symbol>
     </symbols>
@@ -87,8 +88,8 @@
     <property key="labeling/namedStyle" value="Regular"/>
     <property key="labeling/obstacle" value="true"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
-    <property key="labeling/placement" value="0"/>
-    <property key="labeling/placementFlags" value="0"/>
+    <property key="labeling/placement" value="2"/>
+    <property key="labeling/placementFlags" value="10"/>
     <property key="labeling/plussign" value="true"/>
     <property key="labeling/preserveRotation" value="true"/>
     <property key="labeling/previewBkgrdColor" value="#ffffff"/>
@@ -108,7 +109,7 @@
     <property key="labeling/yOffset" value="0"/>
     <property key="labeling/yQuadOffset" value="0"/>
   </customproperties>
-  <displayfield>ID</displayfield>
+  <displayfield>id</displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
@@ -131,13 +132,7 @@
     <selectedonly on=""/>
   </labelattributes>
   <edittypes>
-    <edittype type="0" name="ID"/>
-    <edittype type="0" name="KLADR"/>
-    <edittype type="0" name="NAME"/>
-    <edittype type="0" name="N_OSM_ID"/>
-    <edittype type="0" name="OKATO"/>
-    <edittype type="0" name="P_OSM_ID"/>
-    <edittype type="0" name="STATUS"/>
+    <edittype type="0" name="id"/>
   </edittypes>
   <editform></editform>
   <editforminit></editforminit>

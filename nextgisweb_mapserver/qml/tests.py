@@ -4,8 +4,17 @@ from lxml.etree import parse
 from .. import qml, mapfile, extmapfile
 
 QML_FILES = (
-    'point_single_symbol',
-    'point_categorized_symbol',
+    # Точки
+    'point_simple_marker',
+    # Линии
+    'line_highway_cycleway',
+    'line_highway_ford',
+    'line_highway_steps',
+    'line_highway_trunk',
+    'line_waterway_river',
+    # Рендереры
+    'renderer_single',
+    'renderer_categorized',
 )
 
 
