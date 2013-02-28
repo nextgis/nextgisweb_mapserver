@@ -25,6 +25,7 @@ QML_FILES = (
     'polygon_simple_fill_diagonalx',
     'polygon_simple_fill_fdiagonal',
     'polygon_simple_fill_horizontal',
+    'polygon_simple_fill_opacity',
     'polygon_simple_fill_outline_dash',
     'polygon_simple_fill_outline_empty',
     'polygon_simple_fill_solid',
