@@ -111,7 +111,7 @@ class CompositeDirective(BlockDirective):
             self.registry[m.name] = m
 
     def from_xml(self, e):
-        for c in e:
+        for c in e.iterfind('./'):
             name = c.tag.upper()
             cls = self.registry[name]
 
