@@ -4,15 +4,31 @@ from lxml.etree import parse
 from .. import qml, mapfile, extmapfile
 
 QML_FILES = (
-    # Точки
+    # Точка
     'point_simple_marker',
-    # Линии
+    # Линия
     'line_highway_cycleway',
     'line_highway_ford',
     'line_highway_steps',
     'line_highway_trunk',
     'line_waterway_river',
-    # Рендереры
+    # Полигон
+    'polygon_simple_fill_bdiagonal',
+    'polygon_simple_fill_cross',
+    'polygon_simple_fill_dense1',
+    'polygon_simple_fill_dense2',
+    'polygon_simple_fill_dense3',
+    'polygon_simple_fill_dense4',
+    'polygon_simple_fill_dense5',
+    'polygon_simple_fill_dense6',
+    'polygon_simple_fill_dense7',
+    'polygon_simple_fill_diagonalx',
+    'polygon_simple_fill_fdiagonal',
+    'polygon_simple_fill_horizontal',
+    'polygon_simple_fill_outline_dash',
+    'polygon_simple_fill_solid',
+    'polygon_simple_fill_vertical',
+    # Рендерер
     'renderer_single',
     'renderer_categorized',
 )

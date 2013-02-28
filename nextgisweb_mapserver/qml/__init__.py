@@ -52,6 +52,9 @@ def layer(e, dst=None, root=None, opacity=100, warn=warn):
     elif cls == "MarkerLine":
         layer_marker_line(e, dst, root=root, warn=warn)
 
+    elif cls == "SimpleFill":
+        layer_simple_fill(e, dst, root=root, warn=warn)
+
     else:
         raise NotImplementedError(u"Неизвестный маркер: %s" % cls)
 
@@ -263,6 +266,51 @@ def layer_marker_line(src, dst=None, root=None, warn=warn):
 
     for lr in src.iterfind('./symbol/layer'):
         layer(lr, dst, root=root, warn=warn)
+
+    return dst
+
+
+def layer_simple_fill(src, dst=None, root=None, warn=warn):
+    if dst is None:
+        dst = E.style()
+
+    props = proplist(src)
+    known = set()
+
+    for k, v in props.iteritems():
+        if k == 'color':
+            dst.append(color_property(v, 'color', warn))
+            known.add(k)
+
+        elif k == 'color_border':
+            dst.append(color_property(v, 'outlinecolor', warn))
+            known.add(k)
+
+        elif k == 'offset':
+            if v != '0,0':
+                x, y = v.split(',')
+                dst.append(E.offset(x=x, y=y))
+            known.add(k)
+
+        elif k == 'style':
+            if v == 'solid':
+                known.add(k)
+
+        elif k == 'style_border':
+            # TODO: Сложности с сложными outline
+            if v == 'solid':
+                known.add(k)
+
+        elif k == 'width_border':
+            dst.append(E.width(str(mm2px(v))))
+            known.add(k)
+
+    unknown = set(props.keys()) - known
+    if unknown != set():
+        warn(
+            src, dst,
+            u"Остались необработанные атрибуты: %s" % (', '.join(unknown))
+        )
 
     return dst
 
