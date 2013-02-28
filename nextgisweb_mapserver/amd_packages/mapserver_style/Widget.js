@@ -44,6 +44,11 @@ define([
             aspect.after(this.qmlUploader, 'uploadComplete', function (file) {
                 widget.qmlUploadComplete(file);
             }, true);
+
+            aspect.after(this.qmlUploader, 'uploadBegin', function () {
+                widget.qmlUploadBegin();
+            }, true);
+
         },
 
         _getValueAttr: function () {
@@ -61,6 +66,10 @@ define([
             this.qmlDialog.show();
         },
 
+        qmlUploadBegin: function () {
+            this.qmlPreview.set('value', '');
+        },
+
         qmlUploadComplete: function (file) {
             var widget = this;
             xhr.post(ngwConfig.applicationUrl + '/mapserver_style/qml', {
@@ -68,6 +77,12 @@ define([
             }).then(
                 function (data) {
                     widget.qmlPreview.set("value", data);
+                },
+                function () {
+                    widget.qmlPreview.set(
+                        "value",
+                        '<!-- В ходе конвертации файла возникла ошибка -->'
+                    );
                 }
             ).then(undefined, function (err) { console.error(err); });
         },
