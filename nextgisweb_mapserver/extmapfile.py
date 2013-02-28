@@ -15,7 +15,7 @@ class Class(keyword.Class):
 class Layer(keyword.Layer):
     members = filter(
         lambda m: m.name in (
-            'CLASS', 'OPACITY',
+            'CLASS', 'CLASSITEM', 'OPACITY',
             'SIZEUNITS', 'UNITS',
             'LABELITEM',
         ), keyword.Layer.members

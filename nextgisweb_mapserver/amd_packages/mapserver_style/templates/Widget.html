@@ -2,17 +2,37 @@
 
     <div data-dojo-type="dijit/_WidgetBase" style="padding-bottom: 1ex;">
         <div data-dojo-type="dijit/form/Button"
-            data-dojo-props="disabled: true">
+            data-dojo-attach-event="onClick: qmlShowDialog">
             Импорт стиля QuantumGIS
-        </div>
-        <div data-dojo-type="dijit/form/Button"
-            data-dojo-props="disabled: true">
-            Импорт стиля SLD
         </div>
     </div>
 
     <div data-dojo-attach-point="xml" 
         data-dojo-type="ngw/form/CodeMirror"
         data-dojo-props="mode: 'xml', lineNumbers: true, autoHeight: true"/>
+
+    <div data-dojo-attach-point="qmlDialog"
+        data-dojo-type="dijit/Dialog"
+        title="Импорт стиля QuantumGIS"
+        style="width: 600px;">
+
+        <div data-dojo-attach-point="qmlUploader" 
+            data-dojo-type="ngw/form/Uploader">
+        </div>
+
+        <div class="dijitDialogPaneContentArea">
+            <div data-dojo-attach-point="qmlPreview"
+                data-dojo-type="ngw/form/CodeMirror"
+                data-dojo-props="mode: 'xml', lineNumbers: true">
+            </div>
+        </div>
+
+        <div class="dijitDialogPaneActionBar">
+            <div data-dojo-type="dijit/form/Button"
+                data-dojo-attach-event="onClick: qmlAccept">
+                Ok
+            </div>
+        </div>
+    </div>
 
 </div>
