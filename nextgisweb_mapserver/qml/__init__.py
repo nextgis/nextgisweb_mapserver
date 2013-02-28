@@ -283,7 +283,8 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
             known.add(k)
 
         elif k == 'color_border':
-            dst.append(color_property(v, 'outlinecolor', warn))
+            if props.get('style_border', None) != 'no':
+                dst.append(color_property(v, 'outlinecolor', warn))
             known.add(k)
 
         elif k == 'offset':
@@ -298,11 +299,12 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
 
         elif k == 'style_border':
             # TODO: Сложности с сложными outline
-            if v == 'solid':
+            if v == 'solid' or v == 'no':
                 known.add(k)
 
         elif k == 'width_border':
-            dst.append(E.width(str(mm2px(v))))
+            if props.get('style_border', None) != 'no':
+                dst.append(E.width(str(mm2px(v))))
             known.add(k)
 
     unknown = set(props.keys()) - known

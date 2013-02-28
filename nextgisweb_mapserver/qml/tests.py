@@ -26,6 +26,7 @@ QML_FILES = (
     'polygon_simple_fill_fdiagonal',
     'polygon_simple_fill_horizontal',
     'polygon_simple_fill_outline_dash',
+    'polygon_simple_fill_outline_empty',
     'polygon_simple_fill_solid',
     'polygon_simple_fill_vertical',
     # Рендерер
