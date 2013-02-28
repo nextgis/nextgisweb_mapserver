@@ -208,7 +208,7 @@ def layer_simple_line(src, dst=None, root=None, warn=warn):
                 pattern = (1, 2)
             elif v == 'dash dot':
                 pattern = (4, 2, 1, 2)
-            elif v == 'dash dot':
+            elif v == 'dash dot dot':
                 pattern = (4, 2, 1, 2, 1, 2)
 
             if pattern is not None:
