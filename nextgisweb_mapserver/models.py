@@ -132,8 +132,8 @@ def initialize(comp):
             self._mapfile(features, buf)
             buf.flush()
 
-            with open(tmapfile.name, 'r') as f:
-                print f.read()
+            # with open(tmapfile.name, 'r') as f:
+            #     print f.read()
 
             mapobj = mapscript.mapObj(buf.name)
 
