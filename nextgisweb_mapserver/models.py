@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import choice
-import codecs
 from StringIO import StringIO
-from tempfile import NamedTemporaryFile
 
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
@@ -126,16 +124,7 @@ def initialize(comp):
             feature_query.geom()
             features = feature_query()
 
-            # Создаем объект mapscript из строки
-            tmapfile = NamedTemporaryFile(suffix='.map')
-            buf = codecs.open(tmapfile.name, 'w', 'utf-8')
-            self._mapfile(features, buf)
-            buf.flush()
-
-            # with open(tmapfile.name, 'r') as f:
-            #     print f.read()
-
-            mapobj = mapscript.mapObj(buf.name)
+            mapobj = self._mapobj(features)
 
             # Получаем картинку эмулируя WMS запрос
             req = mapscript.OWSRequest()
@@ -161,7 +150,11 @@ def initialize(comp):
             # Вырезаем нужный нам кусок изображения
             return img.crop(target_box)
 
-        def _mapfile(self, features, buf):
+        def _mapobj(self, features):
+            # tmpf = NamedTemporaryFile(suffix='.map')
+            # buf = codecs.open(tmpf.name, 'w', 'utf-8')
+            buf = StringIO()
+
             fieldnames = map(lambda f: f.keyname, self.layer.fields)
 
             E = ElementMaker()
@@ -219,9 +212,6 @@ def initialize(comp):
 
             layer_setup = [
                 E.name('main'),
-                E.processing('ITEMS=%s' % ','.join(fieldnames)),
-                E.processing('APPROXIMATION_SCALE=FULL'),
-                E.processing('LABEL_NO_CLIP=True'),
                 E.type({
                     "POINT": 'point',
                     'LINESTRING': 'line',
@@ -264,20 +254,36 @@ def initialize(comp):
 
                     symbol.append(E.filled('true'))
 
-            # Добавляем данные в виде элементов feature в конец слоя
-            for f in features:
-                elayer.append(E.feature(
-                    E.wkt(f.geom.wkt),
-                    E.items(
-                        ';'.join(
-                            # TODO: Разобратся с escape
-                            [unicode(f.fields[fld]) for fld in fieldnames]
-                        )
-                    )
-                ))
-
             obj = Map().from_xml(emap)
-
             mapfile(obj, buf)
+
+            mapobj = mapscript.fromstring(buf.getvalue())
+
+            layer = mapobj.getLayer(0)
+
+            items = ';'.join(fieldnames).encode('utf-8')
+            layer.setProcessingKey('ITEMS', items)
+            layer.setProcessingKey('APPROXIMATION_SCALE', 'full')
+            layer.setProcessingKey('LABEL_NO_CLIP', 'true')
+
+            for f in features:
+                shape = mapscript.shapeObj.fromWKT(f.geom.wkt)
+
+                shape.initValues(len(fieldnames))
+                i = 0
+                for fld in fieldnames:
+                    v = f.fields[fld]
+
+                    if isinstance(v, unicode):
+                        v = v.encode('utf-8')
+                    else:
+                        v = str(v)
+
+                    shape.setValue(i, v)
+                    i += 1
+
+                layer.addFeature(shape)
+
+            return mapobj
 
     comp.MapserverStyle = MapserverStyle
