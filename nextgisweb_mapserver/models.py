@@ -260,7 +260,7 @@ def initialize(comp):
                     type_elem.text = 'vector'
 
                     image.tag = 'points'
-                    image.text = '-1 1 1 1 1 -1 -1 -1 -1 1'
+                    image.text = '0 0 0 1 1 1 1 0 0 0'
 
                     symbol.append(E.filled('true'))
 

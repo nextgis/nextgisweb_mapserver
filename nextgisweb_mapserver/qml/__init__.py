@@ -64,7 +64,7 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
             E.name('rectangle'),
             E.type('vector'),
             E.filled('true'),
-            E.points('-1 1 1 1 1 -1 -1 -1 -1 1'),
+            E.points('0 0 0 1 1 1 1 0 0 0'),
         ),
         circle=E.symbol(
             E.name('circle'),
@@ -76,25 +76,25 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
             E.name('diamond'),
             E.type('vector'),
             E.filled('true'),
-            E.points('0 1 1 0 0 -1 -1 0 0 1'),
+            E.points('0 0.5 0.5 1 1 0.5 0.5 0 0 0.5'),
         ),
         cross=E.symbol(
             E.name('cross'),
             E.type('vector'),
             E.filled('true'),
-            E.points('-1 0 1 0 -99 -99 0 -1 0 1'),
+            E.points('0 0.5 1 0.5 -99 -99 0.5 0 0.5 1'),
         ),
         cross2=E.symbol(
             E.name('cross2'),
             E.type('vector'),
             E.filled('true'),
-            E.points('-1 -1 1 1 -99 -99 -1 1 1 -1'),
+            E.points('0 0 1 1 -99 -99 0 1 1 0'),
         ),
         line=E.symbol(
             E.name('line'),
             E.type('vector'),
             E.filled('true'),
-            E.points('0 -1 0 1'),
+            E.points('0 0 0 1'),
         )
     )
 
