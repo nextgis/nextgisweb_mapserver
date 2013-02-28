@@ -257,12 +257,13 @@ def initialize(comp):
             obj = Map().from_xml(emap)
             mapfile(obj, buf)
 
-            mapobj = mapscript.fromstring(buf.getvalue())
+            mapobj = mapscript.fromstring(buf.getvalue().encode('utf-8'))
 
             layer = mapobj.getLayer(0)
 
-            items = ';'.join(fieldnames).encode('utf-8')
+            items = ','.join(fieldnames).encode('utf-8')
             layer.setProcessingKey('ITEMS', items)
+
             layer.setProcessingKey('APPROXIMATION_SCALE', 'full')
             layer.setProcessingKey('LABEL_NO_CLIP', 'true')
 
