@@ -38,6 +38,11 @@ class String(PrimitiveKeyword):
 
 
 @register
+class Attribute(PrimitiveKeyword):
+    primitive = p.Attribute
+
+
+@register
 class Enum(PrimitiveKeyword):
     primitive = p.Enum.subclass(choices=('a', 'b'))
 

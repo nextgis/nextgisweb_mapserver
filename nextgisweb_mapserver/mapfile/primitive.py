@@ -133,6 +133,21 @@ class String(Primitive):
         return RNG.text()
 
 
+class Attribute(Primitive):
+
+    def to_mapfile(self):
+        # TODO: Escape!
+        return '[%s]' % self.value
+
+    @classmethod
+    def from_xml(cls, e):
+        return cls(e.text)
+
+    @classmethod
+    def xml_schema(cls):
+        return RNG.text()
+
+
 class Composite(Primitive):
 
     def to_mapfile(self):
