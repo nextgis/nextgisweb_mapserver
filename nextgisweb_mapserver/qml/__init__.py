@@ -279,7 +279,8 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
 
     for k, v in props.iteritems():
         if k == 'color':
-            dst.append(color_property(v, 'color', warn))
+            if props.get('style', None) != 'no':
+                dst.append(color_property(v, 'color', warn))
             known.add(k)
 
         elif k == 'color_border':
@@ -294,7 +295,7 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
             known.add(k)
 
         elif k == 'style':
-            if v == 'solid':
+            if v == 'solid' or v == 'no':
                 known.add(k)
 
         elif k == 'style_border':

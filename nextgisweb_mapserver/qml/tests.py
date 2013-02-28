@@ -23,6 +23,7 @@ QML_FILES = (
     'polygon_simple_fill_dense6',
     'polygon_simple_fill_dense7',
     'polygon_simple_fill_diagonalx',
+    'polygon_simple_fill_empty',
     'polygon_simple_fill_fdiagonal',
     'polygon_simple_fill_horizontal',
     'polygon_simple_fill_opacity',
