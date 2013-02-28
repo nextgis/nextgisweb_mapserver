@@ -109,6 +109,7 @@ class Style(CompositeDirective):
     name = 'STYLE'
     members = (
         # ANGLE [double|attribute|AUTO]
+        Float.subclass('ANGLE'),
 
         # ANTIALIAS [true|false]
         Boolean.subclass('ANTIALIAS'),
@@ -404,7 +405,9 @@ class Layer(CompositeDirective):
         # CLASSGROUP [string]
         String.subclass('CLASSGROUP'),
 
-        # CLASSITEM [attribute]
+        # CLASSITEM [string]
+        String.subclass('CLASSITEM'),
+
         # CLUSTER
 
         # CONNECTION [string]
