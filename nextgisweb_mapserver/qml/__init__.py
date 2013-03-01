@@ -414,6 +414,54 @@ def renderer_categorized_symbol(src, dst=None, root=None, warn=warn):
     return dst
 
 
+def label(src, mapelem, warn=warn):
+    layer = mapelem.find('./layer')
+
+    def apply_label(label):
+        for cls in layer.iterfind('./class'):
+            cls.append(deepcopy(label))
+
+    if  src.xpath(
+        './customproperties/property'
+        '[@key="labeling/enabled" and @value="true"]'
+    ):
+        # Это "новые" (1.9) подписи
+        custp = dict()
+        for p in src.iterfind('./customproperties/property[@key]'):
+            custp[p.get('key')] = p.get('value')
+
+        layer.insert(0, E.labelitem(custp.get('labeling/fieldName', '')))
+
+        elem = E.label(
+            E.type('truetype'),
+            E.font('regular'),
+            E.size(custp.get('labeling/fontSize', '0')),
+            E.color(
+                red=custp.get('labeling/textColorR', '0'),
+                green=custp.get('labeling/textColorG', '0'),
+                blue=custp.get('labeling/textColorB', '0'),
+            )
+        )
+
+        bufv = custp.get('labeling/bufferSize', '0')
+        if bufv != '0':
+            elem.extend((
+                E.outlinewidth(str(int(round(mm2px(bufv))))),
+                E.outlinecolor(
+                    red=custp.get('labeling/bufferColorR', '0'),
+                    green=custp.get('labeling/bufferColorG', '0'),
+                    blue=custp.get('labeling/bufferColorB', '0')
+                )
+            ))
+
+        if custp.get('labeling/placement', None) == '1':
+            x = {'-1': 'l', '0': 'c', '1': 'r'}[custp.get('labeling/xQuadOffset')]
+            y = {'-1': 'l', '0': 'c', '1': 'u'}[custp.get('labeling/yQuadOffset')]
+            elem.append(E.position(y + x))
+
+        apply_label(elem)
+
+
 def transform(src, dst=None, warn=warn):
     if dst is None:
         dst = E.map()
@@ -439,5 +487,7 @@ def transform(src, dst=None, warn=warn):
         root=dst,
         warn=warn
     ))
+
+    label(src, dst, warn)
 
     return dst

@@ -33,6 +33,8 @@ QML_FILES = (
     'polygon_simple_fill_outline_solid_dash',
     'polygon_simple_fill_solid',
     'polygon_simple_fill_vertical',
+    # Новые подписи (1.9)
+    'label_simple',
     # Рендерер
     'renderer_single',
     'renderer_categorized',

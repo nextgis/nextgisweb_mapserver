@@ -220,6 +220,15 @@ class Style(CompositeDirective):
 
 @register
 class Label(CompositeDirective):
+
+    @register
+    class Style(CompositeDirective):
+        name = 'STYLE'
+        members = (
+            Enum.subclass('GEOMTRANSFORM', choices=('labelpoly', 'labelpnt')),
+            Color.subclass('COLOR'),
+        )
+
     name = 'LABEL'
     members = (
         # ALIGN [left|center|right]
@@ -299,7 +308,9 @@ class Label(CompositeDirective):
 
         # SHADOWSIZE [x][y]|[attribute][attribute]
         #            | [x][attribute]|[attribute][y]
+
         # SIZE [double]|[tiny|small|medium|large|giant]|[attribute]
+        Float.subclass('SIZE'),
 
         # STYLE
         Style.subclass('STYLE'),
@@ -490,6 +501,7 @@ class Layer(CompositeDirective):
         Switch.subclass('LABELCACHE'),
 
         # LABELITEM [attribute]
+        String.subclass('LABELITEM'),
 
         # LABELMAXSCALEDENOM [double]
         Float.subclass('LABELMAXSCALEDENOM'),
