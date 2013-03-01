@@ -76,12 +76,11 @@ def initialize(comp):
 
             if layer.geometry_type == GEOM_TYPE.POINT:
                 symbol = E.symbol(
+                    E.type('ellipse'),
+                    E.name('circle'),
                     E.points('1 1'),
                     E.filled('true'),
                 )
-
-                symbol.set('name', 'circle')
-                symbol.set('type', 'ellipse')
 
                 root.insert(0, symbol)
 
