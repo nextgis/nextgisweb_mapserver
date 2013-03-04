@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pkg_resources import resource_filename
 from nextgisweb.component import Component, require
 
 
@@ -9,6 +10,11 @@ class MapserverStyleComponent(Component):
     @require('style', 'marker_library')
     def initialize(self):
         super(MapserverStyleComponent, self).initialize()
+
+        # Настройки по-умолчанию для fontset
+        if 'fontset' not in self.settings:
+            self.settings['fontset'] = resource_filename(
+                'nextgisweb_mapserver', 'fonts/fontset')
 
         from . import models
         models.initialize(self)

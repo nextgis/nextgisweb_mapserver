@@ -432,9 +432,18 @@ def label(src, mapelem, warn=warn):
 
         layer.insert(0, E.labelitem(custp.get('labeling/fieldName', '')))
 
+        fstyle = custp.get('labeling/namedStyle', 'Regular') \
+            .lower().replace(' ', '-')
+
+        if fstyle not in (
+            'regular', 'bold', 'oblique',
+            'italic', 'bold-oblique', 'bold-italic'
+        ):
+            fstyle = 'regular'
+
         elem = E.label(
             E.type('truetype'),
-            E.font('regular'),
+            E.font(fstyle),
             E.size(custp.get('labeling/fontSize', '0')),
             E.color(
                 red=custp.get('labeling/textColorR', '0'),
