@@ -63,42 +63,17 @@ def layer(e, dst=None, root=None, opacity=100, warn=warn):
 
 def layer_simple_marker(src, dst=None, root=None, warn=warn):
     SIMPLE_MARKER = dict(
-        rectangle=E.symbol(
-            E.name('rectangle'),
-            E.type('vector'),
-            E.filled('true'),
-            E.points('0 0 0 1 1 1 1 0 0 0'),
-        ),
-        circle=E.symbol(
-            E.name('circle'),
-            E.type('ellipse'),
-            E.filled('true'),
-            E.points('1 1'),
-        ),
-        diamond=E.symbol(
-            E.name('diamond'),
-            E.type('vector'),
-            E.filled('true'),
-            E.points('0 0.5 0.5 1 1 0.5 0.5 0 0 0.5'),
-        ),
-        cross=E.symbol(
-            E.name('cross'),
-            E.type('vector'),
-            E.filled('true'),
-            E.points('0 0.5 1 0.5 -99 -99 0.5 0 0.5 1'),
-        ),
-        cross2=E.symbol(
-            E.name('cross2'),
-            E.type('vector'),
-            E.filled('true'),
-            E.points('0 0 1 1 -99 -99 0 1 1 0'),
-        ),
-        line=E.symbol(
-            E.name('line'),
-            E.type('vector'),
-            E.filled('true'),
-            E.points('0 0 0 1'),
-        )
+        rectangle='std:rectangle',
+        circle='std:rectangle',
+        diamond='std:diamond',
+        triangle='std:triangle',
+        equilateral_triangle='std:triangle-equilateral',
+        star='std:star',
+        regular_star='std:star',
+        cross='std:cross',
+        cross2='std:xcross',
+        arrowhead='std:arrow',
+        line='std:line',
     )
 
     if dst is None:
@@ -115,13 +90,8 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
                 warn(src, dst, u"Неизвестный тип маркера: %s" % mark)
                 mark = 'rectangle'
 
-            dst.append(E.symbol(mark))
+            dst.append(E.symbol(SIMPLE_MARKER[mark]))
             known.add(k)
-
-            if root is not None:
-                existing = root.xpath('./symbol/name[text()="%s"]' % mark)
-                if len(existing) == 0:
-                    root.append(deepcopy(SIMPLE_MARKER[mark]))
 
         elif k == 'color':
             dst.append(color_property(v, 'color', warn))

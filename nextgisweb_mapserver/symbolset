@@ -1,0 +1,136 @@
+SYMBOLSET
+
+SYMBOL
+    NAME "std:rectangle"
+    TYPE vector
+    FILLED true
+    POINTS
+        0 0
+        0 1
+        1 1
+        1 0
+        0 0
+    END
+END
+
+SYMBOL
+    NAME "std:circle"
+    TYPE ellipse
+    FILLED true
+    POINTS
+        1 1
+    END
+END
+
+SYMBOL
+    NAME "std:diamond"
+    TYPE vector
+    FILLED true
+    POINTS
+        0 0.5
+        0.5 1
+        1 0.5
+        0.5 0
+        0 0.5
+    END
+END
+
+SYMBOL
+    NAME "std:triangle"
+    TYPE vector
+    FILLED true
+    POINTS
+        0 0
+        0.5 1
+        1 0
+        0 0
+    END
+END
+
+SYMBOL
+    NAME "std:triangle"
+    TYPE vector
+    FILLED true
+    POINTS
+        0 0
+        0.5 1
+        1 0
+        0 0
+    END
+END
+
+SYMBOL
+    NAME "std:triangle-equilateral"
+    TYPE vector
+    FILLED true
+    POINTS
+        0 0
+        0.5 0.866
+        1 0
+        0 0
+    END
+END
+
+SYMBOL
+    NAME "std:star"
+    TYPE vector
+    FILLED true
+    POINTS
+        0.5 0
+        0.61225 0.3455
+        0.9755  0.3455
+        0.6816  0.559
+        0.7939  0.9045
+        0.5 0.69095
+        0.2061  0.9045
+        0.3184  0.559
+        0.0245  0.3455
+        0.38775 0.3455
+    END
+END
+
+SYMBOL
+    NAME "std:arrow"
+    TYPE vector
+    POINTS
+        0 0
+        0.5 0.5
+        0 1
+    END
+END
+
+
+SYMBOL
+    NAME "std:cross"
+    TYPE vector
+    POINTS
+        0 0.5
+        1 0.5
+        -99 -99
+        0.5 0
+        0.5 1
+    END
+END
+
+SYMBOL
+    NAME "std:xcross"
+    TYPE vector
+    POINTS
+        0 0
+        1 1
+        -99 -99
+        0 1
+        1 0
+    END
+END
+
+SYMBOL
+    NAME "std:line"
+    TYPE vector
+    POINTS
+        0 0
+        0 1
+    END
+END
+
+END

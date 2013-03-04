@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from random import choice
 from StringIO import StringIO
+from pkg_resources import resource_filename
 
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
@@ -201,6 +202,9 @@ def initialize(comp):
                 E.extent(minx='-180', miny='-90', maxx='180', maxy='90'),
                 E.projection("+init=epsg:4326"),
                 E.fontset(comp.settings['fontset']),
+                E.symbolset(resource_filename(
+                    'nextgisweb_mapserver', 'symbolset'
+                ))
             ]
 
             for i in reversed(map_setup):
