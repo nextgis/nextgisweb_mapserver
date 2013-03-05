@@ -405,9 +405,16 @@ def label(src, mapelem, warn=warn):
         fstyle = custp.get('labeling/namedStyle', 'Regular') \
             .lower().replace(' ', '-')
 
+        # Перевод русских названий очертаний из qml
+        fstyle = {
+            u'жирный': 'bold',
+            u'курсив': 'italic',
+            u'жирный-курсив': 'bold-italic',
+        }.get(fstyle, fstyle)
+
         if fstyle not in (
             'regular', 'bold', 'oblique',
-            'italic', 'bold-oblique', 'bold-italic'
+            'italic', 'bold-oblique', 'bold-italic',
         ):
             fstyle = 'regular'
 
