@@ -90,6 +90,21 @@ SYMBOL
 END
 
 SYMBOL
+    NAME "std:pentagon"
+    TYPE vector
+    FILLED true
+    POINTS
+        0.5 0
+        0.9755  0.3455
+        0.7939  0.9045
+        0.2061  0.9045
+        0.0245  0.3455
+        0.5 0
+    END
+END
+
+
+SYMBOL
     NAME "std:arrow"
     TYPE vector
     POINTS

@@ -69,6 +69,7 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
         triangle='std:triangle',
         equilateral_triangle='std:triangle-equilateral',
         star='std:star',
+        pentagon='std:pentagon',
         regular_star='std:star',
         cross='std:cross',
         cross2='std:xcross',
