@@ -3,6 +3,7 @@ from random import choice
 from StringIO import StringIO
 from pkg_resources import resource_filename
 
+from zope.interface import implements
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
 
@@ -14,6 +15,11 @@ import mapscript
 
 from nextgisweb.geometry import box
 from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
+from nextgisweb.style import (
+    IRenderableStyle,
+    IExtentRenderRequest,
+    ITileRenderRequest,
+)
 
 from .mapfile import Map, mapfile
 
@@ -40,8 +46,27 @@ def initialize(comp):
 
     Style = comp.env.style.Style
 
+    class RenderRequest(object):
+        implements(IExtentRenderRequest, ITileRenderRequest)
+
+        def __init__(self, style, srs):
+            self.style = style
+            self.srs = srs
+
+        def render_extent(self, extent, size):
+            return self.style.render_image(extent, size)
+
+        def render_tile(self, tile, size):
+            extent = self.srs.tile_extent(tile)
+            return self.style.render_image(
+                extent, (size, size),
+                padding=size / 2
+            )
+
     @Style.registry.register
     class MapserverStyle(Style):
+        implements(IRenderableStyle)
+
         __tablename__ = 'mapserver_style'
 
         identity = __tablename__
@@ -57,6 +82,9 @@ def initialize(comp):
         @classmethod
         def is_layer_supported(cls, layer):
             return IFeatureLayer.providedBy(layer)
+
+        def render_request(self, srs):
+            return RenderRequest(self, srs)
 
         @classmethod
         def default_style_xml(cls, layer):
@@ -90,13 +118,11 @@ def initialize(comp):
 
             return etree.tostring(root, pretty_print=True)
 
-        def render_image(self, extent, img_size, settings):
-            padding = 128
+        def render_image(self, extent, size, padding=0):
+            res_x = (extent[2] - extent[0]) / size[0]
+            res_y = (extent[3] - extent[1]) / size[1]
 
-            res_x = (extent[2] - extent[0]) / img_size[0]
-            res_y = (extent[3] - extent[1]) / img_size[1]
-
-            # Экстент с учетом запаса
+            # Экстент с учетом отступа
             extended = (
                 extent[0] - res_x * padding,
                 extent[1] - res_y * padding,
@@ -104,18 +130,18 @@ def initialize(comp):
                 extent[3] + res_y * padding,
             )
 
-            # Размер изображения с учетом запаса
+            # Размер изображения с учетом отступа
             render_size = (
-                img_size[0] + 2 * padding,
-                img_size[1] + 2 * padding
+                size[0] + 2 * padding,
+                size[1] + 2 * padding
             )
 
-            # Фрагмент изображения размера image_size
+            # Фрагмент изображения размера size
             target_box = (
                 padding,
                 padding,
-                img_size[0] + padding,
-                img_size[1] + padding
+                size[0] + padding,
+                size[1] + padding
             )
 
             # Выбираем объекты по экстенту
