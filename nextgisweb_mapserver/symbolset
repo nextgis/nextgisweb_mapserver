@@ -104,7 +104,6 @@ SYMBOL
     END
 END
 
-
 SYMBOL
     NAME "std:arrow"
     TYPE vector
@@ -114,7 +113,6 @@ SYMBOL
         0 1
     END
 END
-
 
 SYMBOL
     NAME "std:cross"
@@ -147,6 +145,11 @@ SYMBOL
         0 0
         0 1
     END
+END
+
+SYMBOL
+    NAME "std:hatch"
+    TYPE hatch
 END
 
 END

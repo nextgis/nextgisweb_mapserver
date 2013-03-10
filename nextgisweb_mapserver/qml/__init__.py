@@ -277,6 +277,30 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
             if v == 'solid' or v == 'no':
                 known.add(k)
 
+            elif v in ('horizontal', 'vertical', 'f_diagonal', 'b_diagonal'):
+                if v == 'horizontal':
+                    angle = 0
+                elif v == 'vertical':
+                    angle = 90
+                elif v == 'b_diagonal':
+                    angle = 45
+                elif v == 'f_diagonal':
+                    angle = 135
+
+                dst.extend((
+                    E.symbol('std:hatch'),
+                    E.angle(str(angle)),
+                    E.size('6'),
+                ))
+                known.add(k)
+
+            elif v == 'diagonal_x':
+                dst.extend((
+                    E.symbol('std:xcross'),
+                    E.size('8'),
+                ))
+                known.add(k)
+
         elif k == 'style_border':
             if v == 'solid' or v == 'no':
                 known.add(k)
