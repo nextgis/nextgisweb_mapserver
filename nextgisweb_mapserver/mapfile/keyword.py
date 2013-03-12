@@ -235,6 +235,7 @@ class Label(CompositeDirective):
         Enum.subclass('ALIGN', choices=('left', 'center', 'right')),
 
         # ANGLE [double|auto|auto2|follow|attribute]
+        Enum.subclass('ANGLE', choices=('auto', 'follow')),
 
         # ANTIALIAS [true|false]
         Boolean.subclass('ANTIALIAS'),

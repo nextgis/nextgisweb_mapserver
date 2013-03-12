@@ -465,10 +465,28 @@ def label(src, mapelem, warn=warn):
                 )
             ))
 
+        # Offset from point
         if custp.get('labeling/placement', None) == '1':
             x = {'-1': 'l', '0': 'c', '1': 'r'}[custp.get('labeling/xQuadOffset')]
             y = {'-1': 'l', '0': 'c', '1': 'u'}[custp.get('labeling/yQuadOffset')]
             elem.append(E.position(y + x))
+
+        # Parallel
+        elif custp.get('labeling/placement', None) == '2':
+            elem.append(E.angle('auto'))
+
+        # Curved
+        elif custp.get('labeling/placement', None) == '3':
+            elem.append(E.angle('follow'))
+            angle = (
+                abs(float(custp['labeling/maxCurvedCharAngleIn']))
+                + abs(float(custp['labeling/maxCurvedCharAngleOut']))
+            ) / 2
+            elem.append(E.maxoverlapangle(str(angle)))
+
+        # Horizontal
+        elif custp.get('labeling/placement', None) == '4':
+            pass
 
         apply_label(elem)
 
