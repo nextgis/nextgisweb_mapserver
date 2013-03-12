@@ -70,10 +70,11 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
         equilateral_triangle='std:triangle-equilateral',
         star='std:star',
         pentagon='std:pentagon',
+        arrow='std:arrow',
         regular_star='std:star',
         cross='std:cross',
         cross2='std:xcross',
-        arrowhead='std:arrow',
+        arrowhead='std:arrowhead',
         line='std:line',
     )
 

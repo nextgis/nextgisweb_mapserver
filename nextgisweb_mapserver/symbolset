@@ -107,6 +107,22 @@ END
 SYMBOL
     NAME "std:arrow"
     TYPE vector
+    FILLED true
+    POINTS
+        0.5 0
+        0.75 0.25
+        0.625 0.25
+        0.625 1
+        0.375 1
+        0.375 0.25
+        0.25 0.25
+        0.5 0
+    END
+END
+
+SYMBOL
+    NAME "std:arrowhead"
+    TYPE vector
     POINTS
         0 0
         0.5 0.5
