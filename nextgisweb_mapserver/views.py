@@ -63,7 +63,7 @@ def setup_pyramid(comp, config):
     comp.MapserverStyle.object_widget = MapserverStyleObjectWidget
 
     def qml(request):
-        fileid = request.json_body['file']['id']
+        fileid = request.json_body['file']['upload_meta'][0]['id']
         filename, metadata = file_upload.get_filename(fileid)
 
         elem = etree.parse(filename).getroot()
