@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from random import random
 from random import choice
 from StringIO import StringIO
 from pkg_resources import resource_filename
