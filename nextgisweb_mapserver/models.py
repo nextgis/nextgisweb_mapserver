@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from random import random
 from random import choice
 from StringIO import StringIO
 from pkg_resources import resource_filename
@@ -297,7 +298,9 @@ def initialize(comp):
             layer.setProcessingKey('LABEL_NO_CLIP', 'true')
 
             for f in features:
-                shape = mapscript.shapeObj.fromWKT(f.geom.wkt)
+                # У MapServer серьёзные проблемы с отрисовкой объектов,
+                # содержащих дублирующиеся узлы, поэтому выкидываем их
+                shape = mapscript.shapeObj.fromWKT(f.geom.simplify(0).wkt)
 
                 shape.initValues(len(fieldnames))
                 i = 0
