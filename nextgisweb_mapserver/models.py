@@ -306,7 +306,12 @@ def initialize(comp):
                 for fld in fieldnames:
                     v = f.fields[fld]
 
-                    if isinstance(v, unicode):
+                    if v is None:
+                        # TODO: Возможно есть более удачный способ
+                        # передавать mapserver пустые значения, но
+                        # пока он мне не известен
+                        v = ""
+                    elif isinstance(v, unicode):
                         v = v.encode('utf-8')
                     else:
                         v = str(v)
