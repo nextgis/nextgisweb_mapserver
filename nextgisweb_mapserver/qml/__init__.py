@@ -56,7 +56,7 @@ def layer(e, dst=None, root=None, opacity=100, warn=warn):
         layer_simple_fill(e, dst, root=root, warn=warn)
 
     else:
-        raise NotImplementedError(u"Неизвестный маркер: %s" % cls)
+        warn(e, dst, u"Неизвестный тип маркера: %s" % cls)
 
     return dst
 
@@ -417,7 +417,7 @@ def label(src, mapelem, warn=warn):
         for cls in layer.iterfind('./class'):
             cls.append(deepcopy(label))
 
-    if  src.xpath(
+    if src.xpath(
         './customproperties/property'
         '[@key="labeling/enabled" and @value="true"]'
     ):
@@ -468,8 +468,10 @@ def label(src, mapelem, warn=warn):
 
         # Offset from point
         if custp.get('labeling/placement', None) == '1':
-            x = {'-1': 'l', '0': 'c', '1': 'r'}[custp.get('labeling/xQuadOffset')]
-            y = {'-1': 'l', '0': 'c', '1': 'u'}[custp.get('labeling/yQuadOffset')]
+            x = {'-1': 'l', '0': 'c', '1': 'r'}[
+                custp.get('labeling/xQuadOffset')]
+            y = {'-1': 'l', '0': 'c', '1': 'u'}[
+                custp.get('labeling/yQuadOffset')]
             elem.append(E.position(y + x))
 
         # Parallel
