@@ -2,10 +2,13 @@
 from pkg_resources import resource_filename
 from nextgisweb.component import Component, require
 
+from .models import Base
+
 
 @Component.registry.register
 class MapserverStyleComponent(Component):
     identity = 'mapserver_style'
+    metadata = Base.metadata
 
     @require('style', 'marker_library')
     def initialize(self):
@@ -15,9 +18,6 @@ class MapserverStyleComponent(Component):
         if 'fontset' not in self.settings:
             self.settings['fontset'] = resource_filename(
                 'nextgisweb_mapserver', 'fonts/fontset')
-
-        from . import models
-        models.initialize(self)
 
     def setup_pyramid(self, config):
         super(MapserverStyleComponent, self).setup_pyramid(config)

@@ -2,17 +2,17 @@
 from lxml import etree
 from pyramid.response import Response
 
+from nextgisweb.env import env
 from nextgisweb.object_widget import ObjectWidget
 
 from .mapfile import schema
 from .extmapfile import Map
 from .qml import transform
 
+from .models import MapserverStyle
+
 
 def setup_pyramid(comp, config):
-    file_upload = comp.env.file_upload
-
-    MapserverStyle = comp.MapserverStyle
 
     class MapserverStyleObjectWidget(ObjectWidget):
         def is_applicable(self):
@@ -60,17 +60,17 @@ def setup_pyramid(comp, config):
 
             return result
 
-    comp.MapserverStyle.object_widget = MapserverStyleObjectWidget
+    MapserverStyle.object_widget = MapserverStyleObjectWidget
 
     def qml(request):
         fileid = request.json_body['file']['upload_meta'][0]['id']
-        filename, metadata = file_upload.get_filename(fileid)
+        filename, metadata = env.file_upload.get_filename(fileid)
 
         elem = etree.parse(filename).getroot()
 
         def warn(src, dst, msg):
             dst.append(etree.Comment(u" " + msg + u" "))
-        
+
         dst = transform(elem, warn=warn)
 
         return Response(
