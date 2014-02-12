@@ -505,6 +505,8 @@ def transform(src, dst=None, warn=warn):
 
     stype = renderer.get('type')
 
+    proc = None
+
     if stype == 'singleSymbol':
         proc = renderer_single_symbol
 
@@ -512,13 +514,14 @@ def transform(src, dst=None, warn=warn):
         proc = renderer_categorized_symbol
 
     else:
-        raise NotImplementedError(u"Неизвестный тип: %s") % stype
+        warn(src, dst, u"Неизвестный тип: %s" % stype)
 
-    dst.append(proc(
-        renderer,
-        root=dst,
-        warn=warn
-    ))
+    if proc:
+        dst.append(proc(
+            renderer,
+            root=dst,
+            warn=warn
+        ))
 
     label(src, dst, warn)
 
