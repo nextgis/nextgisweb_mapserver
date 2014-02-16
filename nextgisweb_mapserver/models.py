@@ -17,6 +17,7 @@ from nextgisweb.models import declarative_base
 from nextgisweb.env import env
 from nextgisweb.geometry import box
 from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
+from nextgisweb.marker_library import Marker
 from nextgisweb.style import (
     Style,
     IRenderableStyle,
@@ -268,7 +269,7 @@ class MapserverStyle(Base, Style):
             image = symbol.find('./image')
 
             try:
-                marker = env.marker_library.Marker.filter_by(
+                marker = Marker.filter_by(
                     keyname=image.text
                 ).one()
 
