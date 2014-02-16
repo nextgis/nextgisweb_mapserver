@@ -260,9 +260,9 @@ class MapserverStyle(Base, Style):
         for e in reversed(layer_setup):
             elayer.insert(0, e)
 
-        # SVG-маркеры: подставляем путь к файлу в SYMBOL c TYPE == 'SVG'
+        # PIXMAP и SVG маркеры: подставляем путь к файлу в SYMBOL cо значением TYPE 'PIXMAP' или 'SVG'
         for type_elem in emap.iterfind('./symbol/type'):
-            if type_elem.text != 'svg':
+            if type_elem.text not in ('pixmap', 'svg'):
                 continue
 
             symbol = type_elem.getparent()
