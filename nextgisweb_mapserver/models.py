@@ -14,12 +14,12 @@ from PIL import Image
 import mapscript
 
 from nextgisweb.models import declarative_base
+from nextgisweb.resource import Resource, MetaDataScope
 from nextgisweb.env import env
 from nextgisweb.geometry import box
 from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
 from nextgisweb.marker_library import Marker
 from nextgisweb.style import (
-    Style,
     IRenderableStyle,
     IExtentRenderRequest,
     ITileRenderRequest,
@@ -64,25 +64,23 @@ class RenderRequest(object):
         )
 
 
-@Style.registry.register
-class MapserverStyle(Base, Style):
-    implements(IRenderableStyle)
-
-    __tablename__ = 'mapserver_style'
-
-    identity = __tablename__
+@Resource.registry.register
+class MapserverStyle(Base, MetaDataScope, Resource):
+    identity = 'mapserver_style'
     cls_display_name = u"Стиль MapServer"
 
-    style_id = sa.Column(sa.ForeignKey(Style.id), primary_key=True)
+    implements(IRenderableStyle)
+
+    __tablename__ = identity
+    __mapper_args__ = dict(polymorphic_identity=identity)
+
+    resource_id = sa.Column(sa.ForeignKey(Resource.id), primary_key=True)
+
     xml = sa.Column(sa.Unicode, nullable=False)
 
-    __mapper_args__ = dict(
-        polymorphic_identity=identity,
-    )
-
     @classmethod
-    def is_layer_supported(cls, layer):
-        return IFeatureLayer.providedBy(layer)
+    def check_parent(self, parent):
+        return IFeatureLayer.providedBy(parent)
 
     def render_request(self, srs):
         return RenderRequest(self, srs)
@@ -146,8 +144,8 @@ class MapserverStyle(Base, Style):
         )
 
         # Выбираем объекты по экстенту
-        feature_query = self.layer.feature_query()
-        feature_query.intersects(box(*extended, srid=self.layer.srs_id))
+        feature_query = self.parent.feature_query()
+        feature_query.intersects(box(*extended, srid=self.parent.srs_id))
         feature_query.geom()
         features = feature_query()
 
@@ -158,7 +156,7 @@ class MapserverStyle(Base, Style):
         req.setParameter("bbox", ','.join(map(str, extended)))
         req.setParameter("width", str(render_size[0]))
         req.setParameter("height", str(render_size[1]))
-        req.setParameter("srs", 'EPSG:%d' % self.layer.srs_id)
+        req.setParameter("srs", 'EPSG:%d' % self.parent.srs_id)
         req.setParameter("format", 'image/png')
         req.setParameter("layers", 'main')
         req.setParameter("request", "GetMap")
@@ -182,7 +180,7 @@ class MapserverStyle(Base, Style):
         # buf = codecs.open(tmpf.name, 'w', 'utf-8')
         buf = StringIO()
 
-        fieldnames = map(lambda f: f.keyname, self.layer.fields)
+        fieldnames = map(lambda f: f.keyname, self.parent.fields)
 
         E = ElementMaker()
 
@@ -246,7 +244,7 @@ class MapserverStyle(Base, Style):
                 "POINT": 'point',
                 'LINESTRING': 'line',
                 'POLYGON': 'polygon'
-            }[self.layer.geometry_type]),
+            }[self.parent.geometry_type]),
             E.template('dummy.html'),
             E.projection("+init=epsg:3857"),
             E.extent(

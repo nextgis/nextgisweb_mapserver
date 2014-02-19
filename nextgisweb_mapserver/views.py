@@ -55,7 +55,7 @@ def setup_pyramid(comp, config):
                 result['value'] = dict(xml=self.obj.xml)
             else:
                 result['value'] = dict(
-                    xml=MapserverStyle.default_style_xml(self.options['layer'])
+                    xml=MapserverStyle.default_style_xml(self.options['parent'])
                 )
 
             return result
