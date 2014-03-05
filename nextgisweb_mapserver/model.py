@@ -14,7 +14,12 @@ from PIL import Image
 import mapscript
 
 from nextgisweb.models import declarative_base
-from nextgisweb.resource import Resource, MetaDataScope
+from nextgisweb.resource import (
+    Resource,
+    MetaDataScope,
+    Serializer,
+    SerializedProperty as SP)
+from nextgisweb.resource.exception import ValidationError
 from nextgisweb.env import env
 from nextgisweb.geometry import box
 from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
@@ -25,7 +30,7 @@ from nextgisweb.style import (
     ITileRenderRequest,
 )
 
-from .mapfile import Map, mapfile
+from .mapfile import Map, mapfile, schema
 
 Base = declarative_base()
 
@@ -321,3 +326,27 @@ class MapserverStyle(Base, MetaDataScope, Resource):
             layer.addFeature(shape)
 
         return mapobj
+
+
+class _xml_attr(SP):
+
+    def setter(self, srlzr, value):
+        try:
+            layer = etree.fromstring(value)
+            relaxng = schema(Map)
+            relaxng.assertValid(layer)
+
+        except etree.XMLSyntaxError as e:
+            raise ValidationError(e.message)
+
+        except etree.DocumentInvalid as e:
+            raise ValidationError(e.message)
+
+        SP.setter(self, srlzr, value)
+
+
+class StyleSerializer(Serializer):
+    identity = MapserverStyle.identity
+    resclass = MapserverStyle
+
+    xml = _xml_attr(read='view', write='edit', scope=MetaDataScope)

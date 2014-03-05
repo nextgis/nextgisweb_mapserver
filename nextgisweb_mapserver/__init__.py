@@ -2,17 +2,17 @@
 from pkg_resources import resource_filename
 from nextgisweb.component import Component, require
 
-from .models import Base
+from .model import Base
 
 
 @Component.registry.register
-class MapserverStyleComponent(Component):
-    identity = 'mapserver_style'
+class MapserverComponent(Component):
+    identity = 'mapserver'
     metadata = Base.metadata
 
     @require('style', 'marker_library')
     def initialize(self):
-        super(MapserverStyleComponent, self).initialize()
+        super(MapserverComponent, self).initialize()
 
         # Настройки по-умолчанию для fontset
         if 'fontset' not in self.settings:
@@ -20,17 +20,20 @@ class MapserverStyleComponent(Component):
                 'nextgisweb_mapserver', 'fonts/fontset')
 
     def setup_pyramid(self, config):
-        super(MapserverStyleComponent, self).setup_pyramid(config)
-
-        from . import views
-        views.setup_pyramid(self, config)
+        super(MapserverComponent, self).setup_pyramid(config)
+        from . import view
+        view.setup_pyramid(self, config)
 
     settings_info = (
         dict(key='fontset', desc=u"Список шрифтов в формате MAPFILE FONTSET"),
     )
 
 
+def pkginfo():
+    return dict(components=dict(mapserver_style="nextgisweb_mapserver"))
+
+
 def amd_packages():
     return ((
-        'mapserver_style', 'nextgisweb_mapserver:amd_packages/mapserver_style'
+        'ngw-mapserver', 'nextgisweb_mapserver:amd/ngw-mapserver'
     ),)

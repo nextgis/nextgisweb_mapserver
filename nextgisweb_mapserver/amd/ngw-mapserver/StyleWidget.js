@@ -1,20 +1,22 @@
-/*global define, console, ngwConfig*/
+/* globals define, console */
 define([
     "dojo/_base/declare",
     "dojo/aspect",
     "dojo/json",
     "dojo/request/xhr",
-    "ngw/modelWidget/Widget",
-    "ngw/modelWidget/ErrorDisplayMixin",
+    "dijit/layout/ContentPane",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
-    "dojo/text!./templates/Widget.html",
+    "ngw/route",
+    "ngw-resource/serialize",
+    "dojo/text!./template/StyleWidget.html",
     // template
     "dijit/Dialog",
     "dijit/layout/BorderContainer",
     "dijit/form/Textarea",
     "ngw/form/CodeMirror",
     "ngw/form/Uploader",
+    "dijit/Toolbar",
     "dijit/form/Button",
     "dojox/layout/TableContainer",
     "dijit/layout/TabContainer",
@@ -26,40 +28,33 @@ define([
     aspect,
     json,
     xhr,
-    Widget,
-    ErrorDisplayMixin,
+    ContentPane,
     _TemplatedMixin,
     _WidgetsInTemplateMixin,
+    route,
+    serialize,
     template
 ) {
-    return declare([Widget, ErrorDisplayMixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare([ContentPane, serialize.Mixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: template,
         identity: "mapserver_style",
-        title: "Стиль MapServer",
+        title: "MapServer",
 
         postCreate: function () {
             this.inherited(arguments);
 
             var widget = this;
-            aspect.after(this.qmlUploader, 'uploadComplete', function (file) {
+            aspect.after(this.qmlUploader, "uploadComplete", function (file) {
                 widget.qmlUploadComplete(file);
             }, true);
 
-            aspect.after(this.qmlUploader, 'uploadBegin', function () {
+            aspect.after(this.qmlUploader, "uploadBegin", function () {
                 widget.qmlUploadBegin();
             }, true);
 
-        },
-
-        _getValueAttr: function () {
-            return {
-                xml: this.xml.get("value")
-            };
-        },
-
-        _setValueAttr: function (value) {
-            this.inherited(arguments);
-            this.xml.set("value", value.xml);
+            if (this.composite.operation === "create" && this.composite.config["ngw-mapserver/StyleWidget"].defaultValue) {
+                this.xml.set("value", this.composite.config["ngw-mapserver/StyleWidget"].defaultValue);
+            }
         },
 
         qmlShowDialog: function () {
@@ -67,28 +62,21 @@ define([
         },
 
         qmlUploadBegin: function () {
-            this.qmlPreview.set('value', '');
+            this.qmlPreview.set("value", "");
         },
 
         qmlUploadComplete: function (file) {
             var widget = this;
-            xhr.post(ngwConfig.applicationUrl + '/mapserver_style/qml', {
+            xhr.post(route("mapserver.qml_transform"), {
                 data: json.stringify({file: file})
             }).then(
-                function (data) {
-                    widget.qmlPreview.set("value", data);
-                },
-                function () {
-                    widget.qmlPreview.set(
-                        "value",
-                        '<!-- В ходе конвертации файла возникла ошибка -->'
-                    );
-                }
+                function (data) { widget.qmlPreview.set("value", data); },
+                function () { widget.qmlPreview.set("value", "<!-- В ходе преобразования файла возникла неизвестная ошибка -->"); }
             ).then(undefined, function (err) { console.error(err); });
         },
 
         qmlAccept: function () {
-            this.xml.set('value', this.qmlPreview.get('value'));
+            this.xml.set("value", this.qmlPreview.get("value"));
             this.qmlDialog.hide();
         }
     });

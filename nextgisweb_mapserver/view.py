@@ -2,6 +2,7 @@
 from lxml import etree
 from pyramid.response import Response
 
+from nextgisweb.resource import Widget
 from nextgisweb.env import env
 from nextgisweb.object_widget import ObjectWidget
 
@@ -9,7 +10,23 @@ from .mapfile import schema
 from .extmapfile import Map
 from .qml import transform
 
-from .models import MapserverStyle
+from .model import MapserverStyle
+
+
+class StyleWidget(Widget):
+    resource = MapserverStyle
+    operation = ('create', 'update')
+    amdmod = 'ngw-mapserver/StyleWidget'
+
+    def config(self):
+        res = super(StyleWidget, self).config()
+
+        # TODO: Security
+        if self.operation == 'create':
+            res['defaultValue'] = MapserverStyle.default_style_xml(
+                self.obj.parent)
+
+        return res
 
 
 def setup_pyramid(comp, config):
@@ -78,5 +95,5 @@ def setup_pyramid(comp, config):
             content_type="text/xml"
         )
 
-    config.add_route('mapserver_style.qml_transform', '/mapserver_style/qml') \
+    config.add_route('mapserver.qml_transform', '/mapserver/qml-transform', client=()) \
         .add_view(qml, request_method='POST')

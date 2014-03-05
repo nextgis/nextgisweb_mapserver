@@ -10,8 +10,14 @@ requires = (
 )
 
 entry_points = {
-    'nextgisweb.component': ['nextgisweb_mapserver = nextgisweb_mapserver', ],
-    'nextgisweb.amd_packages': [ 'nextgisweb_mapserver = nextgisweb_mapserver:amd_packages', ],
+    'nextgisweb.packages': [
+        'nextgisweb_mapserver = nextgisweb_mapserver:pkginfo',
+    ],
+
+    'nextgisweb.amd_packages': [
+        'nextgisweb_mapserver = nextgisweb_mapserver:amd_packages',
+    ],
+
 }
 
 setup(
