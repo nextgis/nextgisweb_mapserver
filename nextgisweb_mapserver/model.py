@@ -69,17 +69,11 @@ class RenderRequest(object):
         )
 
 
-@Resource.registry.register
 class MapserverStyle(Base, MetaDataScope, Resource):
     identity = 'mapserver_style'
     cls_display_name = u"Стиль MapServer"
 
     implements(IRenderableStyle)
-
-    __tablename__ = identity
-    __mapper_args__ = dict(polymorphic_identity=identity)
-
-    resource_id = sa.Column(sa.ForeignKey(Resource.id), primary_key=True)
 
     xml = sa.Column(sa.Unicode, nullable=False)
 
