@@ -84,6 +84,10 @@ class MapserverStyle(Base, Resource):
     def check_parent(self, parent):
         return IFeatureLayer.providedBy(parent)
 
+    @property
+    def srs(self):
+        return self.parent.srs
+
     def render_request(self, srs):
         return RenderRequest(self, srs)
 
@@ -228,7 +232,7 @@ class MapserverStyle(Base, Resource):
             ),
             E.extent(minx='-180', miny='-90', maxx='180', maxy='90'),
             E.projection("+init=epsg:4326"),
-            E.fontset(env.mapserver_style.settings['fontset']),
+            E.fontset(env.mapserver.settings['fontset']),
             E.symbolset(resource_filename(
                 'nextgisweb_mapserver', 'symbolset'
             ))
