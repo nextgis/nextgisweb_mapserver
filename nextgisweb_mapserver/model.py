@@ -16,7 +16,8 @@ import mapscript
 from nextgisweb.models import declarative_base
 from nextgisweb.resource import (
     Resource,
-    MetaDataScope,
+    ResourceScope,
+    DataScope,
     Serializer,
     SerializedProperty as SP)
 from nextgisweb.resource.exception import ValidationError
@@ -69,9 +70,11 @@ class RenderRequest(object):
         )
 
 
-class MapserverStyle(Base, MetaDataScope, Resource):
+class MapserverStyle(Base, Resource):
     identity = 'mapserver_style'
     cls_display_name = u"Стиль MapServer"
+
+    __scope__ = DataScope
 
     implements(IRenderableStyle)
 
@@ -338,9 +341,12 @@ class _xml_attr(SP):
 
         SP.setter(self, srlzr, value)
 
+PR_READ = ResourceScope.read
+PR_UPDATE = ResourceScope.update
+
 
 class StyleSerializer(Serializer):
     identity = MapserverStyle.identity
     resclass = MapserverStyle
 
-    xml = _xml_attr(read='view', write='edit', scope=MetaDataScope)
+    xml = _xml_attr(read=PR_READ, write=PR_UPDATE)
