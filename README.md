@@ -47,3 +47,9 @@
 Устанавливаем пакет в режиме разработки:
 
     $ env/bin/pip install -e ./nextgisweb_mapserver
+    
+Еще раз выполните команду:
+
+    $ env/bin/pip freeze
+
+чтобы убедиться, что ошибок нет.
