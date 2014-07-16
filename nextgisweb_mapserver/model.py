@@ -169,7 +169,7 @@ class MapserverStyle(Base, Resource):
 
         # Получаем картинку эмулируя WMS запрос
         req = mapscript.OWSRequest()
-        req.setParameter("bbox", ','.join(map(str, extended)))
+        req.setParameter("bbox", ','.join(map(str, extended if padding else extent)))
         req.setParameter("width", str(render_size[0]))
         req.setParameter("height", str(render_size[1]))
         req.setParameter("srs", 'EPSG:%d' % self.parent.srs_id)
