@@ -123,6 +123,24 @@ class Pattern(BlockDirective):
 
 
 @register
+class Expression(PrimitiveKeyword):
+    name = 'EXPRESSION'
+
+    def from_xml(self, e):
+        self.value = e.text
+
+    def to_mapfile(self, buf):
+        buf.write('EXPRESSION %s\n' % self.value)
+
+    @classmethod
+    def element_schema(cls):
+        return RNG.element(
+            RNG.text(),
+            name=cls.name.lower()
+        )
+
+
+@register
 class Style(CompositeDirective):
     class Angle(SimpleKeyword):
 
@@ -250,7 +268,7 @@ class Label(CompositeDirective):
         String.subclass('ENCODING'),
 
         # EXPRESSION [string]
-        String.subclass('EXPRESSION'),
+        Expression.subclass('EXPRESSION'),
 
         # FONT [name|attribute]
         String.subclass('FONT'),
@@ -333,7 +351,7 @@ class Class(CompositeDirective):
         Debug.subclass('DEBUG'),
 
         # EXPRESSION [string]
-        String.subclass('EXPRESSION'),
+        Expression.subclass('EXPRESSION'),
 
         # GROUP [string]
         String.subclass('GROUP'),
