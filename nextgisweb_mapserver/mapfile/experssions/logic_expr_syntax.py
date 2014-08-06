@@ -54,6 +54,7 @@ def p_number(p):
 
 def p_concatenation(p):
     """concatenation : subexpression LOGIC_OPERATOR subexpression
+                    | LBRAC subexpression RBRAC LOGIC_OPERATOR LBRAC subexpression RBRAC
     """
     pass
 
@@ -70,7 +71,8 @@ parser = yacc.yacc()
 
 if __name__ == "__main__":
     examples = [
-        u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')",
+        u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')", # Составной оператор без скобочек
+        u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
         u"('[LANGUAGE]' lt '')",
         u"( 3 < 4)",
         u"([attr] gt 30)",
@@ -91,6 +93,7 @@ if __name__ == "__main__":
         u"([POPULATION])",      # Отсутствует выражение
         u"([LANGUAGE] lt '')",  # Строки-операнды должны быть в кавычках: '[LANGUAGE]'
         u'("[L4]" ~ [L2])',     # ~ это строковый оператор, операнды должны быть в кавычках
+        u'( ("[LANG4]" ~ "FRENCH2") AND [attr] gt 30) )',  # Несбалансированные скобки
     ]
     for s in errors:
         print'PARSING:', s

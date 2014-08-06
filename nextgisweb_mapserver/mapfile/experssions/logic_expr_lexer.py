@@ -29,13 +29,13 @@ t_NUMBER = ur'[0-9]+'
 t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9]*\]'
 # t_UNARY_OPERATOR = ur'length'
 t_LOGIC_OPERATOR = ur'(and)|(or)|(&&)|(\|)'
-t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)|(=\*)'
+t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=\*)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
 t_STRING_OPERATOR = ur'(~\*)|(~)'
 t_QUOTE = ur"'"
 t_DOUBLEQUOTE = ur'"'
 t_LBRAC = ur'\('
 t_RBRAC = ur'\)'
-t_STRING = ur"""('[\w"<>!@$%^&\*-:;,.\?]*')|("[\w'<>!@$%^&\*-:;,.\?].*")"""
+t_STRING = ur"""('[\w"<>!@$%^&\*-:;,.\?=\(\)]*')|("[\w'<>!@$%^&\*-:;,.\?=\(\)].*")"""
 
 
 # Символы, которые будут игнорироваться
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         for i in range(len(token_list)):
             token = token_list[i]
             expected = expected_token_list[i]
-            # print 'recived', token
+            # print 'recived ', token
             # print 'expected', expected
             assert (token.type == expected.type)
             assert (token.value == expected.value)
@@ -152,6 +152,17 @@ if __name__ == "__main__":
                 ('STRING', u'"FR \'w\'2"', 17),
                 ('RBRAC', u')', 26)
             ],
+        # Строковый оператор
+        u"('[attr]' =* 'aa=(a)')":
+            [
+                ('LBRAC', u'(', 0),
+                ('QUOTE', u"'", 1),
+                ('IDENTIFIER', u'[attr]', 2),
+                ('QUOTE', u"'", 8),
+                ('OPERATOR', u'=*', 10),
+                ('STRING', u"'aa=(a)'", 13),
+                ('RBRAC', u')', 21)
+            ]
     }
 
     # Give the lexer some input
