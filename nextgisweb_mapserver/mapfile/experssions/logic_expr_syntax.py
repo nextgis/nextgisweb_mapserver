@@ -24,12 +24,11 @@ def p_subexpression(p):
     p[0] = p[1]
 
 
-
-
 def p_string_expression(p):
     """string_expression : string OPERATOR string
     """
     pass
+
 
 def p_string(p):
     """string : STRING
@@ -43,17 +42,18 @@ def p_binary_expression(p):
     """
     pass
 
+
 def p_number(p):
     """number : NUMBER
               | IDENTIFIER
     """
     pass
 
+
 def p_concatenation(p):
     """concatenation : subexpression LOGIC_OPERATOR subexpression
     """
     pass
-
 
 
 # Обработка ошибок
@@ -70,7 +70,9 @@ if __name__ == "__main__":
     examples = [
         u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')",
         u"('[LANGUAGE]' lt '')",
-        u"( 3 < 4)"
+        u"( 3 < 4)",
+        u"([attr] gt 30)",
+        u"('[LANGUAGE]' eq 'FRENCH2')"
     ]
     for s in examples:
         print 'PARSING:', s

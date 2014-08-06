@@ -24,14 +24,14 @@ tokens = (
 )
 
 t_NUMBER = ur'[0-9]+'
-t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-8]*\]'
+t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9]*\]'
 # t_UNARY_OPERATOR = ur'length'
 t_LOGIC_OPERATOR = ur'(and)|(or)'
 t_OPERATOR = ur'(>=)|(<=)|(<)|(>)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
 t_QUOTE = ur"'"
 t_LBRAC = ur'\('
 t_RBRAC = ur'\)'
-t_STRING = ur"'[A-Za-z_,./!@#$%^&*()]*'"
+t_STRING = ur"'[A-Za-z_,./!@#$%^&*()0-9]*'"
 
 
 # Символы, которые будут игнорироваться
@@ -63,6 +63,7 @@ if __name__ == "__main__":
         token.type = t[0]
         token.value = t[1]
         token.lexpos = t[2]
+        token.lineno = 1
 
         return token
 
@@ -86,6 +87,8 @@ if __name__ == "__main__":
         for i in range(len(token_list)):
             token = token_list[i]
             expected = expected_token_list[i]
+            # print 'recived', token
+            # print 'expected', expected
             assert (token.type == expected.type)
             assert (token.value == expected.value)
             assert (token.lexpos == expected.lexpos)
@@ -96,7 +99,7 @@ if __name__ == "__main__":
 
     # data = {'входная строк    а': список ожидаемых токенов}
     data = {
-        u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')":
+        u"([POPULATION] > 50000 AND '[LANGUAGE9]' eq 'FRENCH')":
             [
                 ('LBRAC', u'(', 0),
                 ('IDENTIFIER', u'[POPULATION]', 1),
@@ -104,11 +107,11 @@ if __name__ == "__main__":
                 ('NUMBER', u'50000', 16),
                 ('LOGIC_OPERATOR', u'AND', 22),
                 ('QUOTE', u"'", 26),
-                ('IDENTIFIER', u'[LANGUAGE]', 27),
-                ('QUOTE', u"'", 37),
-                ('OPERATOR', u'eq', 39),
-                ('STRING', u"'FRENCH'", 42),
-                ('RBRAC', u')', 50)
+                ('IDENTIFIER', u'[LANGUAGE9]', 27),
+                ('QUOTE', u"'", 38),
+                ('OPERATOR', u'eq', 40),
+                ('STRING', u"'FRENCH'", 43),
+                ('RBRAC', u')', 51)
             ],
         u"([SIZE] < 8)":
             [
@@ -117,6 +120,16 @@ if __name__ == "__main__":
                 ('OPERATOR', u'<', 8),
                 ('NUMBER', u'8', 10),
                 ('RBRAC', u')', 11)
+            ],
+        u"('[LANGUAGE]' eq 'FRENCH2')":
+            [
+                ('LBRAC', u'(', 0),
+                ('QUOTE', u"'", 1),
+                ('IDENTIFIER', u'[LANGUAGE]', 2),
+                ('QUOTE', u"'", 12),
+                ('OPERATOR', u'eq', 14),
+                ('STRING', u"'FRENCH2'", 17),
+                ('RBRAC', u')', 26)
             ]
     }
 
