@@ -18,6 +18,7 @@ tokens = (
     'LOGIC_OPERATOR',
     'OPERATOR',
     'QUOTE',
+    'DOUBLEQUOTE',
     'LBRAC',
     'RBRAC',
     'STRING'
@@ -26,12 +27,13 @@ tokens = (
 t_NUMBER = ur'[0-9]+'
 t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9]*\]'
 # t_UNARY_OPERATOR = ur'length'
-t_LOGIC_OPERATOR = ur'(and)|(or)'
+t_LOGIC_OPERATOR = ur'(and)|(or)|(&&)|(\|)'
 t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
 t_QUOTE = ur"'"
+t_DOUBLEQUOTE = ur'"'
 t_LBRAC = ur'\('
 t_RBRAC = ur'\)'
-t_STRING = ur"'\w*'"
+t_STRING = ur"""('[\w"]*')|("[\w'].*")"""
 
 
 # Символы, которые будут игнорироваться
@@ -100,6 +102,7 @@ if __name__ == "__main__":
 
     # data = {'входная строк    а': список ожидаемых токенов}
     data = {
+        # Много разных токенов в одной строке
         u"([POPULATION] > 50000 AND '[LANGUAGE9]' eq 'FRENCH')":
             [
                 ('LBRAC', u'(', 0),
@@ -114,14 +117,7 @@ if __name__ == "__main__":
                 ('STRING', u"'FRENCH'", 43),
                 ('RBRAC', u')', 51)
             ],
-        u"([SIZE] < 8)":
-            [
-                ('LBRAC', u'(', 0),
-                ('IDENTIFIER', u'[SIZE]', 1),
-                ('OPERATOR', u'<', 8),
-                ('NUMBER', u'8', 10),
-                ('RBRAC', u')', 11)
-            ],
+        # Кавычки
         u"('[LANGUAGE]' eq 'FRENCH2')":
             [
                 ('LBRAC', u'(', 0),
@@ -131,7 +127,29 @@ if __name__ == "__main__":
                 ('OPERATOR', u'eq', 14),
                 ('STRING', u"'FRENCH2'", 17),
                 ('RBRAC', u')', 26)
-            ]
+            ],
+        # Двойные кавычки
+        u'("[LANGUAGE]" eq "FRENCH2")':
+            [
+                ('LBRAC', u'(', 0),
+                ('DOUBLEQUOTE', u'"', 1),
+                ('IDENTIFIER', u'[LANGUAGE]', 2),
+                ('DOUBLEQUOTE', u'"', 12),
+                ('OPERATOR', u'eq', 14),
+                ('STRING', u'"FRENCH2"', 17),
+                ('RBRAC', u')', 26)
+            ],
+        # Кавычки внутри строки
+        u'''("[LANGUAGE]" eq "FR 'w'2")''':
+            [
+                ('LBRAC', u'(', 0),
+                ('DOUBLEQUOTE', u'"', 1),
+                ('IDENTIFIER', u'[LANGUAGE]', 2),
+                ('DOUBLEQUOTE', u'"', 12),
+                ('OPERATOR', u'eq', 14),
+                ('STRING', u'"FR \'w\'2"', 17),
+                ('RBRAC', u')', 26)
+            ],
     }
 
     # Give the lexer some input

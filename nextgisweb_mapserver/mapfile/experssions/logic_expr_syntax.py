@@ -13,7 +13,7 @@ class TokenNotRecognizedError(Exception):
 
 def p_expression(p):
     """expression : LBRAC subexpression RBRAC"""
-    p[0] = p[2]
+    pass
 
 
 def p_subexpression(p):
@@ -21,7 +21,7 @@ def p_subexpression(p):
              | binary_expression
              | concatenation
     """
-    p[0] = p[1]
+    pass
 
 
 def p_string_expression(p):
@@ -33,6 +33,7 @@ def p_string_expression(p):
 def p_string(p):
     """string : STRING
               | QUOTE IDENTIFIER QUOTE
+              | DOUBLEQUOTE IDENTIFIER DOUBLEQUOTE
     """
     pass
 
@@ -72,7 +73,9 @@ if __name__ == "__main__":
         u"('[LANGUAGE]' lt '')",
         u"( 3 < 4)",
         u"([attr] gt 30)",
-        u"('[LANGUAGE]' eq 'FRENCH2')"
+        u"('[LANGUAGE]' eq 'FRENCH2')",
+        u'("[LANGUAGE]" eq "FRENCH2")',
+        u'''("[LANGUAGE]" eq "FR 'w'2")'''
     ]
     for s in examples:
         print 'PARSING:', s
