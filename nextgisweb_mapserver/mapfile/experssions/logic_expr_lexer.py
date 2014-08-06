@@ -17,6 +17,7 @@ tokens = (
     #'UNARY_OPERATOR',
     'LOGIC_OPERATOR',
     'OPERATOR',
+    'STRING_OPERATOR',
     'QUOTE',
     'DOUBLEQUOTE',
     'LBRAC',
@@ -28,7 +29,8 @@ t_NUMBER = ur'[0-9]+'
 t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9]*\]'
 # t_UNARY_OPERATOR = ur'length'
 t_LOGIC_OPERATOR = ur'(and)|(or)|(&&)|(\|)'
-t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
+t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)|(=\*)'
+t_STRING_OPERATOR = ur'(~\*)|(~)'
 t_QUOTE = ur"'"
 t_DOUBLEQUOTE = ur'"'
 t_LBRAC = ur'\('

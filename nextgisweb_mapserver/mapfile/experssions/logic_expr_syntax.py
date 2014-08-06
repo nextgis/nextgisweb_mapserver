@@ -26,6 +26,7 @@ def p_subexpression(p):
 
 def p_string_expression(p):
     """string_expression : string OPERATOR string
+                         | string STRING_OPERATOR string
     """
     pass
 
@@ -75,7 +76,8 @@ if __name__ == "__main__":
         u"([attr] gt 30)",
         u"('[LANGUAGE]' eq 'FRENCH2')",
         u'("[LANGUAGE]" eq "FRENCH2")',
-        u'''("[LANGUAGE]" eq "FR 'w'2")'''
+        u'''("[LANGUAGE]" eq "FR 'w'2")''',
+        u'("[LANG4]" ~ "FRENCH2")',
     ]
     for s in examples:
         print 'PARSING:', s
@@ -86,7 +88,8 @@ if __name__ == "__main__":
         u"(aslgjkl)",           # Абракадабра какая-то
         u"3 < 5",               # Нет скобок
         u"([POPULATION])",      # Отсутствует выражение
-        u"([LANGUAGE] lt '')"   # Строки-операнды должны быть в кавычках: '[LANGUAGE]'
+        u"([LANGUAGE] lt '')",  # Строки-операнды должны быть в кавычках: '[LANGUAGE]'
+        u'("[L4]" ~ [L2])',     # ~ это строковый оператор, операнды должны быть в кавычках
     ]
     for s in errors:
         print'PARSING:', s
