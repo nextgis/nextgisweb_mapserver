@@ -78,6 +78,7 @@ if __name__ == "__main__":
         u'("[LANGUAGE]" eq "FRENCH2")',
         u'''("[LANGUAGE]" eq "FR 'w'2")''',
         u'("[LANG4]" ~ "FRENCH2")',
+        u'("[LANG4]" ~ "<dsf\'!@$%^&*<>-:;,.?ыфва")',   # Много всяких символов внутри строки
     ]
     for s in examples:
         print 'PARSING:', s
