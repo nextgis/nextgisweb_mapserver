@@ -16,8 +16,7 @@ tokens = (
     'IDENTIFIER',
     #'UNARY_OPERATOR',
     'LOGIC_OPERATOR',
-    'NUMERIC_OPERATOR',
-    'STRING_OPERATOR',
+    'OPERATOR',
     'QUOTE',
     'LBRAC',
     'RBRAC',
@@ -28,8 +27,7 @@ t_NUMBER = ur'[0-9]+'
 t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-8]*\]'
 # t_UNARY_OPERATOR = ur'length'
 t_LOGIC_OPERATOR = ur'(and)|(or)'
-t_NUMERIC_OPERATOR = ur'(>=)|(<=)|(<)|(>)|(=)'
-t_STRING_OPERATOR = ur'(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
+t_OPERATOR = ur'(>=)|(<=)|(<)|(>)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
 t_QUOTE = ur"'"
 t_LBRAC = ur'\('
 t_RBRAC = ur'\)'
@@ -102,13 +100,13 @@ if __name__ == "__main__":
             [
                 ('LBRAC', u'(', 0),
                 ('IDENTIFIER', u'[POPULATION]', 1),
-                ('NUMERIC_OPERATOR', u'>', 14),
+                ('OPERATOR', u'>', 14),
                 ('NUMBER', u'50000', 16),
                 ('LOGIC_OPERATOR', u'AND', 22),
                 ('QUOTE', u"'", 26),
                 ('IDENTIFIER', u'[LANGUAGE]', 27),
                 ('QUOTE', u"'", 37),
-                ('STRING_OPERATOR', u'eq', 39),
+                ('OPERATOR', u'eq', 39),
                 ('STRING', u"'FRENCH'", 42),
                 ('RBRAC', u')', 50)
             ],
@@ -116,7 +114,7 @@ if __name__ == "__main__":
             [
                 ('LBRAC', u'(', 0),
                 ('IDENTIFIER', u'[SIZE]', 1),
-                ('NUMERIC_OPERATOR', u'<', 8),
+                ('OPERATOR', u'<', 8),
                 ('NUMBER', u'8', 10),
                 ('RBRAC', u')', 11)
             ]

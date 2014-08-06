@@ -27,7 +27,7 @@ def p_subexpression(p):
 
 
 def p_string_expression(p):
-    """string_expression : string STRING_OPERATOR string
+    """string_expression : string OPERATOR string
     """
     pass
 
@@ -39,7 +39,7 @@ def p_string(p):
 
 
 def p_binary_expression(p):
-    """binary_expression : number NUMERIC_OPERATOR number
+    """binary_expression : number OPERATOR number
     """
     pass
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         print 'Ok'
 
     errors = [
-        u"(aslgjkl)",             # Абракадабра какая-то
+        u"(aslgjkl)",           # Абракадабра какая-то
         u"3 < 5",               # Нет скобок
         u"([POPULATION])",      # Отсутствует выражение
         u"([LANGUAGE] lt '')"   # Строки-операнды должны быть в кавычках: '[LANGUAGE]'
