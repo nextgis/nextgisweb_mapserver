@@ -61,7 +61,6 @@ def p_concatenation(p):
 
 # Обработка ошибок
 def p_error(p):
-    print 'Error. Token:', p
     raise TokenNotRecognizedError("Syntax error")
 
 

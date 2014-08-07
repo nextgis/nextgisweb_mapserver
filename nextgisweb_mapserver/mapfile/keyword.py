@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import re
+import experssions as exp
+
 from .util import RNG
 from .grammar import (
     SimpleKeyword,
@@ -138,6 +141,14 @@ class Expression(PrimitiveKeyword):
             RNG.text(),
             name=cls.name.lower()
         )
+
+    @staticmethod
+    def assert_valid(e):
+        text = e.text
+        if re.match(exp.t_STRING, text) is not None:
+            return
+        else:
+            exp.parser.parse(text)
 
 
 @register

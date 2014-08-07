@@ -31,7 +31,7 @@ from nextgisweb.style import (
     ITileRenderRequest,
 )
 
-from .mapfile import Map, mapfile, schema
+from .mapfile import Map, mapfile, schema, registry
 
 Base = declarative_base()
 
@@ -352,6 +352,16 @@ class _xml_attr(SP):
 
         except etree.DocumentInvalid as e:
             raise ValidationError(e.message)
+
+        for cls in registry:
+            if hasattr(cls, 'assert_valid'):
+                tag = cls.name.lower()
+                for el in layer.xpath('//%s' % tag):
+                    try:
+                        cls.assert_valid(el)
+                    except Exception as e:
+                        raise ValidationError("{0} within <{1}> tag".\
+                            format(e.message, tag))
 
         SP.setter(self, srlzr, value)
 

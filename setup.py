@@ -7,6 +7,7 @@ requires = (
     'nextgisweb',
     'mapscript',
     'geojson',
+    'ply',
 )
 
 entry_points = {

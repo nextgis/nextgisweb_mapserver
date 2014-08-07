@@ -45,7 +45,6 @@ t_ignore = u' \t'
 # Правило для обработки ошибок
 def t_error(t):
     # err_char = t.value[0].decode('utf-8', 'replace')
-    print t
     msg = u"Illegal character"
     raise CharNotRecognizedError(msg)
 
