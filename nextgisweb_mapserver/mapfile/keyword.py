@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 import expressions as exp
 
 from .util import RNG
