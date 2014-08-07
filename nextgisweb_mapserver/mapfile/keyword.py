@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-import experssions as exp
+import expressions as exp
 
 from .util import RNG
 from .grammar import (
