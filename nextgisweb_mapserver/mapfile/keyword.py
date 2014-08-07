@@ -145,10 +145,7 @@ class Expression(PrimitiveKeyword):
     @staticmethod
     def assert_valid(e):
         text = e.text
-        if re.match(exp.t_STRING, text) is not None:
-            return
-        else:
-            exp.parser.parse(text)
+        exp.parser.parse(text)
 
 
 @register

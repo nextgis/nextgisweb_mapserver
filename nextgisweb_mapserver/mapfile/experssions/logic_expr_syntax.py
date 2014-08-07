@@ -12,7 +12,9 @@ class TokenNotRecognizedError(Exception):
     pass
 
 def p_expression(p):
-    """expression : LBRAC subexpression RBRAC"""
+    """expression : LBRAC subexpression RBRAC
+                   | string
+    """
     pass
 
 
@@ -70,6 +72,7 @@ parser = yacc.yacc()
 
 if __name__ == "__main__":
     examples = [
+        u'"просто строка -- это тоже валидное выражение"',
         u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')", # Составной оператор без скобочек
         u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
         u"('[LANGUAGE]' lt '')",
@@ -80,6 +83,7 @@ if __name__ == "__main__":
         u'''("[LANGUAGE]" eq "FR 'w'2")''',
         u'("[LANG4]" ~ "FRENCH2")',
         u'("[LANG4]" ~ "<dsf\'!@$%^&*<>-:;,.?ыфва")',   # Много всяких символов внутри строки
+
     ]
     for s in examples:
         print 'PARSING:', s
@@ -88,6 +92,7 @@ if __name__ == "__main__":
 
     errors = [
         u"(aslgjkl)",           # Абракадабра какая-то
+        u'"просто строка, но несбалансированные кавычки',
         u"3 < 5",               # Нет скобок
         u"([POPULATION])",      # Отсутствует выражение
         u"([LANGUAGE] lt '')",  # Строки-операнды должны быть в кавычках: '[LANGUAGE]'
