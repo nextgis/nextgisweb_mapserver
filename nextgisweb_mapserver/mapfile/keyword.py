@@ -464,6 +464,30 @@ class Feature(CompositeDirective):
 
 
 @register
+class Cluster(CompositeDirective):
+    name = 'CLUSTER'
+    members = (
+        # MAXDISTANCE [double]
+        Float.subclass('MAXDISTANCE'),
+
+        # REGION [string]
+        Enum.subclass(
+            'REGION',
+            choices=('"rectangle"', '"ellipse"')
+        ),
+
+        # BUFFER [double]
+        Float.subclass('BUFFER'),
+
+        # GROUP [string]
+        String.subclass('GROUP'),
+
+        # FILTER [string]
+        String.subclass('FILTER')
+    )
+
+
+@register
 class Layer(CompositeDirective):
     name = 'LAYER'
     members = (
@@ -477,6 +501,7 @@ class Layer(CompositeDirective):
         String.subclass('CLASSITEM'),
 
         # CLUSTER
+        Cluster.subclass('CLUSTER'),
 
         # CONNECTION [string]
         String.subclass('CONNECTION'),
