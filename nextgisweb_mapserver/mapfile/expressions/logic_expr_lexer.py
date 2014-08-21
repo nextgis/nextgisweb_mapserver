@@ -26,7 +26,7 @@ tokens = (
 )
 
 t_NUMBER = ur'[0-9]+'
-t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9]*\]'
+t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9_:-]*\]'
 # t_UNARY_OPERATOR = ur'length'
 t_LOGIC_OPERATOR = ur'(and)|(or)|(&&)|(\|)'
 t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=\*)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
