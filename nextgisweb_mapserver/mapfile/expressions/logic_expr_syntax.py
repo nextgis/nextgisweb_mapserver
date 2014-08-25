@@ -29,8 +29,6 @@ def p_subexpression(p):
 def p_string_expression(p):
     """string_expression : string OPERATOR string
                          | string STRING_OPERATOR string
-                         | string OPERATOR NULL
-                         | string STRING_OPERATOR NULL
     """
     pass
 
@@ -45,7 +43,6 @@ def p_string(p):
 
 def p_binary_expression(p):
     """binary_expression : number OPERATOR number
-                         | number OPERATOR NULL
     """
     pass
 
@@ -79,10 +76,6 @@ if __name__ == "__main__":
         u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')", # Составной оператор без скобочек
         u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
         u"('[LANGUAGE]' lt '')",
-        u"('[LANGUAGE]' = NULL)",
-        u"([LANGUAGE] = NULL)",
-        u"(3 > NULL)",
-        u'("qwert fsd" = NULL)',
         u"( 3 < 4)",
         u"([attr] gt 30)",
         u"('[LANGUAGE]' eq 'FRENCH2')",
@@ -105,7 +98,6 @@ if __name__ == "__main__":
         u"([LANGUAGE] lt '')",  # Строки-операнды должны быть в кавычках: '[LANGUAGE]'
         u'("[L4]" ~ [L2])',     # ~ это строковый оператор, операнды должны быть в кавычках
         u'( ("[LANG4]" ~ "FRENCH2") AND [attr] gt 30) )',  # Несбалансированные скобки
-        u'(NULL = "[LANG]")'
     ]
     for s in errors:
         print'PARSING:', s

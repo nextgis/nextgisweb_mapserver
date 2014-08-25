@@ -22,8 +22,7 @@ tokens = (
     'DOUBLEQUOTE',
     'LBRAC',
     'RBRAC',
-    'STRING',
-    'NULL'
+    'STRING'
 )
 
 t_NUMBER = ur'[0-9]+'
@@ -36,7 +35,6 @@ t_QUOTE = ur"'"
 t_DOUBLEQUOTE = ur'"'
 t_LBRAC = ur'\('
 t_RBRAC = ur'\)'
-t_NULL = ur'NULL'
 t_STRING = ur"""('[\w"<>!@$%^&\*-:;,.\?=\(\)]*')|("[\w'<>!@$%^&\*-:;,.\?=\(\)].*")"""
 
 
@@ -163,15 +161,6 @@ if __name__ == "__main__":
                 ('OPERATOR', u'=*', 10),
                 ('STRING', u"'aa=(a)'", 13),
                 ('RBRAC', u')', 21)
-            ],
-        # NULL
-        u"([attr] = NULL)":
-            [
-                ('LBRAC', u'(', 0),
-                ('IDENTIFIER', u'[attr]', 1),
-                ('OPERATOR', u'=', 8),
-                ('NULL', 'NULL', 10),
-                ('RBRAC', u')', 14)
             ]
     }
 
