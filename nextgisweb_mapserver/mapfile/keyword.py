@@ -77,6 +77,15 @@ class Color(PrimitiveKeyword):
         )
     )
 
+@register
+class Point(PrimitiveKeyword):
+    primitive = p.Composite.subclass(
+        items=(
+            ('x', p.Double),
+            ('y', p.Double)
+        )
+    )
+
 
 Debug = register(Enum.subclass(
     'Debug', choices='off|on|0|1|2|3|4|5'.split('|')
@@ -749,6 +758,7 @@ class Symbol(CompositeDirective):
     name = 'SYMBOL'
     members = (
         # ANCHORPOINT [x] [y]
+        Point.subclass('ANCHORPOINT'),
 
         # ANTIALIAS [true|false]
         Boolean.subclass('ANTIALIAS'),
