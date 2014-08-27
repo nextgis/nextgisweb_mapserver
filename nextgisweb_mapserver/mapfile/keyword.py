@@ -226,6 +226,7 @@ class Style(CompositeDirective):
         Float.subclass('MINWIDTH'),
 
         # OFFSET [x] [y]
+        Point.subclass('OFFSET'),
 
         # OPACITY [integer|attribute]
         Integer.subclass('OPACITY'),
@@ -317,6 +318,7 @@ class Label(CompositeDirective):
         Float.subclass('MINSIZE'),
 
         # OFFSET [x] [y]
+        Point.subclass('OFFSET'),
 
         # OUTLINECOLOR [r] [g] [b] | [attribute]
         Color.subclass('OUTLINECOLOR'),
