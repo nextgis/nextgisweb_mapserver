@@ -127,8 +127,6 @@ class MapserverStyle(Base, Resource):
         res_x = (extent[2] - extent[0]) / size[0]
         res_y = (extent[3] - extent[1]) / size[1]
 
-        srs = self.parent.srs
-
         # Экстент с учетом отступов
         extended = (
             max(srs.minx, extent[0] - res_x * padding),
