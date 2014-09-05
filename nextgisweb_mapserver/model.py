@@ -60,12 +60,12 @@ class RenderRequest(object):
         self.srs = srs
 
     def render_extent(self, extent, size):
-        return self.style.render_image(extent, size)
+        return self.style.render_image(self.srs, extent, size)
 
     def render_tile(self, tile, size):
         extent = self.srs.tile_extent(tile)
         return self.style.render_image(
-            extent, (size, size),
+            self.srs, extent, (size, size),
             padding=size / 2
         )
 
@@ -123,7 +123,7 @@ class MapserverStyle(Base, Resource):
 
         return etree.tostring(root, pretty_print=True)
 
-    def render_image(self, extent, size, padding=0):
+    def render_image(self, srs, extent, size, padding=0):
         res_x = (extent[2] - extent[0]) / size[0]
         res_y = (extent[3] - extent[1]) / size[1]
 
@@ -151,7 +151,12 @@ class MapserverStyle(Base, Resource):
 
         # Выбираем объекты по экстенту
         feature_query = self.parent.feature_query()
-        feature_query.intersects(box(*extended, srid=self.parent.srs_id))
+
+        # FIXME: Тоже самое, но через интерфейсы
+        if hasattr(feature_query, 'srs'):
+            feature_query.srs(srs)
+
+        feature_query.intersects(box(*extended, srid=srs.id))
         feature_query.geom()
         features = feature_query()
 
