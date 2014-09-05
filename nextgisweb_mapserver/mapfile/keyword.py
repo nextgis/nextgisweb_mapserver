@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import expressions as exp
+
 from .util import RNG
 from .grammar import (
     SimpleKeyword,
@@ -75,6 +77,15 @@ class Color(PrimitiveKeyword):
         )
     )
 
+@register
+class Point(PrimitiveKeyword):
+    primitive = p.Composite.subclass(
+        items=(
+            ('x', p.Double),
+            ('y', p.Double)
+        )
+    )
+
 
 Debug = register(Enum.subclass(
     'Debug', choices='off|on|0|1|2|3|4|5'.split('|')
@@ -120,6 +131,29 @@ class Pattern(BlockDirective):
             RNG.text(),
             name=cls.name.lower()
         )
+
+
+@register
+class Expression(PrimitiveKeyword):
+    name = 'EXPRESSION'
+
+    def from_xml(self, e):
+        self.value = e.text
+
+    def to_mapfile(self, buf):
+        buf.write('EXPRESSION %s\n' % self.value)
+
+    @classmethod
+    def element_schema(cls):
+        return RNG.element(
+            RNG.text(),
+            name=cls.name.lower()
+        )
+
+    @staticmethod
+    def assert_valid(e):
+        text = e.text
+        exp.parser.parse(text)
 
 
 @register
@@ -192,6 +226,7 @@ class Style(CompositeDirective):
         Float.subclass('MINWIDTH'),
 
         # OFFSET [x] [y]
+        Point.subclass('OFFSET'),
 
         # OPACITY [integer|attribute]
         Integer.subclass('OPACITY'),
@@ -250,7 +285,7 @@ class Label(CompositeDirective):
         String.subclass('ENCODING'),
 
         # EXPRESSION [string]
-        String.subclass('EXPRESSION'),
+        Expression.subclass('EXPRESSION'),
 
         # FONT [name|attribute]
         String.subclass('FONT'),
@@ -283,6 +318,7 @@ class Label(CompositeDirective):
         Float.subclass('MINSIZE'),
 
         # OFFSET [x] [y]
+        Point.subclass('OFFSET'),
 
         # OUTLINECOLOR [r] [g] [b] | [attribute]
         Color.subclass('OUTLINECOLOR'),
@@ -333,7 +369,7 @@ class Class(CompositeDirective):
         Debug.subclass('DEBUG'),
 
         # EXPRESSION [string]
-        String.subclass('EXPRESSION'),
+        Expression.subclass('EXPRESSION'),
 
         # GROUP [string]
         String.subclass('GROUP'),
@@ -439,6 +475,30 @@ class Feature(CompositeDirective):
 
 
 @register
+class Cluster(CompositeDirective):
+    name = 'CLUSTER'
+    members = (
+        # MAXDISTANCE [double]
+        Float.subclass('MAXDISTANCE'),
+
+        # REGION [string]
+        Enum.subclass(
+            'REGION',
+            choices=('"rectangle"', '"ellipse"')
+        ),
+
+        # BUFFER [double]
+        Float.subclass('BUFFER'),
+
+        # GROUP [string]
+        String.subclass('GROUP'),
+
+        # FILTER [string]
+        String.subclass('FILTER')
+    )
+
+
+@register
 class Layer(CompositeDirective):
     name = 'LAYER'
     members = (
@@ -452,6 +512,7 @@ class Layer(CompositeDirective):
         String.subclass('CLASSITEM'),
 
         # CLUSTER
+        Cluster.subclass('CLUSTER'),
 
         # CONNECTION [string]
         String.subclass('CONNECTION'),
@@ -699,6 +760,7 @@ class Symbol(CompositeDirective):
     name = 'SYMBOL'
     members = (
         # ANCHORPOINT [x] [y]
+        Point.subclass('ANCHORPOINT'),
 
         # ANTIALIAS [true|false]
         Boolean.subclass('ANTIALIAS'),

@@ -31,7 +31,7 @@ from nextgisweb.style import (
     ITileRenderRequest,
 )
 
-from .mapfile import Map, mapfile, schema
+from .mapfile import Map, mapfile, schema, registry
 
 Base = declarative_base()
 
@@ -127,26 +127,36 @@ class MapserverStyle(Base, Resource):
         res_x = (extent[2] - extent[0]) / size[0]
         res_y = (extent[3] - extent[1]) / size[1]
 
-        # Экстент с учетом отступа
+        srs = self.parent.srs
+
+        # Экстент с учетом отступов
         extended = (
-            extent[0] - res_x * padding,
-            extent[1] - res_y * padding,
-            extent[2] + res_x * padding,
-            extent[3] + res_y * padding,
+            max(srs.minx, extent[0] - res_x * padding),
+            max(srs.miny, extent[1] - res_y * padding),
+            min(srs.maxx, extent[2] + res_x * padding),
+            min(srs.maxy, extent[3] + res_y * padding),
         )
 
-        # Размер изображения с учетом отступа
+        # Маска отступов
+        pmask = (
+            extended[0] != srs.minx,
+            extended[1] != srs.miny,
+            extended[2] != srs.maxx,
+            extended[3] != srs.maxy
+        )
+
+        # Размер изображения с учетом отступов
         render_size = (
-            size[0] + 2 * padding,
-            size[1] + 2 * padding
+            size[0] + int(pmask[0] + pmask[2]) * padding,
+            size[1] + int(pmask[1] + pmask[3]) * padding
         )
 
         # Фрагмент изображения размера size
         target_box = (
-            padding,
-            padding,
-            size[0] + padding,
-            size[1] + padding
+            pmask[0] * padding,
+            pmask[3] * padding,
+            size[0] + pmask[0] * padding,
+            size[1] + pmask[3] * padding
         )
 
         # Выбираем объекты по экстенту
@@ -164,7 +174,7 @@ class MapserverStyle(Base, Resource):
 
         # Получаем картинку эмулируя WMS запрос
         req = mapscript.OWSRequest()
-        req.setParameter("bbox", ','.join(map(str, extended)))
+        req.setParameter("bbox", ','.join(map(str, extended if padding else extent)))
         req.setParameter("width", str(render_size[0]))
         req.setParameter("height", str(render_size[1]))
         req.setParameter("srs", 'EPSG:%d' % self.parent.srs_id)
@@ -347,6 +357,16 @@ class _xml_attr(SP):
 
         except etree.DocumentInvalid as e:
             raise ValidationError(e.message)
+
+        for cls in registry:
+            if hasattr(cls, 'assert_valid'):
+                tag = cls.name.lower()
+                for el in layer.xpath('//%s' % tag):
+                    try:
+                        cls.assert_valid(el)
+                    except Exception as e:
+                        raise ValidationError("{0} within <{1}> tag".\
+                            format(e.message, tag))
 
         SP.setter(self, srlzr, value)
 
