@@ -400,7 +400,9 @@ def renderer_categorized_symbol(src, dst=None, root=None, warn=warn):
         dst.append(cls)
 
         if cat.get('value', '') != '':
-            cls.append(E.expression(cat.get('value')))
+            cls.append(E.expression('"%s"' % cat.get('value')))
+        else:
+            cls.append(E.expression("''"))
 
         smbl = src.find('./symbols/symbol[@name=\'%s\']' % cat.get("symbol"))
         assert smbl is not None, "Symbol not found"
