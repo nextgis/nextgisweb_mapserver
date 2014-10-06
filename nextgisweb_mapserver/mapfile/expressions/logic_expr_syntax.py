@@ -35,8 +35,6 @@ def p_string_expression(p):
 
 def p_string(p):
     """string : STRING
-              | QUOTE IDENTIFIER QUOTE
-              | DOUBLEQUOTE IDENTIFIER DOUBLEQUOTE
     """
     pass
 
@@ -73,6 +71,12 @@ parser = yacc.yacc()
 if __name__ == "__main__":
     examples = [
         u'"просто строка -- это тоже валидное выражение"',
+        u"''",          # Пустая строка
+        u'""',          # Пустая строка
+        u"'   '",       # Строка с пробелами
+        u'"  "',
+        u"""' "sdf" '""",   # Строка содержащая кавычки
+        u'''" 'sdf' "''',   # Строка содержащая кавычки
         u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')", # Составной оператор без скобочек
         u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
         u"('[LANGUAGE]' lt '')",
@@ -83,7 +87,6 @@ if __name__ == "__main__":
         u'''("[LANGUAGE]" eq "FR 'w'2")''',
         u'("[LANG4]" ~ "FRENCH2")',
         u'("[LANG4]" ~ "<dsf\'!@$%^&*<>-:;,.?ыфва")',   # Много всяких символов внутри строки
-
     ]
     for s in examples:
         print 'PARSING:', s
