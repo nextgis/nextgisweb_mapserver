@@ -2,14 +2,18 @@
 
 """Синтаксический анализатор"""
 
+import sys
+import os
 
 import ply.yacc as yacc
 
-from logic_expr_lexer import tokens, lexer # Не удалять импорт tokens
+from logic_expr_lexer import tokens, lexer # Не удалять импорт tokens # NOQA
 from logic_expr_lexer import CharNotRecognizedError
+
 
 class TokenNotRecognizedError(Exception):
     pass
+
 
 def p_expression(p):
     """expression : LBRAC subexpression RBRAC
@@ -66,9 +70,15 @@ def p_error(p):
     raise TokenNotRecognizedError("Syntax error")
 
 
-# Парсер
-parser = yacc.yacc()
+# Временное перенаправление stderr > /dev/null иначе мусов в консоли
+_stderr_original = sys.stderr
+try:
+    with open(os.devnull, 'w') as fd:
+        sys.stderr = fd
+        parser = yacc.yacc()  # Парсер
 
+finally:
+    sys.stderr = _stderr_original
 
 if __name__ == "__main__":
     examples = [
@@ -110,5 +120,3 @@ if __name__ == "__main__":
         else:
             print 'ERROR!!!'    # Выражение не должно быть распарсено.
             raise Exception
-
-
