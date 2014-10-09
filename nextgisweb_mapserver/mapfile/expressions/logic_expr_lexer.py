@@ -14,12 +14,11 @@ class CharNotRecognizedError(Exception):
 tokens = (
     'NUMBER',
     'IDENTIFIER',
-    #'UNARY_OPERATOR',
     'LOGIC_OPERATOR',
     'OPERATOR',
     'STRING_OPERATOR',
-    'QUOTE',
-    'DOUBLEQUOTE',
+    #'QUOTE',
+    #'DOUBLEQUOTE',
     'LBRAC',
     'RBRAC',
     'STRING'
@@ -27,15 +26,14 @@ tokens = (
 
 t_NUMBER = ur'[0-9]+'
 t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9_:-]*\]'
-# t_UNARY_OPERATOR = ur'length'
 t_LOGIC_OPERATOR = ur'(and)|(or)|(&&)|(\|)'
 t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=\*)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
 t_STRING_OPERATOR = ur'(~\*)|(~)'
-t_QUOTE = ur"'"
-t_DOUBLEQUOTE = ur'"'
+# t_QUOTE = ur"'"
+# t_DOUBLEQUOTE = ur'"'
 t_LBRAC = ur'\('
 t_RBRAC = ur'\)'
-t_STRING = ur"""('[\w"<>!@$%^&\*-:;,.\?=\(\)]*')|("[\w'<>!@$%^&\*-:;,.\?=\(\)].*")"""
+t_STRING = ur"('[^\']*')|(\"[^\"]*\")"
 
 
 # Символы, которые будут игнорироваться
@@ -70,9 +68,9 @@ if __name__ == "__main__":
 
         return token
 
-    def get_tokens(house_number):
+    def get_tokens(token):
         tokens = []
-        lexer.input(house_number)
+        lexer.input(token)
 
         # Tokenize
         while True:
@@ -83,6 +81,8 @@ if __name__ == "__main__":
             tokens.append(tok)
 
     def check_token_eq(token_list, expected_token_list):
+        # print 'list:', token_list
+        # print 'expd:', expected_token_list
         assert (len(token_list) == len(expected_token_list))
 
         expected_token_list = [
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # Тесты
     #######################
 
-    # data = {'входная строк    а': список ожидаемых токенов}
+    # data = {'входная строка': список ожидаемых токенов}
     data = {
         # Много разных токенов в одной строке
         u"([POPULATION] > 50000 AND '[LANGUAGE9]' eq 'FRENCH')":
@@ -111,9 +111,7 @@ if __name__ == "__main__":
                 ('OPERATOR', u'>', 14),
                 ('NUMBER', u'50000', 16),
                 ('LOGIC_OPERATOR', u'AND', 22),
-                ('QUOTE', u"'", 26),
-                ('IDENTIFIER', u'[LANGUAGE9]', 27),
-                ('QUOTE', u"'", 38),
+                ('STRING', u"'[LANGUAGE9]'", 26),
                 ('OPERATOR', u'eq', 40),
                 ('STRING', u"'FRENCH'", 43),
                 ('RBRAC', u')', 51)
@@ -122,9 +120,7 @@ if __name__ == "__main__":
         u"('[LANGUAGE]' eq 'FRENCH2')":
             [
                 ('LBRAC', u'(', 0),
-                ('QUOTE', u"'", 1),
-                ('IDENTIFIER', u'[LANGUAGE]', 2),
-                ('QUOTE', u"'", 12),
+                ('STRING', u"'[LANGUAGE]'", 1),
                 ('OPERATOR', u'eq', 14),
                 ('STRING', u"'FRENCH2'", 17),
                 ('RBRAC', u')', 26)
@@ -133,9 +129,7 @@ if __name__ == "__main__":
         u'("[LANGUAGE]" eq "FRENCH2")':
             [
                 ('LBRAC', u'(', 0),
-                ('DOUBLEQUOTE', u'"', 1),
-                ('IDENTIFIER', u'[LANGUAGE]', 2),
-                ('DOUBLEQUOTE', u'"', 12),
+                ('STRING', u'"[LANGUAGE]"', 1),
                 ('OPERATOR', u'eq', 14),
                 ('STRING', u'"FRENCH2"', 17),
                 ('RBRAC', u')', 26)
@@ -144,9 +138,7 @@ if __name__ == "__main__":
         u'''("[LANGUAGE]" eq "FR 'w'2")''':
             [
                 ('LBRAC', u'(', 0),
-                ('DOUBLEQUOTE', u'"', 1),
-                ('IDENTIFIER', u'[LANGUAGE]', 2),
-                ('DOUBLEQUOTE', u'"', 12),
+                ('STRING', u'"[LANGUAGE]"', 1),
                 ('OPERATOR', u'eq', 14),
                 ('STRING', u'"FR \'w\'2"', 17),
                 ('RBRAC', u')', 26)
@@ -155,12 +147,15 @@ if __name__ == "__main__":
         u"('[attr]' =* 'aa=(a)')":
             [
                 ('LBRAC', u'(', 0),
-                ('QUOTE', u"'", 1),
-                ('IDENTIFIER', u'[attr]', 2),
-                ('QUOTE', u"'", 8),
+                ('STRING', u"'[attr]'", 1),
                 ('OPERATOR', u'=*', 10),
                 ('STRING', u"'aa=(a)'", 13),
                 ('RBRAC', u')', 21)
+            ],
+        # Просто строка с пробелами
+        u"'   '":
+            [
+                ('STRING', "'   '", 0)
             ]
     }
 

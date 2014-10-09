@@ -41,6 +41,11 @@
 ### Установка
 
 Клонируем репозиторий:
+с запросом пароля для github
+
+    $ git clone https://github.com/nextgis/nextgisweb_mapserver.git
+
+альтернативно с использованием публичного ключа для github
 
     $ git clone git@github.com:nextgis/nextgisweb_mapserver.git
 
