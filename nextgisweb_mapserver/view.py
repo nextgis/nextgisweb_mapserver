@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from lxml import etree
 from pyramid.response import Response
 
@@ -90,10 +92,14 @@ def setup_pyramid(comp, config):
 
         dst = transform(elem, warn=warn)
 
-        return Response(
-            etree.tostring(dst, pretty_print=True, encoding=unicode),
-            content_type="text/xml"
-        )
+        body = etree.tostring(dst, pretty_print=True, encoding=unicode)
+
+        XML, JSON = 'text/xml', 'application/json'
+
+        if request.accept.best_match([XML, JSON]) == XML:
+            return Response(body, content_type=XML)
+        else:
+            return Response(json.dumps(body), content_type=JSON)
 
     config.add_route('mapserver.qml_transform', '/mapserver/qml-transform', client=()) \
         .add_view(qml, request_method='POST')
