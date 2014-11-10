@@ -27,6 +27,16 @@ cp /usr/lib/python2.7/dist-packages/*mapscript* env/lib/python2.7/site-packages/
 echo "./mapscript.egg" > env/lib/python2.7/site-packages/mapscript.pth
 ```
 
+Если вы используете Fedora/CentOS, то:
+
+```bash
+mkdir env/lib/python2.7/site-packages/mapscript.egg
+cp /usr/lib/python2.7/site-packages/*mapscript* env/lib/python2.7/site-packages/mapscript.egg
+echo "./mapscript.egg" > env/lib/python2.7/site-packages/mapscript.pth
+```
+
+
+
 Если сейчас выполнить команду:
 
 ```bash
