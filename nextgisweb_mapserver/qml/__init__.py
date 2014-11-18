@@ -64,7 +64,7 @@ def layer(e, dst=None, root=None, opacity=100, warn=warn):
 def layer_simple_marker(src, dst=None, root=None, warn=warn):
     SIMPLE_MARKER = dict(
         rectangle='std:rectangle',
-        circle='std:rectangle',
+        circle='std:circle',
         diamond='std:diamond',
         triangle='std:triangle',
         equilateral_triangle='std:triangle-equilateral',
