@@ -40,15 +40,15 @@ SYMBOL
     TYPE vector
     FILLED true
     POINTS
-        0 0
-        0.5 1
-        1 0
-        0 0
+        0.5 0
+        1 1
+        0 1
+        0.5 0
     END
 END
 
 SYMBOL
-    NAME "std:triangle"
+    NAME "std:triangle-rotated"
     TYPE vector
     FILLED true
     POINTS
