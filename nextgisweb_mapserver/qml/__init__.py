@@ -99,7 +99,7 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
             dst.append(color_property(v, 'color', warn))
             known.add(k)
 
-        elif k == 'color_border':
+        elif k in ('outline_color', 'color_border'):
             dst.append(color_property(v, 'outlinecolor', warn))
             known.add(k)
 
@@ -263,8 +263,8 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
                 dst.append(color_property(v, 'color', warn))
             known.add(k)
 
-        elif k == 'color_border':
-            if props.get('style_border', None) != 'no':
+        elif k in ('outline_color', 'color_border'):
+            if props.get('style_border', props.get('outline_style')) != 'no':
                 dst.append(color_property(v, 'outlinecolor', warn))
             known.add(k)
 
@@ -302,7 +302,7 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
                 ))
                 known.add(k)
 
-        elif k == 'style_border':
+        elif k in ('outline_style', 'style_border'):
             if v == 'solid' or v == 'no':
                 known.add(k)
 
@@ -321,7 +321,8 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
                     pattern = (4, 2, 1, 2, 1, 2)
 
                 if pattern is not None:
-                    width = mm2px(props.get('width_border', 0))
+                    width = mm2px(props.get('width_border',
+                                  props.get('outline_width', 0)))
                     pattern = map(lambda x: str(x * width), pattern)
                     dst.append(E.pattern(' '.join(pattern)))
                     known.add(k)
@@ -336,8 +337,8 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
                     u"Используйте составной символ QuantumGIS.            "
                 )
 
-        elif k == 'width_border':
-            if props.get('style_border', None) != 'no':
+        elif k in ('outline_width', 'width_border'):
+            if props.get('style_border', props.get('outline_style')) != 'no':
                 dst.append(E.width(str(mm2px(v))))
             known.add(k)
 
