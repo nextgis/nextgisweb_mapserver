@@ -73,7 +73,7 @@ _stderr_original = sys.stderr
 try:
     with open(os.devnull, 'w') as fd:
         sys.stderr = fd
-        parser = yacc.yacc()  # Парсер
+        parser = yacc.yacc(debug=False, write_tables=0)  # Парсер
 
 finally:
     sys.stderr = _stderr_original
