@@ -766,6 +766,7 @@ class Symbol(CompositeDirective):
         Boolean.subclass('ANTIALIAS'),
 
         # CHARACTER [char]
+        String.subclass('CHARACTER'),
 
         # FILLED [true|false]
         Boolean.subclass('FILLED'),
