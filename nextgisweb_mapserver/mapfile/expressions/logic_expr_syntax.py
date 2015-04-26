@@ -91,7 +91,9 @@ if __name__ == "__main__":
         u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
         u"('[LANGUAGE]' lt '')",
         u"( 3 < 4)",
+        u"( 3.4 < -4.3e+12)",
         u"([attr] gt 30)",
+        u"([attr] gt 1.30)",
         u"('[LANGUAGE]' eq 'FRENCH2')",
         u'("[LANGUAGE]" eq "FRENCH2")',
         u'''("[LANGUAGE]" eq "FR 'w'2")''',
