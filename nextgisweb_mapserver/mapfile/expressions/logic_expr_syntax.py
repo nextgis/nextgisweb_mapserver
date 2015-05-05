@@ -58,7 +58,7 @@ def p_number(p):
 
 def p_concatenation(p):
     """concatenation : subexpression LOGIC_OPERATOR subexpression
-                    | LBRAC subexpression RBRAC LOGIC_OPERATOR LBRAC subexpression RBRAC
+                    | LBRAC subexpression RBRAC
     """
     pass
 
@@ -89,6 +89,7 @@ if __name__ == "__main__":
         u'''" 'sdf' "''',   # Строка содержащая кавычки
         u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')", # Составной оператор без скобочек
         u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
+        u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) or ([attr1] lt 30) OR ([attr2] = 30))',  # Много скобочек
         u"('[LANGUAGE]' lt '')",
         u"( 3 < 4)",
         u"( 3.4 < -4.3e+12)",
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     for s in examples:
         print 'PARSING:', s
         result = parser.parse(s)
-        print 'Ok'
+        # print 'Ok'
 
     errors = [
         u"(aslgjkl)",           # Абракадабра какая-то
@@ -119,9 +120,11 @@ if __name__ == "__main__":
         try:
             result = parser.parse(s)
         except TokenNotRecognizedError:
-            print 'Syntax error is Ok. We expected the error.'  # Ожидаем ошибку распознавания
+            print 'Ok. The syntax error is found'
+            # print 'Syntax error is Ok. We expected the error.'  # Ожидаем ошибку распознавания
         except CharNotRecognizedError:
-            print 'Syntax error is Ok. We expected the error.'  # Ожидаем ошибку распознавания
+            print 'Ok. The syntax error is found'
+            # print 'Syntax error is Ok. We expected the error.'  # Ожидаем ошибку распознавания
         else:
             print 'ERROR!!!'    # Выражение не должно быть распарсено.
             raise Exception
