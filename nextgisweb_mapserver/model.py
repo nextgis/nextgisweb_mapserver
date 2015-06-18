@@ -81,8 +81,12 @@ class MapserverStyle(Base, Resource):
     xml = sa.Column(sa.Unicode, nullable=False)
 
     @classmethod
-    def check_parent(self, parent):
+    def check_parent(cls, parent):
         return IFeatureLayer.providedBy(parent)
+
+    @property
+    def feature_layer(self):
+        return self.parent
 
     @property
     def srs(self):
