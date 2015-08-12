@@ -627,6 +627,10 @@ class Layer(CompositeDirective):
         ),
 
         # STATUS [on|off|default]
+        Enum.subclass(
+            'STATUS',
+            choices='on|off|default'.split('|')
+        ),
 
         # STYLEITEM [<attribute>|auto]
 
@@ -799,7 +803,6 @@ class Symbol(CompositeDirective):
 class Legend(CompositeDirective):
     name = 'LEGEND'
     members = (
-
         # IMAGECOLOR [r] [g] [b]
 
         # KEYSIZE [x] [y]
