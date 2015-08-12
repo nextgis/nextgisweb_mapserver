@@ -627,6 +627,7 @@ class Layer(CompositeDirective):
         ),
 
         # STATUS [on|off|default]
+
         # STYLEITEM [<attribute>|auto]
 
         # SYMBOLSCALEDENOM [double]
@@ -795,6 +796,35 @@ class Symbol(CompositeDirective):
 
 
 @register
+class Legend(CompositeDirective):
+    name = 'LEGEND'
+    members = (
+
+        # IMAGECOLOR [r] [g] [b]
+
+        # KEYSIZE [x] [y]
+        Point.subclass('KEYSIZE'),
+
+        # KEYSPACING [x] [y]
+        Point.subclass('KEYSPACING'),
+
+        # LABEL
+        Label.subclass('LABEL'),
+
+        # OUTLINECOLOR [r] [g] [b]
+        Color.subclass('OUTLINECOLOR'),
+
+        # POSITION [ul|uc|ur|ll|lc|lr]
+
+        # POSTLABELCACHE [true|false]
+
+        # STATUS [on|off|embed]
+
+        # TEMPLATE [filename]
+    )
+
+
+@register
 class Map(CompositeDirective):
     name = 'MAP'
 
@@ -848,6 +878,7 @@ class Map(CompositeDirective):
         Layer.subclass('LAYER', single=False),
 
         # LEGEND
+        Legend.subclass('LEGEND'),
 
         # MAXSIZE [integer]
         Integer.subclass('MAXSIZE'),
