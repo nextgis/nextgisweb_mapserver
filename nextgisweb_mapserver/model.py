@@ -106,10 +106,20 @@ class MapserverStyle(Base, Resource):
             E.outlinecolor(red='64', green='64', blue='64'),
         )
 
+        legend = E.legend(
+            E.keysize(x='15', y='15'),
+            E.label(
+                E.size('12'),
+                E.type('truetype'),
+                E.font('regular')
+            )
+        )
+
         root = E.map(
             E.layer(
                 E('class', style)
-            )
+            ),
+            legend
         )
 
         if layer.geometry_type == GEOM_TYPE.POINT:
@@ -276,6 +286,7 @@ class MapserverStyle(Base, Resource):
                 maxx='20037508.34',
                 maxy='20037508.34'
             ),
+            E.status('DEFAULT'),
         ]
 
         for e in reversed(layer_setup):
