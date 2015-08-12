@@ -29,6 +29,7 @@ from nextgisweb.style import (
     IRenderableStyle,
     IExtentRenderRequest,
     ITileRenderRequest,
+    ILegendableStyle,
 )
 
 from .mapfile import Map, mapfile, schema, registry
@@ -76,7 +77,7 @@ class MapserverStyle(Base, Resource):
 
     __scope__ = DataScope
 
-    implements(IRenderableStyle)
+    implements(IRenderableStyle, ILegendableStyle)
 
     xml = sa.Column(sa.Unicode, nullable=False)
 
@@ -207,6 +208,16 @@ class MapserverStyle(Base, Resource):
 
         # Вырезаем нужный нам кусок изображения
         return img.crop(target_box)
+
+    def render_legend(self):
+        mapobj = self._mapobj(features=[])
+        gdimg = mapobj.drawLegend()
+
+        buf = StringIO()
+        buf.write(gdimg.getBytes())
+        buf.seek(0)
+
+        return buf
 
     def _mapobj(self, features):
         # tmpf = NamedTemporaryFile(suffix='.map')
