@@ -56,17 +56,19 @@ _RNDCOLOR = (
 class RenderRequest(object):
     implements(IExtentRenderRequest, ITileRenderRequest)
 
-    def __init__(self, style, srs):
+    def __init__(self, style, srs, cond):
         self.style = style
         self.srs = srs
+        self.cond = cond
 
     def render_extent(self, extent, size):
-        return self.style.render_image(self.srs, extent, size)
+        return self.style.render_image(self.srs, extent, size, self.cond)
 
     def render_tile(self, tile, size):
         extent = self.srs.tile_extent(tile)
         return self.style.render_image(
             self.srs, extent, (size, size),
+            self.cond,
             padding=size / 2
         )
 
@@ -93,8 +95,8 @@ class MapserverStyle(Base, Resource):
     def srs(self):
         return self.parent.srs
 
-    def render_request(self, srs):
-        return RenderRequest(self, srs)
+    def render_request(self, srs, cond=None):
+        return RenderRequest(self, srs, cond)
 
     @classmethod
     def default_style_xml(cls, layer):
@@ -138,7 +140,7 @@ class MapserverStyle(Base, Resource):
 
         return etree.tostring(root, pretty_print=True)
 
-    def render_image(self, srs, extent, size, padding=0):
+    def render_image(self, srs, extent, size, cond, padding=0):
         res_x = (extent[2] - extent[0]) / size[0]
         res_y = (extent[3] - extent[1]) / size[1]
 
@@ -174,6 +176,10 @@ class MapserverStyle(Base, Resource):
 
         # Выбираем объекты по экстенту
         feature_query = self.parent.feature_query()
+
+        # Отфильтровываем объекты по условию
+        if cond is not None:
+            feature_query.filter_by(**cond)
 
         # FIXME: Тоже самое, но через интерфейсы
         if hasattr(feature_query, 'srs'):
