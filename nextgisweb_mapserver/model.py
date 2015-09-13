@@ -189,6 +189,9 @@ class MapserverStyle(Base, Resource):
         feature_query.geom()
         features = feature_query()
 
+        if features.total_count < 1:
+            return Image.new('RGBA', (render_size[0], render_size[1]), (255, 255, 255, 0))
+
         mapobj = self._mapobj(features)
 
         # Получаем картинку эмулируя WMS запрос
