@@ -10,7 +10,7 @@
             data-dojo-props="region: 'top'">
             <div data-dojo-type="dijit/form/Button"
                 data-dojo-attach-event="onClick: qmlShowDialog">
-                Импорт стиля QGIS
+                {{gettext 'Import QGIS style'}}
             </div>
         </div>
 
@@ -24,7 +24,7 @@
 
     <div data-dojo-attach-point="qmlDialog"
         data-dojo-type="dijit/Dialog"
-        title="Импорт стиля QuantumGIS"
+        title="{{gettext 'Import QGIS style'}}"
         style="display: none; width: 600px;">
 
         <div data-dojo-attach-point="qmlUploader" 

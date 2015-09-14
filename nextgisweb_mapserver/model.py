@@ -34,6 +34,8 @@ from nextgisweb.style import (
 
 from .mapfile import Map, mapfile, schema, registry
 
+from .util import _
+
 Base = declarative_base()
 
 # Палитра из 12 цветов ColorBrewer
@@ -75,7 +77,7 @@ class RenderRequest(object):
 
 class MapserverStyle(Base, Resource):
     identity = 'mapserver_style'
-    cls_display_name = u"Стиль MapServer"
+    cls_display_name = _("MapServer style")
 
     __scope__ = DataScope
 

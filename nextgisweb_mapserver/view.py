@@ -14,6 +14,8 @@ from .qml import transform
 
 from .model import MapserverStyle
 
+from .util import _
+
 
 class StyleWidget(Widget):
     resource = MapserverStyle
@@ -53,10 +55,10 @@ def setup_pyramid(comp, config):
                 relaxng.assertValid(layer)
 
             except etree.XMLSyntaxError as e:
-                result = err(u"Синтаксическая ошибка XML: %s" % e.message)
+                result = err(_("XML syntax error: %(message)s") % dict(message=e.message))
 
             except etree.DocumentInvalid as e:
-                result = err(u"Ошибка схемы XML: %s" % e.message)
+                result = err(_("XML schema error: %(message)s") % dict(message=e.message))
 
             return result
 

@@ -8,8 +8,10 @@ define([
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
     "ngw/route",
+    "ngw-pyramid/i18n!mapserver_style",
+    "ngw-pyramid/hbs-i18n",
     "ngw-resource/serialize",
-    "dojo/text!./template/StyleWidget.html",
+    "dojo/text!./template/StyleWidget.hbs",
     // template
     "dijit/Dialog",
     "dijit/layout/BorderContainer",
@@ -32,11 +34,13 @@ define([
     _TemplatedMixin,
     _WidgetsInTemplateMixin,
     route,
+    i18n,
+    hbsI18n,
     serialize,
     template
 ) {
     return declare([ContentPane, serialize.Mixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
-        templateString: template,
+        templateString: hbsI18n(template, i18n),
         identity: "mapserver_style",
         title: "MapServer",
 
@@ -71,7 +75,7 @@ define([
                 data: json.stringify({file: file})
             }).then(
                 function (data) { widget.qmlPreview.set("value", data); },
-                function () { widget.qmlPreview.set("value", "<!-- В ходе преобразования файла возникла неизвестная ошибка -->"); }
+                function () { widget.qmlPreview.set("value", i18n.gettext("<!-- An unknown error occurred during the file conversion -->")); }
             ).then(undefined, function (err) { console.error(err); });
         },
 
