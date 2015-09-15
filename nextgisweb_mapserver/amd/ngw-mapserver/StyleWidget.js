@@ -17,7 +17,7 @@ define([
     "dijit/layout/BorderContainer",
     "dijit/form/Textarea",
     "ngw/form/CodeMirror",
-    "ngw/form/Uploader",
+    "ngw-file-upload/Uploader",
     "dijit/Toolbar",
     "dijit/form/Button",
     "dojox/layout/TableContainer",
