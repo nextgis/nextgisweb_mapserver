@@ -71,7 +71,7 @@ define([
 
         qmlUploadComplete: function (file) {
             var widget = this;
-            xhr.post(route("mapserver.qml_transform"), {
+            xhr.post(route.mapserver.qml_transform(), {
                 data: json.stringify({file: file})
             }).then(
                 function (data) { widget.qmlPreview.set("value", data); },
