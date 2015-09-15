@@ -16,7 +16,7 @@ define([
     "dijit/Dialog",
     "dijit/layout/BorderContainer",
     "dijit/form/Textarea",
-    "ngw/form/CodeMirror",
+    "ngw-pyramid/form/CodeMirror",
     "ngw-file-upload/Uploader",
     "dijit/Toolbar",
     "dijit/form/Button",
