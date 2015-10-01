@@ -30,7 +30,7 @@ class MapserverComponent(Component):
 
 
 def pkginfo():
-    return dict(components=dict(mapserver_style="nextgisweb_mapserver"))
+    return dict(components=dict(mapserver="nextgisweb_mapserver"))
 
 
 def amd_packages():
