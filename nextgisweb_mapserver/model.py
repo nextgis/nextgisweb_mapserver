@@ -25,7 +25,7 @@ from nextgisweb.env import env
 from nextgisweb.geometry import box
 from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
 from nextgisweb.marker_library import Marker
-from nextgisweb.style import (
+from nextgisweb.render import (
     IRenderableStyle,
     IExtentRenderRequest,
     ITileRenderRequest,

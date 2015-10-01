@@ -10,7 +10,7 @@ class MapserverComponent(Component):
     identity = 'mapserver'
     metadata = Base.metadata
 
-    @require('style', 'marker_library')
+    @require('render', 'marker_library')
     def initialize(self):
         super(MapserverComponent, self).initialize()
 
