@@ -633,6 +633,7 @@ class Layer(CompositeDirective):
         ),
 
         # STYLEITEM [<attribute>|auto]
+        String.subclass('STYLEITEM'),
 
         # SYMBOLSCALEDENOM [double]
         Float.subclass('SYMBOLSCALEDENOM'),
