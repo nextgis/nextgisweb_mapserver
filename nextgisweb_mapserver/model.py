@@ -369,7 +369,7 @@ class MapserverStyle(Base, Resource):
                 elif isinstance(v, unicode):
                     v = v.encode('utf-8')
                 else:
-                    v = str(v)
+                    v = repr(v)
 
                 shape.setValue(i, v)
                 i += 1
