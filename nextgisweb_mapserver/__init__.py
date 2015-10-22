@@ -5,7 +5,6 @@ from nextgisweb.component import Component, require
 from .model import Base
 
 
-@Component.registry.register
 class MapserverComponent(Component):
     identity = 'mapserver'
     metadata = Base.metadata
