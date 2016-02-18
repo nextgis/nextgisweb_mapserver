@@ -8,7 +8,7 @@ define([
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
     "ngw/route",
-    "ngw-pyramid/i18n!mapserver_style",
+    "ngw-pyramid/i18n!mapserver",
     "ngw-pyramid/hbs-i18n",
     "ngw-resource/serialize",
     "dojo/text!./template/StyleWidget.hbs",
@@ -41,7 +41,7 @@ define([
 ) {
     return declare([ContentPane, serialize.Mixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: hbsI18n(template, i18n),
-        identity: "mapserver_style",
+        prefix: "mapserver_style",
         title: "MapServer",
 
         postCreate: function () {
