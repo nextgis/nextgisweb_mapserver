@@ -296,9 +296,12 @@ class MapserverStyle(Base, Resource):
         layer_setup = [
             E.name('main'),
             E.type({
-                "POINT": 'point',
+                'POINT': 'point',
                 'LINESTRING': 'line',
-                'POLYGON': 'polygon'
+                'POLYGON': 'polygon',
+                'MULTIPOINT': 'point',
+                'MULTILINESTRING': 'line',
+                'MULTIPOLYGON': 'polygon'
             }[self.parent.geometry_type]),
             E.template('dummy.html'),
             E.projection("+init=epsg:3857"),
