@@ -8,18 +8,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nextgisweb_mapserver 0.0.dev0\n"
 "Report-Msgid-Bugs-To: UNKNOWN\n"
-"POT-Creation-Date: 2015-09-14 15:39+0600\n"
+"POT-Creation-Date: 2016-05-12 23:04+0700\n"
 "PO-Revision-Date: 2015-09-14 14:41+0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
 "Language-Team: ru <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.0\n"
+"Generated-By: Babel 2.1.1\n"
 
-#: model.py:80
+#: model.py:80 amd/ngw-mapserver/StyleWidget.js:44
 msgid "MapServer style"
 msgstr "Стиль MapServer"
 

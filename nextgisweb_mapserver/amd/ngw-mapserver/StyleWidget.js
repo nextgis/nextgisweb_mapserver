@@ -41,8 +41,8 @@ define([
 ) {
     return declare([ContentPane, serialize.Mixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: hbsI18n(template, i18n),
+        title: i18n.gettext("MapServer style"),
         prefix: "mapserver_style",
-        title: "MapServer",
 
         postCreate: function () {
             this.inherited(arguments);
