@@ -127,7 +127,9 @@ class MapserverStyle(Base, Resource):
             legend
         )
 
-        if layer.geometry_type == GEOM_TYPE.POINT:
+        if layer.geometry_type == GEOM_TYPE.POINT or (
+            hasattr(GEOM_TYPE, 'MULTIPOINT') and
+                layer.geometry_type == GEOM_TYPE.MULTIPOINT):
             symbol = E.symbol(
                 E.type('ellipse'),
                 E.name('circle'),
