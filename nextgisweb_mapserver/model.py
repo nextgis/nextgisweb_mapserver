@@ -384,6 +384,11 @@ class MapserverStyle(Base, Resource):
         return mapobj
 
 
+DataScope.read.require(
+    DataScope.read,
+    attr='parent', cls=MapserverStyle)
+
+
 class _xml_attr(SP):
 
     def setter(self, srlzr, value):
