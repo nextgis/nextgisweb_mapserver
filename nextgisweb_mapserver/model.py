@@ -194,7 +194,7 @@ class MapserverStyle(Base, Resource):
         features = feature_query()
 
         if features.total_count < 1:
-            return Image.new('RGBA', (render_size[0], render_size[1]), (255, 255, 255, 0))
+            return Image.new('RGBA', (size[0], size[1]), (255, 255, 255, 0))
 
         mapobj = self._mapobj(features)
 
