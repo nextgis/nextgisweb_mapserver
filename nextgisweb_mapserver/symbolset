@@ -27,11 +27,11 @@ SYMBOL
     TYPE vector
     FILLED true
     POINTS
-        0 0.5
-        0.5 1
-        1 0.5
-        0.5 0
-        0 0.5
+        0 1
+        1 2
+        2 1
+        1 0
+        0 1
     END
 END
 
@@ -40,10 +40,10 @@ SYMBOL
     TYPE vector
     FILLED true
     POINTS
-        0.5 0
-        1 1
-        0 1
-        0.5 0
+        1 0
+        2 2
+        0 2
+        1 0
     END
 END
 
@@ -53,8 +53,8 @@ SYMBOL
     FILLED true
     POINTS
         0 0
-        0.5 1
-        1 0
+        1 2
+        2 0
         0 0
     END
 END
@@ -125,8 +125,8 @@ SYMBOL
     TYPE vector
     POINTS
         0 0
-        0.5 0.5
-        0 1
+        1 1
+        0 2
     END
 END
 
@@ -134,11 +134,11 @@ SYMBOL
     NAME "std:cross"
     TYPE vector
     POINTS
-        0 0.5
-        1 0.5
+        0 1
+        2 1
         -99 -99
-        0.5 0
-        0.5 1
+        1 0
+        1 2
     END
 END
 
