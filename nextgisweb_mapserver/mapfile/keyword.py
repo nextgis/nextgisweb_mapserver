@@ -595,6 +595,9 @@ class Layer(CompositeDirective):
         Float.subclass('MINSCALEDENOM'),
 
         # NAME [string]
+        # NAME tag is not allowed here because not compatible
+        # with an internally used 'main' layer name, but
+        # it is impossible to comment it now.
         String.subclass('NAME'),
 
         # OFFSITE [r] [g] [b]
