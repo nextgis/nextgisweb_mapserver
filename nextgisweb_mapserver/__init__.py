@@ -13,7 +13,7 @@ class MapserverComponent(Component):
     def initialize(self):
         super(MapserverComponent, self).initialize()
 
-        # Настройки по-умолчанию для fontset
+        # Default settings for fontset
         if 'fontset' not in self.settings:
             self.settings['fontset'] = resource_filename(
                 'nextgisweb_mapserver', 'fonts/fontset')
@@ -24,7 +24,7 @@ class MapserverComponent(Component):
         view.setup_pyramid(self, config)
 
     settings_info = (
-        dict(key='fontset', desc=u"Список шрифтов в формате MAPFILE FONTSET"),
+        dict(key='fontset', desc=u"List of fonts in MAPFILE FONTSET format"),
     )
 
 
