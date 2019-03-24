@@ -12,4 +12,4 @@ SRC=`/usr/bin/python -c "import mapscript, os.path; print os.path.split(mapscrip
 DST=`$1/bin/python -c "import sys; print sys.path[-1]"`
 
 cp -vu $SRC/mapscript.py $DST
-cp -vu $SRC/_mapscript.so $DST
+cp -vu $SRC/_mapscript.so $DST || cp -vu $SRC/_mapscript.x86_64-linux-gnu.so $DST
