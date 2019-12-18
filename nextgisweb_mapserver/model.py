@@ -23,13 +23,19 @@ from nextgisweb.resource import (
 from nextgisweb.resource.exception import ValidationError
 from nextgisweb.env import env
 from nextgisweb.geometry import box
-from nextgisweb.feature_layer import IFeatureLayer, GEOM_TYPE
+from nextgisweb.feature_layer import (
+    IFeatureLayer,
+    GEOM_TYPE,
+    on_data_change as on_data_change_feature_layer
+)
 from nextgisweb.marker_library import Marker
 from nextgisweb.render import (
     IRenderableStyle,
     IExtentRenderRequest,
     ITileRenderRequest,
     ILegendableStyle,
+    on_style_change,
+    on_data_change as on_data_change_renderable,
 )
 
 from .mapfile import Map, mapfile, schema, registry
@@ -53,6 +59,13 @@ _RNDCOLOR = (
     (204, 235, 197),
     (255, 237, 111),
 )
+
+
+@on_data_change_feature_layer.connect
+def on_data_change_feature_layer(resource, geom):
+    for child in resource.children:
+        if isinstance(child, MapserverStyle):
+            on_data_change_renderable.fire(child, geom)
 
 
 class RenderRequest(object):
@@ -406,6 +419,8 @@ class _xml_attr(SP):
                             format(e.message, tag))
 
         SP.setter(self, srlzr, value)
+
+        on_style_change.fire(srlzr.obj)
 
 PR_READ = ResourceScope.read
 PR_UPDATE = ResourceScope.update
