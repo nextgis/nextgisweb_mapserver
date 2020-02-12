@@ -22,6 +22,7 @@ entry_points = {
 
 setup(
     name='nextgisweb_mapserver',
+    python_requires="<3",
     version=version,
     description="",
     long_description="",
