@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import expressions as exp
+from __future__ import division, absolute_import, print_function, unicode_literals
+
+from .expressions import parser
 
 from .util import RNG
 from .grammar import (
@@ -153,7 +155,7 @@ class Expression(PrimitiveKeyword):
     @staticmethod
     def assert_valid(e):
         text = e.text
-        exp.parser.parse(text)
+        parser.parse(text)
 
 
 @register
@@ -439,7 +441,7 @@ class Metadata(BlockDirective):
 
     def to_mapfile(self, buf):
         buf.begin(self.name)
-        for k, v in self.value.iteritems():
+        for k, v in self.value.items():
             buf.write('"%s" "%s"\n' % (k, v))
         buf.end()
 

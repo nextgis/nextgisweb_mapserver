@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 from lxml.etree import tostring, fromstring, RelaxNG
 
 from .keyword import registry
@@ -11,11 +13,11 @@ def _test_shema(cls):
     xml = tostring(root, pretty_print=True)
 
     idx = 1
-    print ''
+    print('')
     for s in xml.split('\n'):
-        print "%03d: %s" % (idx, s)
+        print("%03d: %s" % (idx, s))
         idx += 1
-    print ''
+    print('')
 
     RelaxNG(fromstring(xml))
 

@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 from ngwdocker import PackageBase
 from ngwdocker.base import AppImage
+
 
 class Package(PackageBase):
     pass
@@ -7,7 +11,7 @@ class Package(PackageBase):
 
 @AppImage.on_apt.handler
 def on_apt(event):
-    event.package('python-mapscript')
+    event.package('python3-mapscript')
 
 
 @AppImage.on_package_files.handler

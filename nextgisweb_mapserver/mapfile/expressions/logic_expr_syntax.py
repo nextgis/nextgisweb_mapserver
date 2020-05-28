@@ -7,8 +7,8 @@ import os
 
 import ply.yacc as yacc
 
-from logic_expr_lexer import tokens, lexer # Не удалять импорт tokens # NOQA
-from logic_expr_lexer import CharNotRecognizedError
+from .logic_expr_lexer import tokens, lexer # Не удалять импорт tokens # NOQA
+from .logic_expr_lexer import CharNotRecognizedError
 
 
 class TokenNotRecognizedError(Exception):
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         u'("[LANG4]" ~ "<dsf\'!@$%^&*<>-:;,.?ыфва")',   # Много всяких символов внутри строки
     ]
     for s in examples:
-        print 'PARSING:', s
+        print('PARSING:', s)
         result = parser.parse(s)
         # print 'Ok'
 
@@ -117,15 +117,15 @@ if __name__ == "__main__":
         u'( ("[LANG4]" ~ "FRENCH2") AND [attr] gt 30) )',  # Несбалансированные скобки
     ]
     for s in errors:
-        print'PARSING:', s
+        print('PARSING:', s)
         try:
             result = parser.parse(s)
         except TokenNotRecognizedError:
-            print 'Ok. The syntax error is found'
+            print('Ok. The syntax error is found')
             # print 'Syntax error is Ok. We expected the error.'  # Ожидаем ошибку распознавания
         except CharNotRecognizedError:
-            print 'Ok. The syntax error is found'
+            print('Ok. The syntax error is found')
             # print 'Syntax error is Ok. We expected the error.'  # Ожидаем ошибку распознавания
         else:
-            print 'ERROR!!!'    # Выражение не должно быть распарсено.
+            print('ERROR!!!')  # Выражение не должно быть распарсено.
             raise Exception

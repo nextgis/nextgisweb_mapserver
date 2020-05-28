@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
+from six import BytesIO
+
 from random import choice
-from StringIO import StringIO
 from pkg_resources import resource_filename
 
-from zope.interface import implements
+from zope.interface import implementer
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
 
@@ -68,8 +71,8 @@ def on_data_change_feature_layer(resource, geom):
             on_data_change_renderable.fire(child, geom)
 
 
+@implementer(IExtentRenderRequest, ITileRenderRequest)
 class RenderRequest(object):
-    implements(IExtentRenderRequest, ITileRenderRequest)
 
     def __init__(self, style, srs, cond):
         self.style = style
@@ -88,13 +91,12 @@ class RenderRequest(object):
         )
 
 
+@implementer((IRenderableStyle, ILegendableStyle))
 class MapserverStyle(Base, Resource):
     identity = 'mapserver_style'
     cls_display_name = _("MapServer style")
 
     __scope__ = DataScope
-
-    implements(IRenderableStyle, ILegendableStyle)
 
     xml = sa.Column(sa.Unicode, nullable=False)
 
@@ -218,7 +220,7 @@ class MapserverStyle(Base, Resource):
         gdimg = mapobj.draw()
 
         # Преобразуем изображение из PNG в объект PIL
-        buf = StringIO()
+        buf = BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -231,7 +233,7 @@ class MapserverStyle(Base, Resource):
         mapobj = self._mapobj(features=[])
         gdimg = mapobj.drawLegend()
 
-        buf = StringIO()
+        buf = BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -240,9 +242,9 @@ class MapserverStyle(Base, Resource):
     def _mapobj(self, features):
         # tmpf = NamedTemporaryFile(suffix='.map')
         # buf = codecs.open(tmpf.name, 'w', 'utf-8')
-        buf = StringIO()
+        buf = BytesIO()
 
-        fieldnames = map(lambda f: f.keyname, self.parent.fields)
+        fieldnames = [f.keyname for f in self.parent.fields]
 
         E = ElementMaker()
 

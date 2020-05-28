@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 import os.path
 from lxml.etree import parse
 from .. import qml, mapfile, extmapfile
@@ -42,7 +44,7 @@ QML_FILES = (
 
 
 def warn(e, t, msg):
-    print 'WARN: ' + msg
+    print('WARN: ' + msg)
 
 
 def _transform(filename):

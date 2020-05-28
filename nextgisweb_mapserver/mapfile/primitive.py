@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
+from six import text_type
+
 import re
 from .util import RNG
 
@@ -14,7 +18,7 @@ class Primitive(object):
         class Subclass(cls):
             pass
 
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(Subclass, k, v)
 
         return Subclass
@@ -31,7 +35,7 @@ class Integer(Primitive):
         return cls(int(t))
 
     def to_mapfile(self):
-        return unicode(self.value)
+        return text_type(self.value)
 
     @classmethod
     def from_xml(cls, e):
@@ -53,7 +57,7 @@ class Double(Primitive):
         return cls(float(t))
 
     def to_mapfile(self):
-        return unicode(self.value)
+        return text_type(self.value)
 
     @classmethod
     def from_xml(cls, e):
@@ -164,7 +168,7 @@ class Composite(Primitive):
             index[k] = p
 
         value = dict()
-        for a, v in e.attrib.iteritems():
+        for a, v in e.attrib.items():
             value[a] = index[a].from_xml(RNG.value(v))
 
         return cls(value)
