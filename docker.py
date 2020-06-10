@@ -11,7 +11,7 @@ class Package(PackageBase):
 
 @AppImage.on_apt.handler
 def on_apt(event):
-    event.package('python3-mapscript')
+    event.package('python3-mapscript' if event.image.context.python3 else 'python-mapscript')
 
 
 @AppImage.on_package_files.handler
