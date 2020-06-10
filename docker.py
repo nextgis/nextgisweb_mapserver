@@ -11,6 +11,13 @@ class Package(PackageBase):
 
 @AppImage.on_apt.handler
 def on_apt(event):
+    if event.image.context.python3:
+        # FIXME: run commands before `add-apt-repository --yes "ppa:nextgis/ppa"`
+        event.command(
+            'echo "deb https://rm.nextgis.com/api/repo/11/deb $(lsb_release -cs) main" | ' +
+            'tee -a /etc/apt/sources.list')
+        event.add_key('https://rm.nextgis.com/api/repo/11/deb/key.gpg')
+
     event.package('python3-mapscript' if event.image.context.python3 else 'python-mapscript')
 
 
