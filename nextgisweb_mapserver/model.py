@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
+from __future__ import division, absolute_import, print_function
 
-from six import BytesIO
+import six
 
 from random import choice
 from pkg_resources import resource_filename
@@ -157,7 +157,7 @@ class MapserverStyle(Base, Resource):
             style.append(E.symbol('circle'))
             style.append(E.size('6'))
 
-        return etree.tostring(root, pretty_print=True)
+        return etree.tostring(root, pretty_print=True, encoding='unicode')
 
     def render_image(self, srs, extent, size, cond, padding=0):
         res_x = (extent[2] - extent[0]) / size[0]
@@ -220,7 +220,7 @@ class MapserverStyle(Base, Resource):
         gdimg = mapobj.draw()
 
         # Преобразуем изображение из PNG в объект PIL
-        buf = BytesIO()
+        buf = six.BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -233,7 +233,7 @@ class MapserverStyle(Base, Resource):
         mapobj = self._mapobj(features=[])
         gdimg = mapobj.drawLegend()
 
-        buf = BytesIO()
+        buf = six.BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -242,7 +242,7 @@ class MapserverStyle(Base, Resource):
     def _mapobj(self, features):
         # tmpf = NamedTemporaryFile(suffix='.map')
         # buf = codecs.open(tmpf.name, 'w', 'utf-8')
-        buf = BytesIO()
+        buf = six.StringIO()
 
         fieldnames = [f.keyname for f in self.parent.fields]
 
@@ -353,12 +353,12 @@ class MapserverStyle(Base, Resource):
         obj = Map().from_xml(emap)
         mapfile(obj, buf)
 
-        mapobj = mapscript.fromstring(buf.getvalue().encode('utf-8'))
+        mapobj = mapscript.fromstring(buf.getvalue())
 
         layer = mapobj.getLayer(0)
 
-        items = ','.join(fieldnames).encode('utf-8')
-        layer.setProcessingKey('ITEMS', items)
+        items = ','.join(fieldnames)
+        layer.setProcessingKey('ITEMS', items.encode('utf-8') if six.PY2 else items)
 
         layer.setProcessingKey('APPROXIMATION_SCALE', 'full')
         layer.setProcessingKey('LABEL_NO_CLIP', 'true')
@@ -378,7 +378,7 @@ class MapserverStyle(Base, Resource):
                     # передавать mapserver пустые значения, но
                     # пока он мне не известен
                     v = ""
-                elif isinstance(v, unicode):
+                elif six.PY2 and isinstance(v, unicode):
                     v = v.encode('utf-8')
                 else:
                     v = repr(v)
