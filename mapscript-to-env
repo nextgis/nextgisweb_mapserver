@@ -8,7 +8,7 @@ usage () {
 
 if [ ! -d "$1" ]; then usage; fi
 
-SRC=`/usr/bin/python3 -c "from __future__ import print_function; import mapscript, os.path; print(os.path.split(mapscript.__file__)[0])"`
+SRC=`/usr/bin/python -c "from __future__ import print_function; import mapscript, os.path; print(os.path.split(mapscript.__file__)[0])"`
 DST=`$1/bin/python -c "from __future__ import print_function; import sys; print(sys.path[-1])"`
 
 cp -vu $SRC/mapscript.py $DST
