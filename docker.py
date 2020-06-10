@@ -24,4 +24,5 @@ def on_package_files(event):
 def on_virtualenv(event):
     event.before_install(
         '$NGWROOT/package/nextgisweb_mapserver/mapscript-to-env ' +
-        '$NGWROOT/env')
+        '$NGWROOT/env/bin/python ' +
+        '/usr/bin/python3' if event.image.context.python3 else '/usr/bin/python')
