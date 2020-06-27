@@ -12,14 +12,4 @@ SRC=`$2 -c "from __future__ import print_function; import mapscript, os.path; pr
 DST=`$1 -c "from __future__ import print_function; import sys; print(sys.path[-1])"`
 
 cp -vu $SRC/mapscript.py $DST
-
-if [[ -f $SRC/_mapscript.so ]]; then
-    cp -vu $SRC/_mapscript.so $DST
-elif [[ -f $SRC/_mapscript.x86_64-linux-gnu.so ]]; then
-    cp -vu $SRC/_mapscript.x86_64-linux-gnu.so $DST
-elif [[ -f $SRC/_mapscript.cpython-36m-x86_64-linux-gnu.so ]]; then
-    cp -vu $SRC/_mapscript.cpython-36m-x86_64-linux-gnu.so $DST
-else
-    echo "Cannot find mapscript library file!"
-    exit 1
-fi
+cp -vu $SRC/_mapscript*.so $DST
