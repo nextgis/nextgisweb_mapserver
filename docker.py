@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
-
 from ngwdocker import PackageBase
 from ngwdocker.base import AppImage
 
