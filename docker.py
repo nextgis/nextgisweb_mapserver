@@ -20,7 +20,7 @@ def on_package_files(event):
 
 @AppImage.on_virtualenv.handler
 def on_virtualenv(event):
+    python_bin = '/usr/bin/python3' if event.image.context.python3 else '/usr/bin/python'
     event.before_install(
         '$NGWROOT/package/nextgisweb_mapserver/mapscript-to-env ' +
-        '$NGWROOT/env/bin/python ' +
-        '/usr/bin/python3' if event.image.context.python3 else '/usr/bin/python')
+        '$NGWROOT/env/bin/python ' + python_bin)
