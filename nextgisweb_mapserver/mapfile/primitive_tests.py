@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
+from six import text_type
+
 from nose.tools import eq_
 
 from .primitive import (
@@ -15,7 +19,7 @@ def test_integer_isvalid():
 
 def test_integer_from_string():
     for v in (-1, 0, 1, -100, 100):
-        eq_(Integer.from_string(unicode(v)).value, v)
+        eq_(Integer.from_string(text_type(v)).value, v)
 
 
 def test_double_isvalid():
@@ -25,7 +29,7 @@ def test_double_isvalid():
 
 def test_double_from_string():
     for v in (-1, 0, 1, -1.1, -100, 100):
-        eq_(Double.from_string(unicode(v)).value, v)
+        eq_(Double.from_string(text_type(v)).value, v)
 
 
 def test_boolean_isvalid():

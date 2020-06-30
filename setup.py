@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 import io
 from setuptools import setup, find_packages
 
@@ -8,6 +11,7 @@ requires = (
     'nextgisweb',
     'geojson',
     'ply',
+    'six',
 )
 
 entry_points = {
@@ -24,7 +28,6 @@ entry_points = {
 setup(
     name='nextgisweb_mapserver',
     version=VERSION,
-    python_requires="<3",
     description="",
     long_description="",
     classifiers=[],

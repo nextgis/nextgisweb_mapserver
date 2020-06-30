@@ -25,26 +25,26 @@ tokens = (
 )
 
 
-t_NUMBER = ur'[+-]?(\d+)?\.\d+([Ee][+-]?\d+)?|[+-]?\d+?\.([Ee][+-]?\d+)?|[+-]?\d+'
-t_IDENTIFIER = ur'\[[A-Z_]+[A-Z0-9_:-]*\]'
-t_LOGIC_OPERATOR = ur'(and)|(or)|(&&)|(\|)'
-t_OPERATOR = ur'(!=)|(>=)|(<=)|(<)|(>)|(=\*)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
-t_STRING_OPERATOR = ur'(~\*)|(~)'
+t_NUMBER = r'[+-]?(\d+)?\.\d+([Ee][+-]?\d+)?|[+-]?\d+?\.([Ee][+-]?\d+)?|[+-]?\d+'
+t_IDENTIFIER = r'\[[A-Z_]+[A-Z0-9_:-]*\]'
+t_LOGIC_OPERATOR = r'(and)|(or)|(&&)|(\|)'
+t_OPERATOR = r'(!=)|(>=)|(<=)|(<)|(>)|(=\*)|(=)|(lt)|(gt)|(ge)|(le)|(eq)|(ne)'
+t_STRING_OPERATOR = r'(~\*)|(~)'
 # t_QUOTE = ur"'"
 # t_DOUBLEQUOTE = ur'"'
-t_LBRAC = ur'\('
-t_RBRAC = ur'\)'
-t_STRING = ur"('[^\']*')|(\"[^\"]*\")"
+t_LBRAC = r'\('
+t_RBRAC = r'\)'
+t_STRING = r"('[^\']*')|(\"[^\"]*\")"
 
 
 # Символы, которые будут игнорироваться
-t_ignore = u' \t'
+t_ignore = ' \t'
 
 
 # Правило для обработки ошибок
 def t_error(t):
     # err_char = t.value[0].decode('utf-8', 'replace')
-    msg = u"Illegal character"
+    msg = "Illegal character"
     raise CharNotRecognizedError(msg)
 
 
@@ -105,83 +105,80 @@ if __name__ == "__main__":
     # data = {'входная строка': список ожидаемых токенов}
     data = {
 		# Число:
-		u"-23 34.4 24 -4.5 +2.3E-1 -2. +.4E+3 .4E3":
+		"-23 34.4 24 -4.5 +2.3E-1 -2. +.4E+3 .4E3":
 		#u"-23 34.4":
 			[
-				('NUMBER', u'-23', 0),
-				('NUMBER', u'34.4', 4),
-				('NUMBER', u'24', 9),
-				('NUMBER', u'-4.5', 12),
-				('NUMBER', u'+2.3E-1', 17),
-				('NUMBER', u'-2.', 25),
-				('NUMBER', u'+.4E+3', 29),
-				('NUMBER', u'.4E3', 36),
+				('NUMBER', '-23', 0),
+				('NUMBER', '34.4', 4),
+				('NUMBER', '24', 9),
+				('NUMBER', '-4.5', 12),
+				('NUMBER', '+2.3E-1', 17),
+				('NUMBER', '-2.', 25),
+				('NUMBER', '+.4E+3', 29),
+				('NUMBER', '.4E3', 36),
 			],
         # Много разных токенов в одной строке
-        u"([POPULATION] > 50000 AND '[LANGUAGE9]' eq 'FRENCH')":
+        "([POPULATION] > 50000 AND '[LANGUAGE9]' eq 'FRENCH')":
             [
-                ('LBRAC', u'(', 0),
-                ('IDENTIFIER', u'[POPULATION]', 1),
-                ('OPERATOR', u'>', 14),
-                ('NUMBER', u'50000', 16),
-                ('LOGIC_OPERATOR', u'AND', 22),
-                ('STRING', u"'[LANGUAGE9]'", 26),
-                ('OPERATOR', u'eq', 40),
-                ('STRING', u"'FRENCH'", 43),
-                ('RBRAC', u')', 51)
+                ('LBRAC', '(', 0),
+                ('IDENTIFIER', '[POPULATION]', 1),
+                ('OPERATOR', '>', 14),
+                ('NUMBER', '50000', 16),
+                ('LOGIC_OPERATOR', 'AND', 22),
+                ('STRING', "'[LANGUAGE9]'", 26),
+                ('OPERATOR', 'eq', 40),
+                ('STRING', "'FRENCH'", 43),
+                ('RBRAC', ')', 51)
             ],
         # Кавычки
-        u"('[LANGUAGE]' eq 'FRENCH2')":
+        "('[LANGUAGE]' eq 'FRENCH2')":
             [
-                ('LBRAC', u'(', 0),
-                ('STRING', u"'[LANGUAGE]'", 1),
-                ('OPERATOR', u'eq', 14),
-                ('STRING', u"'FRENCH2'", 17),
-                ('RBRAC', u')', 26)
+                ('LBRAC', '(', 0),
+                ('STRING', "'[LANGUAGE]'", 1),
+                ('OPERATOR', 'eq', 14),
+                ('STRING', "'FRENCH2'", 17),
+                ('RBRAC', ')', 26)
             ],
         # Двойные кавычки
-        u'("[LANGUAGE]" eq "FRENCH2")':
+        '("[LANGUAGE]" eq "FRENCH2")':
             [
-                ('LBRAC', u'(', 0),
-                ('STRING', u'"[LANGUAGE]"', 1),
-                ('OPERATOR', u'eq', 14),
-                ('STRING', u'"FRENCH2"', 17),
-                ('RBRAC', u')', 26)
+                ('LBRAC', '(', 0),
+                ('STRING', '"[LANGUAGE]"', 1),
+                ('OPERATOR', 'eq', 14),
+                ('STRING', '"FRENCH2"', 17),
+                ('RBRAC', ')', 26)
             ],
         # Кавычки внутри строки
-        u'''("[LANGUAGE]" eq "FR 'w'2")''':
+        '''("[LANGUAGE]" eq "FR 'w'2")''':
             [
-                ('LBRAC', u'(', 0),
-                ('STRING', u'"[LANGUAGE]"', 1),
-                ('OPERATOR', u'eq', 14),
-                ('STRING', u'"FR \'w\'2"', 17),
-                ('RBRAC', u')', 26)
+                ('LBRAC', '(', 0),
+                ('STRING', '"[LANGUAGE]"', 1),
+                ('OPERATOR', 'eq', 14),
+                ('STRING', '"FR \'w\'2"', 17),
+                ('RBRAC', ')', 26)
             ],
         # Строковый оператор
-        u"('[attr]' =* 'aa=(a)')":
+        "('[attr]' =* 'aa=(a)')":
             [
-                ('LBRAC', u'(', 0),
-                ('STRING', u"'[attr]'", 1),
-                ('OPERATOR', u'=*', 10),
-                ('STRING', u"'aa=(a)'", 13),
-                ('RBRAC', u')', 21)
+                ('LBRAC', '(', 0),
+                ('STRING', "'[attr]'", 1),
+                ('OPERATOR', '=*', 10),
+                ('STRING', "'aa=(a)'", 13),
+                ('RBRAC', ')', 21)
             ],
         # Просто строка с пробелами
-        u"'   '":
+        "'   '":
             [
                 ('STRING', "'   '", 0)
             ]
     }
 
     # Give the lexer some input
-    for line, expected in data.iteritems():
-        print
-        print 'line:', line
+    for line, expected in data.items():
+        print()
+        print('line:', line)
         lexer.input(line)
 
         recived_tokens = get_tokens(line)
         # print 'Tokens', recived_tokens
         check_token_eq(recived_tokens, expected)
-
-
-

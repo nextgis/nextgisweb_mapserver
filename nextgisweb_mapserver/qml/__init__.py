@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 from copy import deepcopy
 from lxml.builder import ElementMaker
 
@@ -84,7 +86,7 @@ def layer_simple_marker(src, dst=None, root=None, warn=warn):
     props = proplist(src)
     known = set()
 
-    for k, v in props.iteritems():
+    for k, v in props.items():
 
         if k == 'name':
             mark = v
@@ -144,7 +146,7 @@ def layer_simple_line(src, dst=None, root=None, warn=warn):
     props = proplist(src)
     known = set()
 
-    for k, v in props.iteritems():
+    for k, v in props.items():
         if k == 'capstyle':
             if v in CAPSTYLE:
                 dst.append(E.linecap(CAPSTYLE[v]))
@@ -215,7 +217,7 @@ def layer_marker_line(src, dst=None, root=None, warn=warn):
     props = proplist(src)
     known = set()
 
-    for k, v in props.iteritems():
+    for k, v in props.items():
         if k == 'interval':
             dst.append(E.gap(str(
                 (-1 if props.get('rotate', '0') == '1' else 1) * mm2px(v)
@@ -257,7 +259,7 @@ def layer_simple_fill(src, dst=None, root=None, warn=warn):
     props = proplist(src)
     known = set()
 
-    for k, v in props.iteritems():
+    for k, v in props.items():
         if k == 'color':
             if props.get('style', None) != 'no':
                 dst.append(color_property(v, 'color', warn))

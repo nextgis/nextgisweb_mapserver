@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function
+
+import six
+
 from random import choice
-from StringIO import StringIO
 from pkg_resources import resource_filename
 
-from zope.interface import implements
+from zope.interface import implementer
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
 
@@ -68,8 +71,8 @@ def on_data_change_feature_layer(resource, geom):
             on_data_change_renderable.fire(child, geom)
 
 
+@implementer(IExtentRenderRequest, ITileRenderRequest)
 class RenderRequest(object):
-    implements(IExtentRenderRequest, ITileRenderRequest)
 
     def __init__(self, style, srs, cond):
         self.style = style
@@ -88,13 +91,12 @@ class RenderRequest(object):
         )
 
 
+@implementer((IRenderableStyle, ILegendableStyle))
 class MapserverStyle(Base, Resource):
     identity = 'mapserver_style'
     cls_display_name = _("MapServer style")
 
     __scope__ = DataScope
-
-    implements(IRenderableStyle, ILegendableStyle)
 
     xml = sa.Column(sa.Unicode, nullable=False)
 
@@ -155,7 +157,7 @@ class MapserverStyle(Base, Resource):
             style.append(E.symbol('circle'))
             style.append(E.size('6'))
 
-        return etree.tostring(root, pretty_print=True)
+        return etree.tostring(root, pretty_print=True, encoding='unicode')
 
     def render_image(self, srs, extent, size, cond, padding=0):
         res_x = (extent[2] - extent[0]) / size[0]
@@ -218,7 +220,7 @@ class MapserverStyle(Base, Resource):
         gdimg = mapobj.draw()
 
         # Преобразуем изображение из PNG в объект PIL
-        buf = StringIO()
+        buf = six.BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -231,7 +233,7 @@ class MapserverStyle(Base, Resource):
         mapobj = self._mapobj(features=[])
         gdimg = mapobj.drawLegend()
 
-        buf = StringIO()
+        buf = six.BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -240,9 +242,9 @@ class MapserverStyle(Base, Resource):
     def _mapobj(self, features):
         # tmpf = NamedTemporaryFile(suffix='.map')
         # buf = codecs.open(tmpf.name, 'w', 'utf-8')
-        buf = StringIO()
+        buf = six.StringIO()
 
-        fieldnames = map(lambda f: f.keyname, self.parent.fields)
+        fieldnames = [f.keyname for f in self.parent.fields]
 
         E = ElementMaker()
 
@@ -351,12 +353,12 @@ class MapserverStyle(Base, Resource):
         obj = Map().from_xml(emap)
         mapfile(obj, buf)
 
-        mapobj = mapscript.fromstring(buf.getvalue().encode('utf-8'))
+        mapobj = mapscript.fromstring(buf.getvalue())
 
         layer = mapobj.getLayer(0)
 
-        items = ','.join(fieldnames).encode('utf-8')
-        layer.setProcessingKey('ITEMS', items)
+        items = ','.join(fieldnames)
+        layer.setProcessingKey('ITEMS', items.encode('utf-8') if six.PY2 else items)
 
         layer.setProcessingKey('APPROXIMATION_SCALE', 'full')
         layer.setProcessingKey('LABEL_NO_CLIP', 'true')
@@ -376,7 +378,7 @@ class MapserverStyle(Base, Resource):
                     # передавать mapserver пустые значения, но
                     # пока он мне не известен
                     v = ""
-                elif isinstance(v, unicode):
+                elif six.PY2 and isinstance(v, unicode):
                     v = v.encode('utf-8')
                 else:
                     v = repr(v)

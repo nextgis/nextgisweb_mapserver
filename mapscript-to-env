@@ -2,14 +2,17 @@
 set -e
 
 usage () {
-    echo "USAGE: mapscript-to-env path-to-env"
+    echo "USAGE: mapscript-to-env path-to-env-python path-to-main-python"
     exit -1
 }
 
-if [ ! -d "$1" ]; then usage; fi
+if [ -z $1 ]; then usage; fi
 
-SRC=`/usr/bin/python -c "import mapscript, os.path; print os.path.split(mapscript.__file__)[0]"`
-DST=`$1/bin/python -c "import sys; print sys.path[-1]"`
+PYTHON_NGW=$1
+PYTHON_MAIN=${2:-"/usr/bin/python"}
+
+SRC=`${PYTHON_MAIN} -c "from __future__ import print_function; import mapscript, os.path; print(os.path.split(mapscript.__file__)[0])"`
+DST=`${PYTHON_NGW} -c "from __future__ import print_function; import sys; print(sys.path[-1])"`
 
 cp -vu $SRC/mapscript.py $DST
-cp -vu $SRC/_mapscript.so $DST || cp -vu $SRC/_mapscript.x86_64-linux-gnu.so $DST
+cp -vu $SRC/_mapscript*.so $DST

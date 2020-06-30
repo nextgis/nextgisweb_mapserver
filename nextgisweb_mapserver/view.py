@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 import json
 
 from lxml import etree
@@ -99,9 +101,9 @@ def setup_pyramid(comp, config):
         XML, JSON = 'text/xml', 'application/json'
 
         if request.accept.best_match([XML, JSON]) == XML:
-            return Response(body, content_type=XML)
+            return Response(body, content_type=XML, charset='utf-8')
         else:
-            return Response(json.dumps(body), content_type=JSON)
+            return Response(json.dumps(body), content_type=JSON, charset='utf-8')
 
     config.add_route('mapserver.qml_transform', '/mapserver/qml-transform', client=()) \
         .add_view(qml, request_method='POST')
