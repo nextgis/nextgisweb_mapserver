@@ -353,7 +353,8 @@ class MapserverStyle(Base, Resource):
         obj = Map().from_xml(emap)
         mapfile(obj, buf)
 
-        mapobj = mapscript.fromstring(buf.getvalue())
+        val = buf.getvalue()
+        mapobj = mapscript.fromstring(val.encode('utf-8') if six.PY2 else val)
 
         layer = mapobj.getLayer(0)
 
