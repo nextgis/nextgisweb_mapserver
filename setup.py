@@ -12,6 +12,7 @@ requires = (
     'geojson',
     'ply',
     'six',
+    'shapely'
 )
 
 entry_points = {

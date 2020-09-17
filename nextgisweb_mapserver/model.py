@@ -7,6 +7,7 @@ from random import choice
 from pkg_resources import resource_filename
 
 from zope.interface import implementer
+from shapely import wkt
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
 
@@ -142,9 +143,10 @@ class MapserverStyle(Base, Resource):
             legend
         )
 
-        if layer.geometry_type == GEOM_TYPE.POINT or (
-            hasattr(GEOM_TYPE, 'MULTIPOINT') and
-                layer.geometry_type == GEOM_TYPE.MULTIPOINT):
+        if layer.geometry_type in (
+            GEOM_TYPE.POINT, GEOM_TYPE.MULTIPOINT,
+            GEOM_TYPE.POINTZ, GEOM_TYPE.MULTIPOINTZ
+        ):
             symbol = E.symbol(
                 E.type('ellipse'),
                 E.name('circle'),
@@ -305,12 +307,18 @@ class MapserverStyle(Base, Resource):
         layer_setup = [
             E.name('main'),
             E.type({
-                'POINT': 'point',
-                'LINESTRING': 'line',
-                'POLYGON': 'polygon',
-                'MULTIPOINT': 'point',
-                'MULTILINESTRING': 'line',
-                'MULTIPOLYGON': 'polygon'
+                GEOM_TYPE.POINT: 'point',
+                GEOM_TYPE.LINESTRING: 'line',
+                GEOM_TYPE.POLYGON: 'polygon',
+                GEOM_TYPE.MULTIPOINT: 'point',
+                GEOM_TYPE.MULTILINESTRING: 'line',
+                GEOM_TYPE.MULTIPOLYGON: 'polygon',
+                GEOM_TYPE.POINTZ: 'point',
+                GEOM_TYPE.LINESTRINGZ: 'line',
+                GEOM_TYPE.POLYGONZ: 'polygon',
+                GEOM_TYPE.MULTIPOINTZ: 'point',
+                GEOM_TYPE.MULTILINESTRINGZ: 'line',
+                GEOM_TYPE.MULTIPOLYGONZ: 'polygon'
             }[self.parent.geometry_type]),
             E.template('dummy.html'),
             E.projection("+init=epsg:3857"),
@@ -367,7 +375,10 @@ class MapserverStyle(Base, Resource):
         for f in features:
             # У MapServer серьёзные проблемы с отрисовкой объектов,
             # содержащих дублирующиеся узлы, поэтому выкидываем их
-            shape = mapscript.shapeObj.fromWKT(f.geom.simplify(0).wkt)
+            geom = f.geom.simplify(0)
+            # Превращаем 3D геометрии в 2D
+            geom_wkt = wkt.dumps(geom, output_dimension=2)
+            shape = mapscript.shapeObj.fromWKT(geom_wkt)
 
             shape.initValues(len(fieldnames))
             i = 0
