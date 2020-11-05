@@ -200,9 +200,9 @@ class MapserverStyle(Base, Resource):
 
         feature_query.intersects(box(*extended, srid=srs.id))
         feature_query.geom()
-        features = feature_query()
+        features = list(feature_query())
 
-        if features.total_count < 1:
+        if len(features) == 0:
             return None
 
         mapobj = self._mapobj(features)
