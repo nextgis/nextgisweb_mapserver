@@ -8,7 +8,7 @@ with io.open('VERSION', 'r') as fd:
     VERSION = fd.read().rstrip()
 
 requires = (
-    'nextgisweb',
+    'nextgisweb>=3.6.0.dev5',
     'geojson',
     'ply',
     'six',
