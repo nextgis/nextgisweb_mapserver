@@ -32,7 +32,6 @@ from nextgisweb.feature_layer import (
     GEOM_TYPE,
     on_data_change as on_data_change_feature_layer
 )
-from nextgisweb.marker_library import Marker
 from nextgisweb.render import (
     IRenderableStyle,
     IExtentRenderRequest,
@@ -334,7 +333,7 @@ class MapserverStyle(Base, Resource):
         for e in reversed(layer_setup):
             elayer.insert(0, e)
 
-        # PIXMAP и SVG маркеры: подставляем путь к файлу в SYMBOL cо значением TYPE 'PIXMAP' или 'SVG'
+        # PIXMAP & SVG markers: replace to rectangle      
         for type_elem in emap.iterfind('./symbol/type'):
             if type_elem.text not in ('pixmap', 'svg'):
                 continue
@@ -342,21 +341,13 @@ class MapserverStyle(Base, Resource):
             symbol = type_elem.getparent()
             image = symbol.find('./image')
 
-            try:
-                marker = Marker.filter_by(
-                    keyname=image.text
-                ).one()
+            # TODO: Set path to SVG marker library
+            # image.text = ...
 
-                image.text = env.file_storage.filename(marker.fileobj)
-
-            except orm_exc.NoResultFound:
-                # Если маркера не нашлось, то заменяем symbol на квадрат
-                type_elem.text = 'vector'
-
-                image.tag = 'points'
-                image.text = '0 0 0 1 1 1 1 0 0 0'
-
-                symbol.append(E.filled('true'))
+            type_elem.text = 'vector'
+            image.tag = 'points'
+            image.text = '0 0 0 1 1 1 1 0 0 0'
+            symbol.append(E.filled('true'))
 
         obj = Map().from_xml(emap)
         mapfile(obj, buf)
