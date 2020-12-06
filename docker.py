@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+import ngwdocker
+ngwdocker.require_version('>=2.0.0.dev7')
+
 from ngwdocker import PackageBase
 from ngwdocker.base import AppImage
 
