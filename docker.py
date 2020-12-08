@@ -13,7 +13,7 @@ class Package(PackageBase):
 def on_apt(event):
     image = event.image
 
-    event.package('cmake', 'swig', 'libfreetype6-dev', 'libgeos-dev')
+    event.package('cmake', 'swig', 'libfreetype6-dev', 'libgeos-dev', 'libproj-dev')
     python = '/usr/bin/python3' if image.context.python3 else '/usr/bin/python2'
     msver = '7.6.1'
 
