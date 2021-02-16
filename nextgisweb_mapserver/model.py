@@ -2,6 +2,7 @@
 from __future__ import division, absolute_import, print_function
 
 import six
+import datetime
 
 from random import choice
 from pkg_resources import resource_filename
@@ -383,6 +384,8 @@ class MapserverStyle(Base, Resource):
                     v = ""
                 elif six.PY2 and isinstance(v, unicode):
                     v = v.encode('utf-8')
+                elif isinstance(v, datetime.date):
+                    v = v.strftime('%Y-%m-%dT%H:%M:%S')
                 else:
                     v = repr(v)
 
