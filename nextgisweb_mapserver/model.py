@@ -27,7 +27,7 @@ from nextgisweb.resource import (
     SerializedProperty as SP)
 from nextgisweb.resource.exception import ValidationError
 from nextgisweb.env import env
-from nextgisweb.geometry import box
+from nextgisweb.lib.geometry import Geometry
 from nextgisweb.feature_layer import (
     IFeatureLayer,
     GEOM_TYPE,
@@ -198,7 +198,7 @@ class MapserverStyle(Base, Resource):
         if hasattr(feature_query, 'srs'):
             feature_query.srs(srs)
 
-        feature_query.intersects(box(*extended, srid=srs.id))
+        feature_query.intersects(Geometry.from_box(*extended, srid=srs.id))
         feature_query.geom()
         features = list(feature_query())
 
@@ -367,7 +367,7 @@ class MapserverStyle(Base, Resource):
         for f in features:
             # У MapServer серьёзные проблемы с отрисовкой объектов,
             # содержащих дублирующиеся узлы, поэтому выкидываем их
-            geom = f.geom.simplify(0)
+            geom = f.geom.shape.simplify(0)
             # Превращаем 3D геометрии в 2D
             geom_wkt = wkt.dumps(geom, output_dimension=2)
             shape = mapscript.shapeObj.fromWKT(geom_wkt)
