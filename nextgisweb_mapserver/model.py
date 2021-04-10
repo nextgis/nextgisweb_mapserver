@@ -8,7 +8,6 @@ from random import choice
 from pkg_resources import resource_filename
 
 from zope.interface import implementer
-from shapely import wkt
 import sqlalchemy as sa
 import sqlalchemy.orm.exc as orm_exc
 
@@ -18,6 +17,7 @@ from lxml.builder import ElementMaker
 from PIL import Image
 import mapscript
 
+from nextgisweb.lib.geometry import Geometry
 from nextgisweb.models import declarative_base
 from nextgisweb.resource import (
     Resource,
@@ -27,7 +27,6 @@ from nextgisweb.resource import (
     SerializedProperty as SP)
 from nextgisweb.resource.exception import ValidationError
 from nextgisweb.env import env
-from nextgisweb.lib.geometry import Geometry
 from nextgisweb.feature_layer import (
     IFeatureLayer,
     GEOM_TYPE,
@@ -365,12 +364,12 @@ class MapserverStyle(Base, Resource):
         layer.setProcessingKey('LABEL_NO_CLIP', 'true')
 
         for f in features:
-            # У MapServer серьёзные проблемы с отрисовкой объектов,
-            # содержащих дублирующиеся узлы, поэтому выкидываем их
-            geom = f.geom.shape.simplify(0)
-            # Превращаем 3D геометрии в 2D
-            geom_wkt = wkt.dumps(geom, output_dimension=2)
-            shape = mapscript.shapeObj.fromWKT(geom_wkt)
+            # MapServer has problems while rendering 3D geometries and
+            # geometries with duplicate points.
+            ogr_geom = f.geom.ogr
+            ogr_geom.Set3D(False)
+            ogr_geom.Simplify(0)
+            shape = mapscript.shapeObj.fromWKT(ogr_geom.ExportToIsoWkt())
 
             shape.initValues(len(fieldnames))
             i = 0

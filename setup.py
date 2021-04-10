@@ -8,11 +8,10 @@ with io.open('VERSION', 'r') as fd:
     VERSION = fd.read().rstrip()
 
 requires = (
-    'nextgisweb>=3.8.0.dev2',
+    'nextgisweb>=3.8.0.dev3',
     'geojson',
     'ply',
     'six',
-    'shapely'
 )
 
 entry_points = {
