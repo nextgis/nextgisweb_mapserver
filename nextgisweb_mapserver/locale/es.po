@@ -1,0 +1,44 @@
+# Spanish translations for nextgisweb_mapserver.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the
+# nextgisweb_mapserver project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nextgisweb_mapserver 1.4.0.dev0+7960a6c\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-04-26 19:35+0000\n"
+"PO-Revision-Date: 2021-04-26 19:35+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: amd/ngw-mapserver/StyleWidget.js:44 model.py:97
+msgid "MapServer style"
+msgstr "Estilo MapServer"
+
+#: view.py:60
+#, python-format
+msgid "XML syntax error: %(message)s"
+msgstr "Error de sintaxis XML: %(message)s"
+
+#: view.py:63
+#, python-format
+msgid "XML schema error: %(message)s"
+msgstr "Error de esquema XML: %(message)s"
+
+#: amd/ngw-mapserver/StyleWidget.js:78
+msgid "<!-- An unknown error occurred during the file conversion -->"
+msgstr "<! - Se produjo un error desconocido durante la conversión del archivo ->"
+
+#: amd/ngw-mapserver/template/StyleWidget.hbs:14
+#: amd/ngw-mapserver/template/StyleWidget.hbs:28
+msgid "Import QGIS style"
+msgstr "Importar estilo QGIS"
+
