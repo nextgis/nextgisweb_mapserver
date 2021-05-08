@@ -8,8 +8,7 @@ define([
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
     "ngw/route",
-    "ngw-pyramid/i18n!mapserver",
-    "ngw-pyramid/hbs-i18n",
+    "@nextgisweb/pyramid/i18n!",
     "ngw-resource/serialize",
     "dojo/text!./template/StyleWidget.hbs",
     // template
@@ -35,12 +34,11 @@ define([
     _WidgetsInTemplateMixin,
     route,
     i18n,
-    hbsI18n,
     serialize,
     template
 ) {
     return declare([ContentPane, serialize.Mixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
-        templateString: hbsI18n(template, i18n),
+        templateString: i18n.renderTemplate(template),
         title: i18n.gettext("MapServer style"),
         prefix: "mapserver_style",
 
