@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-import json
-
 from lxml import etree
-from pyramid.response import Response
 
 from nextgisweb.resource import Widget
-from nextgisweb.env import env
 from nextgisweb.object_widget import ObjectWidget
 
 from .mapfile import schema
 from .extmapfile import Map
-from .qml import transform
 
 from .model import MapserverStyle
 
@@ -84,26 +79,3 @@ def setup_pyramid(comp, config):
             return result
 
     MapserverStyle.object_widget = MapserverStyleObjectWidget
-
-    def qml(request):
-        fileid = request.json_body['file']['upload_meta'][0]['id']
-        filename, metadata = env.file_upload.get_filename(fileid)
-
-        elem = etree.parse(filename).getroot()
-
-        def warn(src, dst, msg):
-            dst.append(etree.Comment(u" " + msg + u" "))
-
-        dst = transform(elem, warn=warn)
-
-        body = etree.tostring(dst, pretty_print=True, encoding=unicode)
-
-        XML, JSON = 'text/xml', 'application/json'
-
-        if request.accept.best_match([XML, JSON]) == XML:
-            return Response(body, content_type=XML, charset='utf-8')
-        else:
-            return Response(json.dumps(body), content_type=JSON, charset='utf-8')
-
-    config.add_route('mapserver.qml_transform', '/mapserver/qml-transform', client=()) \
-        .add_view(qml, request_method='POST')
