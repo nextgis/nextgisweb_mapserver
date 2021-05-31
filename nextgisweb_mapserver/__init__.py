@@ -2,7 +2,10 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 from pkg_resources import resource_filename
-from nextgisweb.component import Component, require
+
+from mapscript import MS_VERSION
+
+from nextgisweb.component import Component
 from nextgisweb.lib.config import Option
 
 from .model import Base
@@ -16,13 +19,17 @@ class MapserverComponent(Component):
     metadata = Base.metadata
 
     def setup_pyramid(self, config):
-        super(MapserverComponent, self).setup_pyramid(config)
         from . import view
         view.setup_pyramid(self, config)
 
+    def sys_info(self):
+        return (
+            ("MapServer", MS_VERSION),
+        )
+
     option_annotations = ((
-        Option('fontset', default=_default_fontset, doc=
-            "List of fonts in MAPFILE FONTSET format"),
+        Option('fontset', default=_default_fontset,
+               doc="List of fonts in MAPFILE FONTSET format"),
     ))
 
 
