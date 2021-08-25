@@ -372,8 +372,7 @@ class MapserverStyle(Base, Resource):
             shape = mapscript.shapeObj.fromWKT(ogr_geom.ExportToIsoWkt())
 
             shape.initValues(len(fieldnames))
-            i = 0
-            for fld in fieldnames:
+            for i, fld in enumerate(fieldnames, start=0):
                 v = f.fields[fld]
 
                 if v is None:
@@ -381,15 +380,14 @@ class MapserverStyle(Base, Resource):
                     # передавать mapserver пустые значения, но
                     # пока он мне не известен
                     v = ""
-                elif six.PY2 and isinstance(v, unicode):
-                    v = v.encode('utf-8')
+                elif isinstance(v, (six.text_type, six.binary_type)):
+                    v = six.ensure_str(v)
                 elif isinstance(v, datetime.date):
                     v = v.strftime('%Y-%m-%dT%H:%M:%S')
                 else:
                     v = repr(v)
 
                 shape.setValue(i, v)
-                i += 1
 
             layer.addFeature(shape)
 
