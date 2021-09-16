@@ -193,9 +193,7 @@ class MapserverStyle(Base, Resource):
         if cond is not None:
             feature_query.filter_by(**cond)
 
-        # FIXME: Тоже самое, но через интерфейсы
-        if hasattr(feature_query, 'srs'):
-            feature_query.srs(srs)
+        feature_query.srs(srs)
 
         feature_query.intersects(Geometry.from_box(*extended, srid=srs.id))
         feature_query.geom()
