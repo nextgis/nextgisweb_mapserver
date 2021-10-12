@@ -1,12 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
-
-from six import string_types
-
 from .util import RNG
 
 
-class Directive(object):
+class Directive:
 
     @classmethod
     def subclass(cls, name, single=True, **kwargs):
@@ -72,7 +67,7 @@ class SimpleKeyword(Keyword):
     """
 
     def from_xml(self, e):
-        if isinstance(e, string_types):
+        if isinstance(e, str):
             self.from_string(e)
         else:
             self.from_string(e.text)

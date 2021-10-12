@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
-
 from lxml.builder import ElementMaker
 from lxml.etree import RelaxNG, tostring, fromstring
 
@@ -8,7 +5,7 @@ E = ElementMaker()
 RNG = ElementMaker(namespace='http://relaxng.org/ns/structure/1.0')
 
 
-class MapfileBuffer(object):
+class MapfileBuffer:
 
     def __init__(self, buf, indent=0):
         self._buf = buf

@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
-
-from six import text_type
-
 import re
 from .util import RNG
 
@@ -35,7 +30,7 @@ class Integer(Primitive):
         return cls(int(t))
 
     def to_mapfile(self):
-        return text_type(self.value)
+        return str(self.value)
 
     @classmethod
     def from_xml(cls, e):
@@ -57,7 +52,7 @@ class Double(Primitive):
         return cls(float(t))
 
     def to_mapfile(self):
-        return text_type(self.value)
+        return str(self.value)
 
     @classmethod
     def from_xml(cls, e):

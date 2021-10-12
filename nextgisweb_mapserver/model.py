@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function
-
-import six
 import datetime
+from io import BytesIO, StringIO
 
 from random import choice
 from pkg_resources import resource_filename
 
 from zope.interface import implementer
 import sqlalchemy as sa
-import sqlalchemy.orm.exc as orm_exc
 
 from lxml import etree
 from lxml.builder import ElementMaker
@@ -219,7 +215,7 @@ class MapserverStyle(Base, Resource):
         gdimg = mapobj.draw()
 
         # Преобразуем изображение из PNG в объект PIL
-        buf = six.BytesIO()
+        buf = BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -232,7 +228,7 @@ class MapserverStyle(Base, Resource):
         mapobj = self._mapobj(features=[])
         gdimg = mapobj.drawLegend()
 
-        buf = six.BytesIO()
+        buf = BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
@@ -241,7 +237,7 @@ class MapserverStyle(Base, Resource):
     def _mapobj(self, features):
         # tmpf = NamedTemporaryFile(suffix='.map')
         # buf = codecs.open(tmpf.name, 'w', 'utf-8')
-        buf = six.StringIO()
+        buf = StringIO()
 
         fieldnames = [f.keyname for f in self.parent.fields]
 
@@ -351,12 +347,12 @@ class MapserverStyle(Base, Resource):
         mapfile(obj, buf)
 
         val = buf.getvalue()
-        mapobj = mapscript.fromstring(val.encode('utf-8') if six.PY2 else val)
+        mapobj = mapscript.fromstring(val)
 
         layer = mapobj.getLayer(0)
 
         items = ','.join(fieldnames)
-        layer.setProcessingKey('ITEMS', items.encode('utf-8') if six.PY2 else items)
+        layer.setProcessingKey('ITEMS', items)
 
         layer.setProcessingKey('APPROXIMATION_SCALE', 'full')
         layer.setProcessingKey('LABEL_NO_CLIP', 'true')
@@ -378,10 +374,12 @@ class MapserverStyle(Base, Resource):
                     # передавать mapserver пустые значения, но
                     # пока он мне не известен
                     v = ""
-                elif isinstance(v, (six.text_type, six.binary_type)):
-                    v = six.ensure_str(v)
+                elif isinstance(v, str):
+                    pass
+                elif isinstance(v, bytes):
+                    v = v.decode('utf-8')
                 elif isinstance(v, datetime.date):
-                    v = v.strftime('%Y-%m-%dT%H:%M:%S')
+                    v = v.strftime(r'%Y-%m-%dT%H:%M:%S')
                 else:
                     v = repr(v)
 
