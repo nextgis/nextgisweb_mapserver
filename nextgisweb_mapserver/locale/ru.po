@@ -1,23 +1,13 @@
-#: model.py:80 amd/ngw-mapserver/StyleWidget.js:44
+#: amd/ngw-mapserver/StyleWidget.js:34 model.py:93
 msgid "MapServer style"
 msgstr "Стиль MapServer"
 
-#: view.py:58
+#: view.py:52
 #, python-format
 msgid "XML syntax error: %(message)s"
 msgstr "Синтаксическая ошибка XML"
 
-#: view.py:61
+#: view.py:55
 #, python-format
 msgid "XML schema error: %(message)s"
 msgstr "Ошибка схемы XML"
-
-#: amd/ngw-mapserver/StyleWidget.js:78
-msgid "<!-- An unknown error occurred during the file conversion -->"
-msgstr "<!-- В ходе преобразования файла возникла неизвестная ошибка -->"
-
-#: amd/ngw-mapserver/template/StyleWidget.hbs:14
-#: amd/ngw-mapserver/template/StyleWidget.hbs:28
-msgid "Import QGIS style"
-msgstr "Импорт стиля QGIS"
-
