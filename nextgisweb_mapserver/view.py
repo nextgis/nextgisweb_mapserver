@@ -49,10 +49,10 @@ def setup_pyramid(comp, config):
                 relaxng.assertValid(layer)
 
             except etree.XMLSyntaxError as e:
-                result = err(_("XML syntax error: %(message)s") % dict(message=e.message))
+                result = err(_("XML syntax error: %s") % str(e))
 
             except etree.DocumentInvalid as e:
-                result = err(_("XML schema error: %(message)s") % dict(message=e.message))
+                result = err(_("XML schema error: %s") % str(e))
 
             return result
 

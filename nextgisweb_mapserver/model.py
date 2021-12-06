@@ -404,10 +404,10 @@ class _xml_attr(SP):
             relaxng.assertValid(layer)
 
         except etree.XMLSyntaxError as e:
-            raise ValidationError(e.message)
+            raise ValidationError(_("XML syntax error: %s") % str(e))
 
         except etree.DocumentInvalid as e:
-            raise ValidationError(e.message)
+            raise ValidationError(_("XML schema error: %s") % str(e))
 
         for cls in registry:
             if hasattr(cls, 'assert_valid'):
@@ -416,8 +416,7 @@ class _xml_attr(SP):
                     try:
                         cls.assert_valid(el)
                     except Exception as e:
-                        raise ValidationError("{0} within <{1}> tag".\
-                            format(e.message, tag))
+                        raise ValidationError("{0} within <{1}> tag".format(str(e), tag))
 
         SP.setter(self, srlzr, value)
 
