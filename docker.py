@@ -32,6 +32,7 @@ def on_apt(event):
             '-DWITH_PYTHON=ON -DPYTHON_EXECUTABLE={} ../ '.format(python_bin) +
             ' > ../configure.out.txt',
         'make && make install',
+        '{} -m pip install mapscript/python'.format(python_bin),
         'cd / && rm -rf /tmp/mapserver',
     )
 
