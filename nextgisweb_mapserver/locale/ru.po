@@ -2,12 +2,12 @@
 msgid "MapServer style"
 msgstr "Стиль MapServer"
 
-#: view.py:52
+#: model.py:407 view.py:52
 #, python-format
-msgid "XML syntax error: %(message)s"
-msgstr "Синтаксическая ошибка XML"
+msgid "XML syntax error: %s"
+msgstr "Синтаксическая ошибка XML: %s"
 
-#: view.py:55
+#: model.py:410 view.py:55
 #, python-format
-msgid "XML schema error: %(message)s"
-msgstr "Ошибка схемы XML"
+msgid "XML schema error: %s"
+msgstr "Ошибка схемы XML: %s"
