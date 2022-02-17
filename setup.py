@@ -6,7 +6,6 @@ with io.open('VERSION', 'r') as fd:
 
 requires = (
     'nextgisweb>=4.0.0.dev5',
-    'geojson',
     'ply',
 )
 
