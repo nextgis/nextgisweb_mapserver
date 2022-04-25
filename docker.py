@@ -15,7 +15,7 @@ class Package(PackageBase):
 @AppImage.on_apt.handler
 def on_apt(event):
     event.package('cmake', 'swig', 'libfreetype6-dev', 'libgeos-dev', 'libproj-dev')
-    msver = '7.6.1'
+    msver = '7.6.4'
 
     event.pop()
     event.command(
