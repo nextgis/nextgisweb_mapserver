@@ -112,12 +112,15 @@ class MapserverStyle(Base, Resource):
         return RenderRequest(self, srs, cond)
 
     @classmethod
-    def default_style_xml(cls, layer):
+    def default_style_xml(cls, layer, color=None):
+        if color is None:
+            color = choice(_RNDCOLOR)
+
         E = ElementMaker()
 
         style = E.style(
             E.color(dict(zip(
-                ('red', 'green', 'blue'), map(str, choice(_RNDCOLOR))
+                ('red', 'green', 'blue'), map(str, color)
             ))),
             E.outlinecolor(red='64', green='64', blue='64'),
         )
