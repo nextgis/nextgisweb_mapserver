@@ -1,4 +1,4 @@
-from nextgisweb.i18n import trstring_factory
+from nextgisweb.lib.i18n import trstr_factory
 
 COMP_ID = 'mapserver'
-_ = trstring_factory(COMP_ID)
+_ = trstr_factory(COMP_ID)
