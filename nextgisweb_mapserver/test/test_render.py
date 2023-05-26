@@ -7,7 +7,7 @@ from osgeo import ogr
 from PIL import ImageStat
 
 from nextgisweb.auth import User
-from nextgisweb.models import DBSession
+from nextgisweb.env.model import DBSession
 from nextgisweb.spatial_ref_sys import SRS
 from nextgisweb.vector_layer import VectorLayer
 from nextgisweb_mapserver.model import MapserverStyle

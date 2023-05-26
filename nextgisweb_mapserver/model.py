@@ -14,7 +14,7 @@ from PIL import Image
 import mapscript
 
 from nextgisweb.lib.geometry import Geometry
-from nextgisweb.models import declarative_base
+from nextgisweb.env.model import declarative_base
 from nextgisweb.resource import (
     Resource,
     ResourceScope,

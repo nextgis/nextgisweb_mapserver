@@ -2,7 +2,7 @@ from pkg_resources import resource_filename
 
 from mapscript import MS_VERSION
 
-from nextgisweb.component import Component
+from nextgisweb.env import Component
 from nextgisweb.lib.config import Option
 
 from .model import Base
