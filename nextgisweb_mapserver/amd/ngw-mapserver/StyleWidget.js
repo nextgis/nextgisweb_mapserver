@@ -32,6 +32,7 @@ define([
     return declare([ContentPane, serialize.Mixin, _TemplatedMixin, _WidgetsInTemplateMixin], {
         templateString: i18n.renderTemplate(template),
         title: i18n.gettext("MapServer style"),
+        activateOn: { create: true },
         prefix: "mapserver_style",
 
         postCreate: function () {
