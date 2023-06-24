@@ -1,44 +1,35 @@
 import datetime
 from io import BytesIO, StringIO
-
-from random import choice
 from pkg_resources import resource_filename
+from random import choice
 
-from zope.interface import implementer
+import mapscript
 import sqlalchemy as sa
-
 from lxml import etree
 from lxml.builder import ElementMaker
-
 from PIL import Image
-import mapscript
+from zope.interface import implementer
 
+from nextgisweb.env import declarative_base, env
 from nextgisweb.lib.geometry import Geometry
-from nextgisweb.env.model import declarative_base
-from nextgisweb.resource import (
-    Resource,
-    ResourceScope,
-    DataScope,
-    Serializer,
-    SerializedProperty as SP)
-from nextgisweb.resource.exception import ValidationError
-from nextgisweb.env import env
-from nextgisweb.feature_layer import (
-    IFeatureLayer,
-    GEOM_TYPE,
-    on_data_change as on_data_change_feature_layer
+
+from nextgisweb.feature_layer import GEOM_TYPE, IFeatureLayer
+from nextgisweb.feature_layer import on_data_change as on_data_change_feature_layer
+from nextgisweb.render import (
+    IExtentRenderRequest,
+    ILegendableStyle,
+    IRenderableStyle,
+    ITileRenderRequest,
+    on_style_change,
 )
 from nextgisweb.render import (
-    IRenderableStyle,
-    IExtentRenderRequest,
-    ITileRenderRequest,
-    ILegendableStyle,
-    on_style_change,
     on_data_change as on_data_change_renderable,
 )
+from nextgisweb.resource import DataScope, Resource, ResourceScope, Serializer
+from nextgisweb.resource import SerializedProperty as SP
+from nextgisweb.resource.exception import ValidationError
 
-from .mapfile import Map, mapfile, schema, registry
-
+from .mapfile import Map, mapfile, registry, schema
 from .util import _
 
 Base = declarative_base()
@@ -290,7 +281,7 @@ class MapserverStyle(Base, Resource):
             E.projection("+init=epsg:4326"),
             E.fontset(env.mapserver.options['fontset']),
             E.symbolset(resource_filename(
-                'nextgisweb_mapserver', 'symbolset'
+                'nextgisweb_mapserver', 'mapserver/symbolset'
             ))
         ]
 
@@ -330,7 +321,7 @@ class MapserverStyle(Base, Resource):
         for e in reversed(layer_setup):
             elayer.insert(0, e)
 
-        # PIXMAP & SVG markers: replace to rectangle      
+        # PIXMAP & SVG markers: replace to rectangle
         for type_elem in emap.iterfind('./symbol/type'):
             if type_elem.text not in ('pixmap', 'svg'):
                 continue
@@ -424,6 +415,7 @@ class _xml_attr(SP):
         SP.setter(self, srlzr, value)
 
         on_style_change.fire(srlzr.obj)
+
 
 PR_READ = ResourceScope.read
 PR_UPDATE = ResourceScope.update

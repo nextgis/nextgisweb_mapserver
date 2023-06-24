@@ -1,7 +1,6 @@
 from nextgisweb.resource import Widget
 
 from .model import MapserverStyle
-from .util import _
 
 
 class StyleWidget(Widget):

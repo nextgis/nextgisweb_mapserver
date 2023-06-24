@@ -2,6 +2,7 @@
 '''
 
 import re
+
 import ply.lex as lex
 
 
@@ -15,8 +16,8 @@ tokens = (
     'LOGIC_OPERATOR',
     'OPERATOR',
     'STRING_OPERATOR',
-    #'QUOTE',
-    #'DOUBLEQUOTE',
+    # 'QUOTE',
+    # 'DOUBLEQUOTE',
     'LBRAC',
     'RBRAC',
     'STRING'
@@ -47,7 +48,7 @@ def t_error(t):
 
 
 # Лексический анализатор
-lexer = lex.lex(reflags=re.IGNORECASE+re.UNICODE)
+lexer = lex.lex(reflags=re.IGNORECASE + re.UNICODE)
 
 
 if __name__ == "__main__":
@@ -102,19 +103,19 @@ if __name__ == "__main__":
 
     # data = {'входная строка': список ожидаемых токенов}
     data = {
-		# Число:
-		"-23 34.4 24 -4.5 +2.3E-1 -2. +.4E+3 .4E3":
-		#u"-23 34.4":
-			[
-				('NUMBER', '-23', 0),
-				('NUMBER', '34.4', 4),
-				('NUMBER', '24', 9),
-				('NUMBER', '-4.5', 12),
-				('NUMBER', '+2.3E-1', 17),
-				('NUMBER', '-2.', 25),
-				('NUMBER', '+.4E+3', 29),
-				('NUMBER', '.4E3', 36),
-			],
+        # Число:
+        "-23 34.4 24 -4.5 +2.3E-1 -2. +.4E+3 .4E3":
+        # u"-23 34.4":
+            [
+                ('NUMBER', '-23', 0),
+                ('NUMBER', '34.4', 4),
+                ('NUMBER', '24', 9),
+                ('NUMBER', '-4.5', 12),
+                ('NUMBER', '+2.3E-1', 17),
+                ('NUMBER', '-2.', 25),
+                ('NUMBER', '+.4E+3', 29),
+                ('NUMBER', '.4E3', 36),
+            ],
         # Много разных токенов в одной строке
         "([POPULATION] > 50000 AND '[LANGUAGE9]' eq 'FRENCH')":
             [

@@ -1,2 +1,2 @@
 from .keyword import Map, registry
-from .util import schema, mapfile
+from .util import mapfile, schema

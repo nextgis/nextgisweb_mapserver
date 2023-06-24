@@ -1,5 +1,5 @@
 from lxml.builder import ElementMaker
-from lxml.etree import RelaxNG, tostring, fromstring
+from lxml.etree import RelaxNG, fromstring, tostring
 
 E = ElementMaker()
 RNG = ElementMaker(namespace='http://relaxng.org/ns/structure/1.0')

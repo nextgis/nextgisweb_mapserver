@@ -1,4 +1,4 @@
-from lxml.etree import tostring, fromstring, RelaxNG
+from lxml.etree import RelaxNG, fromstring, tostring
 
 from .keyword import registry
 

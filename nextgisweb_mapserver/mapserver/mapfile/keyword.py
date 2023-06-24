@@ -1,14 +1,7 @@
-from .expressions import parser
-
-from .util import RNG
-from .grammar import (
-    SimpleKeyword,
-    PrimitiveKeyword,
-    BlockDirective,
-    CompositeDirective,
-)
-
 from . import primitive as p
+from .expressions import parser
+from .grammar import BlockDirective, CompositeDirective, PrimitiveKeyword, SimpleKeyword
+from .util import RNG
 
 registry = list()
 
@@ -75,6 +68,7 @@ class Color(PrimitiveKeyword):
             ('blue', p.Integer),
         )
     )
+
 
 @register
 class Point(PrimitiveKeyword):
@@ -433,8 +427,8 @@ class Metadata(BlockDirective):
 
     def from_xml(self, e):
         self.value = dict()
-        for p in e.iterfind('./item'):
-            self.value[p.attrib['key']] = p.attrib['value']
+        for pr in e.iterfind('./item'):
+            self.value[pr.attrib['key']] = pr.attrib['value']
 
     def to_mapfile(self, buf):
         buf.begin(self.name)

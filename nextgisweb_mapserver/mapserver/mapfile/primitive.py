@@ -1,4 +1,5 @@
 import re
+
 from .util import RNG
 
 
@@ -150,11 +151,11 @@ class Attribute(Primitive):
 class Composite(Primitive):
 
     def to_mapfile(self):
-        l = list()
+        a = list()
         for k, p in self.items:
-            l.append(self.value[k].to_mapfile())
+            a.append(self.value[k].to_mapfile())
 
-        return ' '.join(l)
+        return ' '.join(a)
 
     @classmethod
     def from_xml(cls, e):

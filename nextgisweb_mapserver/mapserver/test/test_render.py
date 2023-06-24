@@ -4,14 +4,14 @@ from uuid import uuid4
 import pytest
 import transaction
 from osgeo import ogr
-from PIL import ImageStat
+
+from nextgisweb.env import DBSession
 
 from nextgisweb.auth import User
-from nextgisweb.env.model import DBSession
 from nextgisweb.spatial_ref_sys import SRS
 from nextgisweb.vector_layer import VectorLayer
-from nextgisweb_mapserver.model import MapserverStyle
 
+from ..model import MapserverStyle
 
 data_path = Path(__file__).parent / 'data'
 
@@ -57,6 +57,7 @@ def style(layer):
         yield res
 
         DBSession.delete(res)
+
 
 def test_render(style):
     srs = SRS.filter_by(id=4326).one()

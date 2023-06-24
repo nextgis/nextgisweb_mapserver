@@ -1,10 +1,6 @@
 from nose.tools import eq_
 
-from .primitive import (
-    Integer,
-    Double,
-    Boolean,
-)
+from .primitive import Boolean, Double, Integer
 
 
 def test_integer_isvalid():
@@ -35,4 +31,3 @@ def test_boolean_isvalid():
 def test_boolean_from_string():
     eq_(Boolean.from_string('true').value, True)
     eq_(Boolean.from_string('false').value, False)
-

@@ -1,12 +1,9 @@
-"""Синтаксический анализатор"""
-
-import sys
 import os
+import sys
 
 import ply.yacc as yacc
 
-from .logic_expr_lexer import tokens, lexer # Не удалять импорт tokens # NOQA
-from .logic_expr_lexer import CharNotRecognizedError
+from .logic_expr_lexer import CharNotRecognizedError, lexer, tokens  # NOQA: F401
 
 
 class TokenNotRecognizedError(Exception):
@@ -85,8 +82,8 @@ if __name__ == "__main__":
         u'"  "',
         u"""' "sdf" '""",   # Строка содержащая кавычки
         u'''" 'sdf' "''',   # Строка содержащая кавычки
-        u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')", # Составной оператор без скобочек
-        u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',  # Составной оператор со скобочками
+        u"([POPULATION] > 50000 AND '[LANGUAGE]' eq 'FRENCH')",  # Составной оператор без скобочек
+        u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) )',   # Составной оператор со скобочками
         u'( ("[LANG4]" ~ "FRENCH2") AND ([attr] gt 30) or ([attr1] lt 30) OR ([attr2] = 30))',  # Много скобочек
         u"('[LANGUAGE]' lt '')",
         u"( 3 < 4)",
