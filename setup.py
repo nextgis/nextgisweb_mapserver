@@ -5,13 +5,13 @@ with io.open('VERSION', 'r') as fd:
     VERSION = fd.read().rstrip()
 
 requires = (
-    'nextgisweb>=4.4.0.dev14',
+    'nextgisweb>=4.4.0.dev15',
     'ply',
 )
 
 entry_points = {
     'nextgisweb.packages': [
-        'nextgisweb_mapserver = nextgisweb_mapserver:pkginfo',
+        'nextgisweb_mapserver = nextgisweb:single_component',
     ],
 }
 

@@ -7,8 +7,7 @@ from nextgisweb.lib.config import Option
 
 from .model import Base
 
-_default_fontset = resource_filename(
-    'nextgisweb_mapserver', 'mapserver/fonts/fontset')
+_default_fontset = resource_filename('nextgisweb_mapserver', 'fonts/fontset')
 
 
 class MapserverComponent(Component):
@@ -28,7 +27,3 @@ class MapserverComponent(Component):
         Option('fontset', default=_default_fontset,
                doc="List of fonts in MAPFILE FONTSET format"),
     ))
-
-
-def pkginfo():
-    return dict(components=dict(mapserver="nextgisweb_mapserver"))

@@ -280,9 +280,7 @@ class MapserverStyle(Base, Resource):
             E.extent(minx='-180', miny='-90', maxx='180', maxy='90'),
             E.projection("+init=epsg:4326"),
             E.fontset(env.mapserver.options['fontset']),
-            E.symbolset(resource_filename(
-                'nextgisweb_mapserver', 'mapserver/symbolset'
-            ))
+            E.symbolset(resource_filename('nextgisweb_mapserver', 'symbolset')),
         ]
 
         for i in reversed(map_setup):

@@ -1,2 +1,2 @@
-def pkginfo():
-    return dict(components=dict(mapserver="nextgisweb_mapserver.mapserver"))
+from .component import MapserverComponent
+from .model import MapserverStyle
