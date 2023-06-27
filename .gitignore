@@ -6,20 +6,11 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-.Python
+*.egg-info
 env/
 build/
-develop-eggs/
 dist/
-eggs/
-lib/
-lib64/
-parts/
 sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -42,6 +33,7 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+*.jed
 
 # Django stuff:
 *.log
