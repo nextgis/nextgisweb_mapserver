@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { Code } from "@nextgisweb/gui/component/code";
-import i18n from "@nextgisweb/pyramid/i18n!mapserver";
+import i18n from "@nextgisweb/pyramid/i18n";
 
 export const EditorWidget = observer(({ store }) => {
     return (
