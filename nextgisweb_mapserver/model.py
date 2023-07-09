@@ -10,7 +10,7 @@ from lxml.builder import ElementMaker
 from PIL import Image
 from zope.interface import implementer
 
-from nextgisweb.env import declarative_base, env
+from nextgisweb.env import Base, _, env
 from nextgisweb.lib.geometry import Geometry
 
 from nextgisweb.feature_layer import GEOM_TYPE, IFeatureLayer
@@ -30,9 +30,6 @@ from nextgisweb.resource import SerializedProperty as SP
 from nextgisweb.resource.exception import ValidationError
 
 from .mapfile import Map, mapfile, registry, schema
-from .util import _
-
-Base = declarative_base()
 
 # Палитра из 12 цветов ColorBrewer
 _RNDCOLOR = (

@@ -5,14 +5,10 @@ from mapscript import MS_VERSION
 from nextgisweb.env import Component
 from nextgisweb.lib.config import Option
 
-from .model import Base
-
 _default_fontset = resource_filename('nextgisweb_mapserver', 'fonts/fontset')
 
 
 class MapserverComponent(Component):
-    identity = 'mapserver'
-    metadata = Base.metadata
 
     def setup_pyramid(self, config):
         from . import view
