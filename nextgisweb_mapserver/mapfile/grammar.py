@@ -2,7 +2,6 @@ from .util import RNG
 
 
 class Directive:
-
     @classmethod
     def subclass(cls, name, single=True, **kwargs):
         class SubClass(cls):
@@ -20,51 +19,33 @@ class Directive:
 
 
 class Keyword(Directive):
-    """
-    Выражения вида:
+    """KEYWORD ..."""
 
-    KEYWORD ...
-
-    """
-
-    name = 'KEYWORD'
+    name = "KEYWORD"
 
 
 class BlockDirective(Directive):
-    """
-    Выражение вида:
+    """BLOCK ... END"""
 
-    BLOCK ... END
-
-    """
-
-    name = 'BLOCK'
+    name = "BLOCK"
 
 
 class PrimitiveKeyword(Keyword):
-    """ Выражение вида: KEYWORD primitive """
+    """KEYWORD primitive"""
 
     def from_xml(self, e):
         self.value = self.primitive.from_xml(e)
 
     def to_mapfile(self, buf):
-        buf.write('%s %s\n' % (self.name, self.value.to_mapfile()))
+        buf.write("%s %s\n" % (self.name, self.value.to_mapfile()))
 
     @classmethod
     def element_schema(cls):
-        return RNG.element(
-            cls.primitive.xml_schema(),
-            name=cls.name.lower()
-        )
+        return RNG.element(cls.primitive.xml_schema(), name=cls.name.lower())
 
 
 class SimpleKeyword(Keyword):
-    """
-    Выражения вида:
-
-    KEYWORD value
-
-    """
+    """KEYWORD value"""
 
     def from_xml(self, e):
         if isinstance(e, str):
@@ -73,7 +54,7 @@ class SimpleKeyword(Keyword):
             self.from_string(e.text)
 
     def to_mapfile(self, buf):
-        buf.write('%s %s\n' % (self.name, self.to_string()))
+        buf.write("%s %s\n" % (self.name, self.to_string()))
 
     @classmethod
     def value_schema(cls):
@@ -81,25 +62,18 @@ class SimpleKeyword(Keyword):
 
     @classmethod
     def element_schema(cls):
-        return RNG.element(
-            cls.value_schema(),
-            name=cls.name.lower()
-        )
+        return RNG.element(cls.value_schema(), name=cls.name.lower())
 
 
 class CompositeDirective(BlockDirective):
     """
-    Выражение вида:
-
-        BLOCK
-            KEYWORD1 ...
-            KEYWORD2 ...
-            SUBBLOCK 1
-                ...
-            END
+    BLOCK
+        KEYWORD1 ...
+        KEYWORD2 ...
+        SUBBLOCK 1
+            ...
         END
-
-    """
+    END"""
 
     def __init__(self):
         self.data = dict()
@@ -110,7 +84,7 @@ class CompositeDirective(BlockDirective):
             self.registry[m.name] = m
 
     def from_xml(self, e):
-        for c in e.iterfind('./'):
+        for c in e.iterfind("./"):
             name = c.tag.upper()
             cls = self.registry[name]
 
@@ -140,12 +114,8 @@ class CompositeDirective(BlockDirective):
 
         for m in self.members:
             if m.single:
-                i.append(RNG.optional(
-                    m.element_schema()
-                ))
+                i.append(RNG.optional(m.element_schema()))
             else:
-                i.append(RNG.zeroOrMore(
-                    m.element_schema()
-                ))
+                i.append(RNG.zeroOrMore(m.element_schema()))
 
         return e

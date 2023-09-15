@@ -31,7 +31,7 @@ from nextgisweb.resource.exception import ValidationError
 
 from .mapfile import Map, mapfile, registry, schema
 
-# Палитра из 12 цветов ColorBrewer
+# ColorBrewer
 _RNDCOLOR = (
     (141, 211, 199),
     (255, 255, 179),
@@ -151,7 +151,6 @@ class MapserverStyle(Base, Resource):
         res_x = (extent[2] - extent[0]) / size[0]
         res_y = (extent[3] - extent[1]) / size[1]
 
-        # Экстент с учетом отступов
         extended = (
             extent[0] - res_x * padding,
             extent[1] - res_y * padding,
@@ -159,13 +158,11 @@ class MapserverStyle(Base, Resource):
             extent[3] + res_y * padding,
         )
 
-        # Размер изображения с учетом отступов
         render_size = (
             size[0] + 2 * padding,
             size[1] + 2 * padding
         )
 
-        # Фрагмент изображения размера size
         target_box = (
             padding,
             padding,
@@ -173,10 +170,8 @@ class MapserverStyle(Base, Resource):
             size[1] + padding
         )
 
-        # Выбираем объекты по экстенту
         feature_query = self.parent.feature_query()
 
-        # Отфильтровываем объекты по условию
         if cond is not None:
             feature_query.filter_by(**cond)
 
@@ -191,7 +186,6 @@ class MapserverStyle(Base, Resource):
 
         mapobj = self._mapobj(features)
 
-        # Получаем картинку эмулируя WMS запрос
         req = mapscript.OWSRequest()
         req.setParameter("bbox", ','.join(map(str, extended if padding else extent)))
         req.setParameter("width", str(render_size[0]))
@@ -205,14 +199,12 @@ class MapserverStyle(Base, Resource):
         mapobj.loadOWSParameters(req)
         gdimg = mapobj.draw()
 
-        # Преобразуем изображение из PNG в объект PIL
         buf = BytesIO()
         buf.write(gdimg.getBytes())
         buf.seek(0)
 
         img = Image.open(buf)
 
-        # Вырезаем нужный нам кусок изображения
         return img.crop(target_box)
 
     def render_legend(self):
@@ -234,7 +226,6 @@ class MapserverStyle(Base, Resource):
 
         E = ElementMaker()
 
-        # Настраиваем map
         emap = etree.fromstring(self.xml)
 
         map_setup = [
@@ -283,7 +274,6 @@ class MapserverStyle(Base, Resource):
         for i in reversed(map_setup):
             emap.insert(0, i)
 
-        # Настраиваем layer
         elayer = emap.find('./layer')
 
         layer_setup = [
@@ -359,9 +349,7 @@ class MapserverStyle(Base, Resource):
                 v = f.fields[fld]
 
                 if v is None:
-                    # TODO: Возможно есть более удачный способ
-                    # передавать mapserver пустые значения, но
-                    # пока он мне не известен
+                    # TODO: There is no other way to pass empty values
                     v = ""
                 elif isinstance(v, str):
                     pass
