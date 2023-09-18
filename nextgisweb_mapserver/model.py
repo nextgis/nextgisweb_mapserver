@@ -57,7 +57,6 @@ def on_data_change_feature_layer(resource, geom):
 
 @implementer(IExtentRenderRequest, ITileRenderRequest)
 class RenderRequest(object):
-
     def __init__(self, style, srs, cond):
         self.style = style
         self.srs = srs
@@ -68,16 +67,12 @@ class RenderRequest(object):
 
     def render_tile(self, tile, size):
         extent = self.srs.tile_extent(tile)
-        return self.style.render_image(
-            self.srs, extent, (size, size),
-            self.cond,
-            padding=size / 2
-        )
+        return self.style.render_image(self.srs, extent, (size, size), self.cond, padding=size / 2)
 
 
 @implementer((IRenderableStyle, ILegendableStyle))
 class MapserverStyle(Base, Resource):
-    identity = 'mapserver_style'
+    identity = "mapserver_style"
     cls_display_name = _("MapServer style")
 
     __scope__ = DataScope
@@ -107,45 +102,35 @@ class MapserverStyle(Base, Resource):
         E = ElementMaker()
 
         style = E.style(
-            E.color(dict(zip(
-                ('red', 'green', 'blue'), map(str, color)
-            ))),
-            E.outlinecolor(red='64', green='64', blue='64'),
+            E.color(dict(zip(("red", "green", "blue"), map(str, color)))),
+            E.outlinecolor(red="64", green="64", blue="64"),
         )
 
         legend = E.legend(
-            E.keysize(x='15', y='15'),
-            E.label(
-                E.size('12'),
-                E.type('truetype'),
-                E.font('regular')
-            )
+            E.keysize(x="15", y="15"), E.label(E.size("12"), E.type("truetype"), E.font("regular"))
         )
 
-        root = E.map(
-            E.layer(
-                E('class', style)
-            ),
-            legend
-        )
+        root = E.map(E.layer(E("class", style)), legend)
 
         if layer.geometry_type in (
-            GEOM_TYPE.POINT, GEOM_TYPE.MULTIPOINT,
-            GEOM_TYPE.POINTZ, GEOM_TYPE.MULTIPOINTZ
+            GEOM_TYPE.POINT,
+            GEOM_TYPE.MULTIPOINT,
+            GEOM_TYPE.POINTZ,
+            GEOM_TYPE.MULTIPOINTZ,
         ):
             symbol = E.symbol(
-                E.type('ellipse'),
-                E.name('circle'),
-                E.points('1 1'),
-                E.filled('true'),
+                E.type("ellipse"),
+                E.name("circle"),
+                E.points("1 1"),
+                E.filled("true"),
             )
 
             root.insert(0, symbol)
 
-            style.append(E.symbol('circle'))
-            style.append(E.size('6'))
+            style.append(E.symbol("circle"))
+            style.append(E.size("6"))
 
-        return etree.tostring(root, pretty_print=True, encoding='unicode')
+        return etree.tostring(root, pretty_print=True, encoding="unicode")
 
     def render_image(self, srs, extent, size, cond, padding=0):
         res_x = (extent[2] - extent[0]) / size[0]
@@ -158,17 +143,9 @@ class MapserverStyle(Base, Resource):
             extent[3] + res_y * padding,
         )
 
-        render_size = (
-            size[0] + 2 * padding,
-            size[1] + 2 * padding
-        )
+        render_size = (size[0] + 2 * padding, size[1] + 2 * padding)
 
-        target_box = (
-            padding,
-            padding,
-            size[0] + padding,
-            size[1] + padding
-        )
+        target_box = (padding, padding, size[0] + padding, size[1] + padding)
 
         feature_query = self.parent.feature_query()
 
@@ -187,14 +164,14 @@ class MapserverStyle(Base, Resource):
         mapobj = self._mapobj(features)
 
         req = mapscript.OWSRequest()
-        req.setParameter("bbox", ','.join(map(str, extended if padding else extent)))
+        req.setParameter("bbox", ",".join(map(str, extended if padding else extent)))
         req.setParameter("width", str(render_size[0]))
         req.setParameter("height", str(render_size[1]))
-        req.setParameter("srs", 'EPSG:%d' % self.parent.srs_id)
-        req.setParameter("format", 'image/png')
-        req.setParameter("layers", 'main')
+        req.setParameter("srs", "EPSG:%d" % self.parent.srs_id)
+        req.setParameter("format", "image/png")
+        req.setParameter("layers", "main")
         req.setParameter("request", "GetMap")
-        req.setParameter('transparent', 'TRUE')
+        req.setParameter("transparent", "TRUE")
 
         mapobj.loadOWSParameters(req)
         gdimg = mapobj.draw()
@@ -229,98 +206,82 @@ class MapserverStyle(Base, Resource):
         emap = etree.fromstring(self.xml)
 
         map_setup = [
-            E.size(width='800', height='600'),
-            E.maxsize('4096'),
-            E.imagecolor(red='255', green='255', blue='255'),
-            E.imagetype('PNG'),
+            E.size(width="800", height="600"),
+            E.maxsize("4096"),
+            E.imagecolor(red="255", green="255", blue="255"),
+            E.imagetype("PNG"),
             E.outputformat(
-                E.name('png'),
-                E.extension('png'),
-                E.mimetype('image/png'),
-                E.driver('AGG/PNG'),
-                E.imagemode('RGBA'),
-                E.formatoption('INTERLACE=OFF')
+                E.name("png"),
+                E.extension("png"),
+                E.mimetype("image/png"),
+                E.driver("AGG/PNG"),
+                E.imagemode("RGBA"),
+                E.formatoption("INTERLACE=OFF"),
             ),
             E.web(
                 E.metadata(
-                    E.item(
-                        key='wms_onlineresource',
-                        value='http://localhost/'
-                    ),
-                    E.item(
-                        key='wfs_onlineresource',
-                        value='http://localhost/'
-                    ),
-                    E.item(
-                        key='ows_title',
-                        value='nextgisweb'
-                    ),
-                    E.item(
-                        key='wms_enable_request',
-                        value='*'
-                    ),
-                    E.item(
-                        key='wms_srs',
-                        value='EPSG:3857'
-                    )
+                    E.item(key="wms_onlineresource", value="http://localhost/"),
+                    E.item(key="wfs_onlineresource", value="http://localhost/"),
+                    E.item(key="ows_title", value="nextgisweb"),
+                    E.item(key="wms_enable_request", value="*"),
+                    E.item(key="wms_srs", value="EPSG:3857"),
                 )
             ),
-            E.extent(minx='-180', miny='-90', maxx='180', maxy='90'),
+            E.extent(minx="-180", miny="-90", maxx="180", maxy="90"),
             E.projection("+init=epsg:4326"),
-            E.fontset(env.mapserver.options['fontset']),
-            E.symbolset(resource_filename('nextgisweb_mapserver', 'symbolset')),
+            E.fontset(env.mapserver.options["fontset"]),
+            E.symbolset(resource_filename("nextgisweb_mapserver", "symbolset")),
         ]
 
         for i in reversed(map_setup):
             emap.insert(0, i)
 
-        elayer = emap.find('./layer')
+        elayer = emap.find("./layer")
 
         layer_setup = [
-            E.name('main'),
-            E.type({
-                GEOM_TYPE.POINT: 'point',
-                GEOM_TYPE.LINESTRING: 'line',
-                GEOM_TYPE.POLYGON: 'polygon',
-                GEOM_TYPE.MULTIPOINT: 'point',
-                GEOM_TYPE.MULTILINESTRING: 'line',
-                GEOM_TYPE.MULTIPOLYGON: 'polygon',
-                GEOM_TYPE.POINTZ: 'point',
-                GEOM_TYPE.LINESTRINGZ: 'line',
-                GEOM_TYPE.POLYGONZ: 'polygon',
-                GEOM_TYPE.MULTIPOINTZ: 'point',
-                GEOM_TYPE.MULTILINESTRINGZ: 'line',
-                GEOM_TYPE.MULTIPOLYGONZ: 'polygon'
-            }[self.parent.geometry_type]),
-            E.template('dummy.html'),
+            E.name("main"),
+            E.type(
+                {
+                    GEOM_TYPE.POINT: "point",
+                    GEOM_TYPE.LINESTRING: "line",
+                    GEOM_TYPE.POLYGON: "polygon",
+                    GEOM_TYPE.MULTIPOINT: "point",
+                    GEOM_TYPE.MULTILINESTRING: "line",
+                    GEOM_TYPE.MULTIPOLYGON: "polygon",
+                    GEOM_TYPE.POINTZ: "point",
+                    GEOM_TYPE.LINESTRINGZ: "line",
+                    GEOM_TYPE.POLYGONZ: "polygon",
+                    GEOM_TYPE.MULTIPOINTZ: "point",
+                    GEOM_TYPE.MULTILINESTRINGZ: "line",
+                    GEOM_TYPE.MULTIPOLYGONZ: "polygon",
+                }[self.parent.geometry_type]
+            ),
+            E.template("dummy.html"),
             E.projection("+init=epsg:3857"),
             E.extent(
-                minx='-20037508.34',
-                miny='-20037508.34',
-                maxx='20037508.34',
-                maxy='20037508.34'
+                minx="-20037508.34", miny="-20037508.34", maxx="20037508.34", maxy="20037508.34"
             ),
-            E.status('DEFAULT'),
+            E.status("DEFAULT"),
         ]
 
         for e in reversed(layer_setup):
             elayer.insert(0, e)
 
         # PIXMAP & SVG markers: replace to rectangle
-        for type_elem in emap.iterfind('./symbol/type'):
-            if type_elem.text not in ('pixmap', 'svg'):
+        for type_elem in emap.iterfind("./symbol/type"):
+            if type_elem.text not in ("pixmap", "svg"):
                 continue
 
             symbol = type_elem.getparent()
-            image = symbol.find('./image')
+            image = symbol.find("./image")
 
             # TODO: Set path to SVG marker library
             # image.text = ...
 
-            type_elem.text = 'vector'
-            image.tag = 'points'
-            image.text = '0 0 0 1 1 1 1 0 0 0'
-            symbol.append(E.filled('true'))
+            type_elem.text = "vector"
+            image.tag = "points"
+            image.text = "0 0 0 1 1 1 1 0 0 0"
+            symbol.append(E.filled("true"))
 
         obj = Map().from_xml(emap)
         mapfile(obj, buf)
@@ -330,11 +291,11 @@ class MapserverStyle(Base, Resource):
 
         layer = mapobj.getLayer(0)
 
-        items = ','.join(fieldnames)
-        layer.setProcessingKey('ITEMS', items)
+        items = ",".join(fieldnames)
+        layer.setProcessingKey("ITEMS", items)
 
-        layer.setProcessingKey('APPROXIMATION_SCALE', 'full')
-        layer.setProcessingKey('LABEL_NO_CLIP', 'true')
+        layer.setProcessingKey("APPROXIMATION_SCALE", "full")
+        layer.setProcessingKey("LABEL_NO_CLIP", "true")
 
         for f in features:
             # MapServer has problems while rendering 3D geometries and
@@ -354,9 +315,9 @@ class MapserverStyle(Base, Resource):
                 elif isinstance(v, str):
                     pass
                 elif isinstance(v, bytes):
-                    v = v.decode('utf-8')
+                    v = v.decode("utf-8")
                 elif isinstance(v, datetime.date):
-                    v = v.strftime(r'%Y-%m-%dT%H:%M:%S')
+                    v = v.strftime(r"%Y-%m-%dT%H:%M:%S")
                 else:
                     v = repr(v)
 
@@ -367,13 +328,10 @@ class MapserverStyle(Base, Resource):
         return mapobj
 
 
-DataScope.read.require(
-    DataScope.read,
-    attr='parent', cls=MapserverStyle)
+DataScope.read.require(DataScope.read, attr="parent", cls=MapserverStyle)
 
 
 class _xml_attr(SP):
-
     def setter(self, srlzr, value):
         try:
             layer = etree.fromstring(value)
@@ -387,9 +345,9 @@ class _xml_attr(SP):
             raise ValidationError(_("XML schema error: %s") % str(e))
 
         for cls in registry:
-            if hasattr(cls, 'assert_valid'):
+            if hasattr(cls, "assert_valid"):
                 tag = cls.name.lower()
-                for el in layer.xpath('//%s' % tag):
+                for el in layer.xpath("//%s" % tag):
                     try:
                         cls.assert_valid(el)
                     except Exception as e:

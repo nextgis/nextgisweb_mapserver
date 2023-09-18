@@ -73,7 +73,8 @@ class CompositeDirective(BlockDirective):
         SUBBLOCK 1
             ...
         END
-    END"""
+    END
+    """
 
     def __init__(self):
         self.data = dict()

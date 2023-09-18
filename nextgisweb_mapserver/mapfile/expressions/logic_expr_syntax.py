@@ -53,4 +53,5 @@ def p_error(p):
 
 # fmt: on
 
+
 parser = yacc.yacc(debug=False, write_tables=False)

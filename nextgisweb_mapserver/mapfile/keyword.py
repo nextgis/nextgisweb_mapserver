@@ -38,7 +38,7 @@ class Attribute(PrimitiveKeyword):
 
 @register
 class Enum(PrimitiveKeyword):
-    primitive = p.Enum.subclass(choices=('a', 'b'))
+    primitive = p.Enum.subclass(choices=("a", "b"))
 
     @classmethod
     def subclass(cls, name, choices=(), **kwargs):
@@ -51,10 +51,10 @@ class Enum(PrimitiveKeyword):
 class Extent(PrimitiveKeyword):
     primitive = p.Composite.subclass(
         items=(
-            ('minx', p.Double),
-            ('miny', p.Double),
-            ('maxx', p.Double),
-            ('maxy', p.Double),
+            ("minx", p.Double),
+            ("miny", p.Double),
+            ("maxx", p.Double),
+            ("maxy", p.Double),
         )
     )
 
@@ -63,85 +63,67 @@ class Extent(PrimitiveKeyword):
 class Color(PrimitiveKeyword):
     primitive = p.Composite.subclass(
         items=(
-            ('red', p.Integer),
-            ('green', p.Integer),
-            ('blue', p.Integer),
+            ("red", p.Integer),
+            ("green", p.Integer),
+            ("blue", p.Integer),
         )
     )
 
 
 @register
 class Point(PrimitiveKeyword):
-    primitive = p.Composite.subclass(
-        items=(
-            ('x', p.Double),
-            ('y', p.Double)
-        )
-    )
+    primitive = p.Composite.subclass(items=(("x", p.Double), ("y", p.Double)))
 
 
-Debug = register(Enum.subclass(
-    'Debug', choices='off|on|0|1|2|3|4|5'.split('|')
-))
+Debug = register(Enum.subclass("Debug", choices="off|on|0|1|2|3|4|5".split("|")))
 
 
-Switch = register(Enum.subclass(
-    'Switch', choices=('off', 'on')
-))
+Switch = register(Enum.subclass("Switch", choices=("off", "on")))
 
 
 @register
 class Points(BlockDirective):
-    name = 'POINTS'
+    name = "POINTS"
 
     def from_xml(self, e):
-        self.value = map(float, e.text.split(' '))
+        self.value = map(float, e.text.split(" "))
 
     def to_mapfile(self, buf):
-        buf.write('POINTS %s END\n' % ' '.join(map(str, self.value)))
+        buf.write("POINTS %s END\n" % " ".join(map(str, self.value)))
 
     @classmethod
     def element_schema(cls):
-        return RNG.element(
-            RNG.text(),
-            name=cls.name.lower()
-        )
+        return RNG.element(RNG.text(), name=cls.name.lower())
 
 
 @register
 class Pattern(BlockDirective):
-    name = 'PATTERN'
+    name = "PATTERN"
 
     def from_xml(self, e):
-        self.value = map(float, e.text.split(' '))
+        self.value = map(float, e.text.split(" "))
 
     def to_mapfile(self, buf):
-        buf.write('PATTERN %s END\n' % ' '.join(map(str, self.value)))
+        buf.write("PATTERN %s END\n" % " ".join(map(str, self.value)))
 
     @classmethod
     def element_schema(cls):
-        return RNG.element(
-            RNG.text(),
-            name=cls.name.lower()
-        )
+        return RNG.element(RNG.text(), name=cls.name.lower())
 
 
 @register
 class Expression(PrimitiveKeyword):
-    name = 'EXPRESSION'
+    name = "EXPRESSION"
 
     def from_xml(self, e):
         self.value = e.text
 
     def to_mapfile(self, buf):
-        buf.write('EXPRESSION %s\n' % self.value)
+        buf.write("EXPRESSION %s\n" % self.value)
 
     @classmethod
     def element_schema(cls):
-        return RNG.element(
-            RNG.text(),
-            name=cls.name.lower()
-        )
+        return RNG.element(RNG.text(), name=cls.name.lower())
 
     @staticmethod
     def assert_valid(e):
@@ -152,249 +134,171 @@ class Expression(PrimitiveKeyword):
 @register
 class Style(CompositeDirective):
     class Angle(SimpleKeyword):
-
         def from_string(self, t):
-            if t == 'auto':
-                self.value = 'auto'
+            if t == "auto":
+                self.value = "auto"
             else:
                 self.value = float(t)
 
         def to_string(self):
             return str(self.value)
 
-    name = 'STYLE'
+    name = "STYLE"
     members = (
         # ANGLE [double|attribute|auto]
-        Angle.subclass('ANGLE'),
-
+        Angle.subclass("ANGLE"),
         # ANTIALIAS [true|false]
-        Boolean.subclass('ANTIALIAS'),
-
+        Boolean.subclass("ANTIALIAS"),
         # BACKGROUNDCOLOR [r] [g] [b]
-        Color.subclass('BACKGROUNDCOLOR'),
-
+        Color.subclass("BACKGROUNDCOLOR"),
         # COLOR [r] [g] [b] | [attribute]
-        Color.subclass('COLOR'),
-
+        Color.subclass("COLOR"),
         # GAP [double]
-        Float.subclass('GAP'),
-
+        Float.subclass("GAP"),
         # GEOMTRANSFORM bbox|end|labelpnt|labelpoly|
         #               start|vertices|<expression>
-
         # INITIALGAP [double]
-        Float.subclass('INITIALGAP'),
-
+        Float.subclass("INITIALGAP"),
         # LINECAP [butt|round|square]
-        Enum.subclass(
-            'LINECAP',
-            choices='butt|round|square'.split('|')
-        ),
-
+        Enum.subclass("LINECAP", choices="butt|round|square".split("|")),
         # LINEJOIN [round|miter|bevel]
-        Enum.subclass(
-            'LINEJOIN',
-            choices='round|miter|bevel'.split('|')
-        ),
-
+        Enum.subclass("LINEJOIN", choices="round|miter|bevel".split("|")),
         # LINEJOINMAXSIZE [int]
-        Integer.subclass('LINEJOINMAXSIZE'),
-
+        Integer.subclass("LINEJOINMAXSIZE"),
         # MAXSCALEDENOM [double]
-        Float.subclass('MAXSCALEDENOM'),
-
+        Float.subclass("MAXSCALEDENOM"),
         # MAXSIZE [double]
-        Float.subclass('MAXSIZE'),
-
+        Float.subclass("MAXSIZE"),
         # MAXWIDTH [double]
-        Float.subclass('MAXWIDTH'),
-
+        Float.subclass("MAXWIDTH"),
         # MINSCALEDENOM [double]
-        Float.subclass('MINSCALEDENOM'),
-
+        Float.subclass("MINSCALEDENOM"),
         # MINSIZE [double]
-        Float.subclass('MINSIZE'),
-
+        Float.subclass("MINSIZE"),
         # MINWIDTH [double]
-        Float.subclass('MINWIDTH'),
-
+        Float.subclass("MINWIDTH"),
         # OFFSET [x] [y]
-        Point.subclass('OFFSET'),
-
+        Point.subclass("OFFSET"),
         # OPACITY [integer|attribute]
-        Integer.subclass('OPACITY'),
-
+        Integer.subclass("OPACITY"),
         # OUTLINECOLOR [r] [g] [b] | [attribute]
-        Color.subclass('OUTLINECOLOR'),
-
+        Color.subclass("OUTLINECOLOR"),
         # OUTLINEWIDTH [double|attribute]
-        Float.subclass('OUTLINEWIDTH'),
-
+        Float.subclass("OUTLINEWIDTH"),
         # PATTERN [double on] [double off] [double on] [double off] ... END
-        Pattern.subclass('PATTERN'),
-
+        Pattern.subclass("PATTERN"),
         # POLAROFFSET [double|attribute] [double|attribute]
-
         # SIZE [double|attribute]
-        Float.subclass('SIZE'),
-
+        Float.subclass("SIZE"),
         # SYMBOL [integer|string|filename|url|attribute]
-        String.subclass('SYMBOL', single=False),
-
+        String.subclass("SYMBOL", single=False),
         # WIDTH [double|attribute]
-        Float.subclass('WIDTH'),
+        Float.subclass("WIDTH"),
     )
 
 
 @register
 class Label(CompositeDirective):
-
     @register
     class Style(CompositeDirective):
-        name = 'STYLE'
+        name = "STYLE"
         members = (
-            Enum.subclass('GEOMTRANSFORM', choices=('labelpoly', 'labelpnt')),
-            Color.subclass('COLOR'),
+            Enum.subclass("GEOMTRANSFORM", choices=("labelpoly", "labelpnt")),
+            Color.subclass("COLOR"),
         )
 
-    name = 'LABEL'
+    name = "LABEL"
     members = (
         # ALIGN [left|center|right]
-        Enum.subclass('ALIGN', choices=('left', 'center', 'right')),
-
+        Enum.subclass("ALIGN", choices=("left", "center", "right")),
         # ANGLE [double|auto|auto2|follow|attribute]
-        Enum.subclass('ANGLE', choices=('auto', 'follow')),
-
+        Enum.subclass("ANGLE", choices=("auto", "follow")),
         # ANTIALIAS [true|false]
-        Boolean.subclass('ANTIALIAS'),
-
+        Boolean.subclass("ANTIALIAS"),
         # BUFFER [integer]
-        Integer.subclass('BUFFER'),
-
+        Integer.subclass("BUFFER"),
         # COLOR [r] [g] [b] | [attribute]
-        Color.subclass('COLOR'),
-
+        Color.subclass("COLOR"),
         # ENCODING [string]
-        String.subclass('ENCODING'),
-
+        String.subclass("ENCODING"),
         # EXPRESSION [string]
-        Expression.subclass('EXPRESSION'),
-
+        Expression.subclass("EXPRESSION"),
         # FONT [name|attribute]
-        String.subclass('FONT'),
-
+        String.subclass("FONT"),
         # FORCE [true|false]
-        Boolean.subclass('FORCE'),
-
+        Boolean.subclass("FORCE"),
         # MAXLENGTH [integer]
-        Integer.subclass('MAXLENGTH'),
-
+        Integer.subclass("MAXLENGTH"),
         # MAXOVERLAPANGLE [double]
-        Float.subclass('MAXOVERLAPANGLE'),
-
+        Float.subclass("MAXOVERLAPANGLE"),
         # MAXSCALEDENOM [double]
-        Float.subclass('MAXSCALEDENOM'),
-
+        Float.subclass("MAXSCALEDENOM"),
         # MAXSIZE [double]
-        Float.subclass('MAXSIZE'),
-
+        Float.subclass("MAXSIZE"),
         # MINDISTANCE [integer]
-        Integer.subclass('MINDISTANCE'),
-
+        Integer.subclass("MINDISTANCE"),
         # MINFEATURESIZE [integer]|[auto]
-        Integer.subclass('MINFEATURESIZE'),
-
+        Integer.subclass("MINFEATURESIZE"),
         # MINSCALEDENOM [double]
-        Float.subclass('MINSCALEDENOM'),
-
+        Float.subclass("MINSCALEDENOM"),
         # MINSIZE [double]
-        Float.subclass('MINSIZE'),
-
+        Float.subclass("MINSIZE"),
         # OFFSET [x] [y]
-        Point.subclass('OFFSET'),
-
+        Point.subclass("OFFSET"),
         # OUTLINECOLOR [r] [g] [b] | [attribute]
-        Color.subclass('OUTLINECOLOR'),
-
+        Color.subclass("OUTLINECOLOR"),
         # OUTLINEWIDTH [integer]
-        Integer.subclass('OUTLINEWIDTH'),
-
+        Integer.subclass("OUTLINEWIDTH"),
         # PARTIALS [true|false]
-        Boolean.subclass('PARTIALS'),
-
+        Boolean.subclass("PARTIALS"),
         # POSITION [ul|uc|ur|cl|cc|cr|ll|lc|lr|auto]
-        Enum.subclass(
-            'POSITION',
-            choices='ul|uc|ur|cl|cc|cr|ll|lc|lr|auto'.split('|')
-        ),
-
+        Enum.subclass("POSITION", choices="ul|uc|ur|cl|cc|cr|ll|lc|lr|auto".split("|")),
         # PRIORITY [integer]|[item_name]|[attribute]
-
         # REPEATDISTANCE [integer]
-        Integer.subclass('REPEATDISTANCE'),
-
+        Integer.subclass("REPEATDISTANCE"),
         # SHADOWCOLOR [r] [g] [b]
-        Color.subclass('SHADOWCOLOR'),
-
+        Color.subclass("SHADOWCOLOR"),
         # SHADOWSIZE [x][y]|[attribute][attribute]
         #            | [x][attribute]|[attribute][y]
-
         # SIZE [double]|[tiny|small|medium|large|giant]|[attribute]
-        Float.subclass('SIZE'),
-
+        Float.subclass("SIZE"),
         # STYLE
-        Style.subclass('STYLE'),
-
+        Style.subclass("STYLE"),
         # TEXT [string|expression]
-
         # TYPE [bitmap|truetype]
-        Enum.subclass('TYPE', choices=('bitmap', 'truetype')),
-
+        Enum.subclass("TYPE", choices=("bitmap", "truetype")),
         # # WRAP [character]
     )
 
 
 @register
 class Class(CompositeDirective):
-    name = 'CLASS'
+    name = "CLASS"
     members = (
         # DEBUG [on|off]
-        Debug.subclass('DEBUG'),
-
+        Debug.subclass("DEBUG"),
         # EXPRESSION [string]
-        Expression.subclass('EXPRESSION'),
-
+        Expression.subclass("EXPRESSION"),
         # GROUP [string]
-        String.subclass('GROUP'),
-
+        String.subclass("GROUP"),
         # KEYIMAGE [filename]
-        String.subclass('KEYIMAGE'),
-
+        String.subclass("KEYIMAGE"),
         # LABEL
-        Label.subclass('LABEL', single=False),
-
+        Label.subclass("LABEL", single=False),
         # LEADER
-
         # MAXSCALEDENOM [double]
-        Float.subclass('MAXSCALEDENOM'),
-
+        Float.subclass("MAXSCALEDENOM"),
         # MINSCALEDENOM [double]
-        Float.subclass('MINSCALEDENOM'),
-
+        Float.subclass("MINSCALEDENOM"),
         # NAME [string]
-        String.subclass('NAME'),
-
+        String.subclass("NAME"),
         # STATUS [on|off]
-        Switch.subclass('STATUS'),
-
+        Switch.subclass("STATUS"),
         # STYLE
-        Style.subclass('STYLE', single=False),
-
+        Style.subclass("STYLE", single=False),
         # SYMBOL [integer|string|filename]
-
         # TEMPLATE [filename]
-        String.subclass('TEMPLATE'),
-
+        String.subclass("TEMPLATE"),
         # TEXT [string|expression]
         # VALIDATION
     )
@@ -402,33 +306,30 @@ class Class(CompositeDirective):
 
 @register
 class Projection(BlockDirective):
-    name = 'PROJECTION'
+    name = "PROJECTION"
 
     def from_xml(self, e):
         self.value = e.text
 
     def to_mapfile(self, buf):
         buf.begin(self.name)
-        for s in self.value.split(' '):
+        for s in self.value.split(" "):
             buf.write('"%s"\n' % s)
         buf.end()
 
     @classmethod
     def element_schema(self):
-        return RNG.element(
-            RNG.text(),
-            name=self.name.lower()
-        )
+        return RNG.element(RNG.text(), name=self.name.lower())
 
 
 @register
 class Metadata(BlockDirective):
-    name = 'METADATA'
+    name = "METADATA"
 
     def from_xml(self, e):
         self.value = dict()
-        for pr in e.iterfind('./item'):
-            self.value[pr.attrib['key']] = pr.attrib['value']
+        for pr in e.iterfind("./item"):
+            self.value[pr.attrib["key"]] = pr.attrib["value"]
 
     def to_mapfile(self, buf):
         buf.begin(self.name)
@@ -441,495 +342,343 @@ class Metadata(BlockDirective):
         return RNG.element(
             RNG.oneOrMore(
                 RNG.element(
-                    RNG.attribute(RNG.text(), name='key'),
-                    RNG.attribute(RNG.text(), name='value'),
-                    name='item'
+                    RNG.attribute(RNG.text(), name="key"),
+                    RNG.attribute(RNG.text(), name="value"),
+                    name="item",
                 )
             ),
-            name=cls.name.lower()
+            name=cls.name.lower(),
         )
 
 
 @register
 class Feature(CompositeDirective):
-    name = 'FEATURE'
+    name = "FEATURE"
     members = (
         # POINTS
-        Points.subclass('POINTS'),
-
+        Points.subclass("POINTS"),
         # ITEMS
-        String.subclass('ITEMS'),
-
+        String.subclass("ITEMS"),
         # TEXT [string]
-
         # WKT [string]
-        String.subclass('WKT'),
+        String.subclass("WKT"),
     )
 
 
 @register
 class Cluster(CompositeDirective):
-    name = 'CLUSTER'
+    name = "CLUSTER"
     members = (
         # MAXDISTANCE [double]
-        Float.subclass('MAXDISTANCE'),
-
+        Float.subclass("MAXDISTANCE"),
         # REGION [string]
-        Enum.subclass(
-            'REGION',
-            choices=('"rectangle"', '"ellipse"')
-        ),
-
+        Enum.subclass("REGION", choices=('"rectangle"', '"ellipse"')),
         # BUFFER [double]
-        Float.subclass('BUFFER'),
-
+        Float.subclass("BUFFER"),
         # GROUP [string]
-        String.subclass('GROUP'),
-
+        String.subclass("GROUP"),
         # FILTER [string]
-        String.subclass('FILTER')
+        String.subclass("FILTER"),
     )
 
 
 @register
 class Layer(CompositeDirective):
-    name = 'LAYER'
+    name = "LAYER"
     members = (
         # CLASS
-        Class.subclass('CLASS', single=False),
-
+        Class.subclass("CLASS", single=False),
         # CLASSGROUP [string]
-        String.subclass('CLASSGROUP'),
-
+        String.subclass("CLASSGROUP"),
         # CLASSITEM [string]
-        String.subclass('CLASSITEM'),
-
+        String.subclass("CLASSITEM"),
         # CLUSTER
-        Cluster.subclass('CLUSTER'),
-
+        Cluster.subclass("CLUSTER"),
         # CONNECTION [string]
-        String.subclass('CONNECTION'),
-
+        String.subclass("CONNECTION"),
         # CONNECTIONTYPE local|ogr|oraclespatial|plugin|
         #                postgis|sde|union|uvraster|wfs|wms]
         Enum.subclass(
-            'CONNECTIONTYPE',
-            choices=(
-                "local|ogr|oraclespatial|plugin|"
-                "postgis|sde|union|uvraster|wfs|wms"
-            ).split('|')
+            "CONNECTIONTYPE",
+            choices=("local|ogr|oraclespatial|plugin|postgis|sde|union|uvraster|wfs|wms").split(
+                "|"
+            ),
         ),
-
         # DATA [filename] |
         #      [sde parameters] |
         #      [postgis table/column] |
         #      [oracle table/column]
-
         # DEBUG [off|on|0|1|2|3|4|5]
-        Debug.subclass('DEBUG'),
-
+        Debug.subclass("DEBUG"),
         # EXTENT [minx] [miny] [maxx] [maxy]
-        Extent.subclass('EXTENT'),
-
+        Extent.subclass("EXTENT"),
         # FEATURE
-        Feature.subclass('FEATURE', single=False),
-
+        Feature.subclass("FEATURE", single=False),
         # FILTER [string]
-        String.subclass('FILTER'),
-
+        String.subclass("FILTER"),
         # FILTERITEM [attribute]
-
         # FOOTER [filename]
-        String.subclass('FOOTER'),
-
+        String.subclass("FOOTER"),
         # GRID
-
         # GROUP [name]
-        String.subclass('GROUP'),
-
+        String.subclass("GROUP"),
         # HEADER [filename]
-        String.subclass('HEADER'),
-
+        String.subclass("HEADER"),
         # JOIN
-
         # LABELCACHE [on|off]
-        Switch.subclass('LABELCACHE'),
-
+        Switch.subclass("LABELCACHE"),
         # LABELITEM [attribute]
-        String.subclass('LABELITEM'),
-
+        String.subclass("LABELITEM"),
         # LABELMAXSCALEDENOM [double]
-        Float.subclass('LABELMAXSCALEDENOM'),
-
+        Float.subclass("LABELMAXSCALEDENOM"),
         # LABELMINSCALEDENOM [double]
-        Float.subclass('LABELMINSCALEDENOM'),
-
+        Float.subclass("LABELMINSCALEDENOM"),
         # LABELREQUIRES [expression]
-
         # MASK [layername]
-        String.subclass('MASK'),
-
+        String.subclass("MASK"),
         # MAXFEATURES [integer]
-        Integer.subclass('MAXFEATURES'),
-
+        Integer.subclass("MAXFEATURES"),
         # MAXGEOWIDTH [double]
-        Float.subclass('MAXGEOWIDTH'),
-
+        Float.subclass("MAXGEOWIDTH"),
         # MAXSCALEDENOM [double]
-        Float.subclass('MAXSCALEDENOM'),
-
+        Float.subclass("MAXSCALEDENOM"),
         # METADATA
-        Metadata.subclass('METADATA'),
-
+        Metadata.subclass("METADATA"),
         # MINGEOWIDTH [double]
-        Float.subclass('MINGEOWIDTH'),
-
+        Float.subclass("MINGEOWIDTH"),
         # MINSCALEDENOM [double]
-        Float.subclass('MINSCALEDENOM'),
-
+        Float.subclass("MINSCALEDENOM"),
         # NAME [string]
         # NAME tag is not allowed here because not compatible
         # with an internally used 'main' layer name, but
         # it is impossible to comment it now.
-        String.subclass('NAME'),
-
+        String.subclass("NAME"),
         # OFFSITE [r] [g] [b]
-        Color.subclass('OFFSITE'),
-
+        Color.subclass("OFFSITE"),
         # OPACITY [integer|alpha]
-        Integer.subclass('OPACITY'),
-
+        Integer.subclass("OPACITY"),
         # PLUGIN [filename]
-        String.subclass('PLUGIN'),
-
+        String.subclass("PLUGIN"),
         # POSTLABELCACHE [true|false]
-        Boolean.subclass('POSTLABELCACHE'),
-
+        Boolean.subclass("POSTLABELCACHE"),
         # PROCESSING [string]
-        String.subclass('PROCESSING', single=False),
-
+        String.subclass("PROCESSING", single=False),
         # PROJECTION
-        Projection.subclass('PROJECTION'),
-
+        Projection.subclass("PROJECTION"),
         # REQUIRES [expression]
-
         # SIZEUNITS [feet|inches|kilometers|meters|miles|nauticalmiles|pixels]
         Enum.subclass(
-            'SIZEUNITS',
-            choices=(
-                "feet|inches|kilometers|meters|"
-                "miles|nauticalmiles|pixels"
-            ).split('|')
+            "SIZEUNITS",
+            choices=("feet|inches|kilometers|meters|miles|nauticalmiles|pixels").split("|"),
         ),
-
         # STATUS [on|off|default]
-        Enum.subclass(
-            'STATUS',
-            choices='on|off|default'.split('|')
-        ),
-
+        Enum.subclass("STATUS", choices="on|off|default".split("|")),
         # STYLEITEM [<attribute>|auto]
-        String.subclass('STYLEITEM'),
-
+        String.subclass("STYLEITEM"),
         # SYMBOLSCALEDENOM [double]
-        Float.subclass('SYMBOLSCALEDENOM'),
-
+        Float.subclass("SYMBOLSCALEDENOM"),
         # TEMPLATE [file|url]
-        String.subclass('TEMPLATE'),
-
+        String.subclass("TEMPLATE"),
         # TILEINDEX [filename|layername]
-        String.subclass('TILEINDEX'),
-
+        String.subclass("TILEINDEX"),
         # TILEITEM [attribute]
-
         # TOLERANCE [double]
-        Float.subclass('TOLERANCE'),
-
+        Float.subclass("TOLERANCE"),
         # TOLERANCEUNITS pixels|feet|inches|kilometers|
         #                meters|miles|nauticalmiles|dd
         Enum.subclass(
-            'TOLERANCEUNITS',
-            choices=(
-                "pixels|feet|inches|kilometers|"
-                "meters|miles|nauticalmiles|dd"
-            ).split('|')
+            "TOLERANCEUNITS",
+            choices=("pixels|feet|inches|kilometers|meters|miles|nauticalmiles|dd").split("|"),
         ),
-
         # TRANSFORM [true|false ul|uc|ur|lc|cc|lr|ll|lc|lr]
-
         # TYPE [chart|circle|line|point|polygon|raster|query]
-        Enum.subclass(
-            'TYPE',
-            choices="chart|circle|line|point|polygon|raster|query".split('|')
-        ),
-
+        Enum.subclass("TYPE", choices="chart|circle|line|point|polygon|raster|query".split("|")),
         # UNITS dd|feet|inches|kilometers|meters|miles|
         #       nauticalmiles|percentages|pixels
         Enum.subclass(
-            'UNITS',
+            "UNITS",
             choices=(
-                "dd|feet|inches|kilometers|meters|miles|"
-                "nauticalmiles|percentages|pixels"
-            ).split('|')
+                "dd|feet|inches|kilometers|meters|miles|nauticalmiles|percentages|pixels"
+            ).split("|"),
         ),
-
         # VALIDATION
     )
 
 
 @register
 class Web(CompositeDirective):
-    name = 'WEB'
+    name = "WEB"
     members = (
         # BROWSEFORMAT [mime-type]
-        String.subclass('BROWSEFORMAT'),
-
+        String.subclass("BROWSEFORMAT"),
         # EMPTY [url]
-        String.subclass('EMPTY'),
-
+        String.subclass("EMPTY"),
         # ERROR [url]
-        String.subclass('ERROR'),
-
+        String.subclass("ERROR"),
         # FOOTER [filename]
-        String.subclass('FOOTER'),
-
+        String.subclass("FOOTER"),
         # HEADER [filename]
-        String.subclass('HEADER'),
-
+        String.subclass("HEADER"),
         # IMAGEPATH [path]
-        String.subclass('IMAGEPATH'),
-
+        String.subclass("IMAGEPATH"),
         # IMAGEURL [path]
-        String.subclass('IMAGEURL'),
-
+        String.subclass("IMAGEURL"),
         # LEGENDFORMAT [mime-type]
-        String.subclass('LEGENDFORMAT'),
-
+        String.subclass("LEGENDFORMAT"),
         # MAXSCALEDENOM [double]
-        String.subclass('MAXSCALEDENOM'),
-
+        String.subclass("MAXSCALEDENOM"),
         # MAXTEMPLATE [file|url]
-        String.subclass('MAXTEMPLATE'),
-
+        String.subclass("MAXTEMPLATE"),
         # METADATA
-        Metadata.subclass('METADATA'),
-
+        Metadata.subclass("METADATA"),
         # MINSCALEDENOM [double]
-        String.subclass('MINSCALEDENOM'),
-
+        String.subclass("MINSCALEDENOM"),
         # QUERYFORMAT [mime-type]
-        String.subclass('QUERYFORMAT'),
-
+        String.subclass("QUERYFORMAT"),
         # TEMPLATE [filename|url]
-        String.subclass('TEMPLATE'),
-
+        String.subclass("TEMPLATE"),
         # TEMPPATH
-        String.subclass('TEMPPATH')
-
+        String.subclass("TEMPPATH")
         # VALIDATION
     )
 
 
 @register
 class OutputFormat(CompositeDirective):
-    name = 'OUTPUTFORMAT'
+    name = "OUTPUTFORMAT"
     members = (
         # DRIVER [name]
-        String.subclass('DRIVER'),
-
+        String.subclass("DRIVER"),
         # EXTENSION [type]
-        String.subclass('EXTENSION'),
-
+        String.subclass("EXTENSION"),
         # FORMATOPTION [option]
-        String.subclass('FORMATOPTION', single=False),
-
+        String.subclass("FORMATOPTION", single=False),
         # IMAGEMODE [PC256/RGB/RGBA/INT16/FLOAT32/FEATURE]
-        Enum.subclass(
-            'IMAGEMODE',
-            choices='PC256|RGB|RGBA|INT16|FLOAT32|FEATURE'.split('|')
-        ),
-
+        Enum.subclass("IMAGEMODE", choices="PC256|RGB|RGBA|INT16|FLOAT32|FEATURE".split("|")),
         # MIMETYPE [type]
-        String.subclass('MIMETYPE'),
-
+        String.subclass("MIMETYPE"),
         # NAME [name]
-        String.subclass('NAME'),
+        String.subclass("NAME"),
     )
 
 
 @register
 class Symbol(CompositeDirective):
-    name = 'SYMBOL'
+    name = "SYMBOL"
     members = (
         # ANCHORPOINT [x] [y]
-        Point.subclass('ANCHORPOINT'),
-
+        Point.subclass("ANCHORPOINT"),
         # ANTIALIAS [true|false]
-        Boolean.subclass('ANTIALIAS'),
-
+        Boolean.subclass("ANTIALIAS"),
         # CHARACTER [char]
-        String.subclass('CHARACTER'),
-
+        String.subclass("CHARACTER"),
         # FILLED [true|false]
-        Boolean.subclass('FILLED'),
-
+        Boolean.subclass("FILLED"),
         # FONT [string]
-        String.subclass('FONT'),
-
+        String.subclass("FONT"),
         # IMAGE [string]
-        String.subclass('IMAGE'),
-
+        String.subclass("IMAGE"),
         # NAME [string]
-        String.subclass('NAME'),
-
+        String.subclass("NAME"),
         # POINTS [x y] [x y] ... END
-        Points.subclass('POINTS'),
-
+        Points.subclass("POINTS"),
         # TRANSPARENT [integer]
-        Integer.subclass('TRANSPARENT'),
-
+        Integer.subclass("TRANSPARENT"),
         # TYPE [ellipse|hatch|pixmap|svg|truetype|vector]
-        Enum.subclass(
-            'TYPE',
-            choices='ellipse|hatch|pixmap|svg|truetype|vector'.split('|')
-        )
+        Enum.subclass("TYPE", choices="ellipse|hatch|pixmap|svg|truetype|vector".split("|")),
     )
 
 
 @register
 class Legend(CompositeDirective):
-    name = 'LEGEND'
+    name = "LEGEND"
     members = (
         # IMAGECOLOR [r] [g] [b]
-
         # KEYSIZE [x] [y]
-        Point.subclass('KEYSIZE'),
-
+        Point.subclass("KEYSIZE"),
         # KEYSPACING [x] [y]
-        Point.subclass('KEYSPACING'),
-
+        Point.subclass("KEYSPACING"),
         # LABEL
-        Label.subclass('LABEL'),
-
+        Label.subclass("LABEL"),
         # OUTLINECOLOR [r] [g] [b]
-        Color.subclass('OUTLINECOLOR'),
-
+        Color.subclass("OUTLINECOLOR"),
         # POSITION [ul|uc|ur|ll|lc|lr]
-
         # POSTLABELCACHE [true|false]
-
         # STATUS [on|off|embed]
-
         # TEMPLATE [filename]
     )
 
 
 @register
 class Map(CompositeDirective):
-    name = 'MAP'
+    name = "MAP"
 
     class Size(SimpleKeyword):
-
         def from_xml(self, e):
-            self.value = tuple(map(
-                int,
-                map(e.get, ('width', 'height'))
-            ))
+            self.value = tuple(map(int, map(e.get, ("width", "height"))))
 
         def to_string(self):
-            return '%d %d' % self.value
+            return "%d %d" % self.value
 
         @classmethod
         def element_schema(cls):
             e = RNG.element(name=cls.name.lower())
-            for a in ('width', 'height'):
-                e.append(RNG.attribute(
-                    RNG.data(type='int'),
-                    name=a
-                ))
+            for a in ("width", "height"):
+                e.append(RNG.attribute(RNG.data(type="int"), name=a))
             return e
 
     members = (
         # ANGLE [double]
-        Float.subclass('ANGLE'),
-
+        Float.subclass("ANGLE"),
         # CONFIG [key] [value]
         # DATAPATTERN [regular expression]
-
         # DEBUG [off|on|0|1|2|3|4|5]
-        Debug.subclass('DEBUG'),
-
+        Debug.subclass("DEBUG"),
         # DEFRESOLUTION [integer]
-        Integer.subclass('DEFRESOLUTION'),
-
+        Integer.subclass("DEFRESOLUTION"),
         # EXTENT [minx] [miny] [maxx] [maxy]
-        Extent.subclass('EXTENT'),
-
+        Extent.subclass("EXTENT"),
         # FONTSET [filename]
-        String.subclass('FONTSET'),
-
+        String.subclass("FONTSET"),
         # IMAGECOLOR [r] [g] [b]
-        Color.subclass('IMAGECOLOR'),
-
+        Color.subclass("IMAGECOLOR"),
         # IMAGETYPE [jpeg|pdf|png|svg|...|userdefined]
-        Enum.subclass('IMAGETYPE', choices='jpeg|pdf|png|svg'.split('|')),
-
+        Enum.subclass("IMAGETYPE", choices="jpeg|pdf|png|svg".split("|")),
         # LAYER
-        Layer.subclass('LAYER', single=False),
-
+        Layer.subclass("LAYER", single=False),
         # LEGEND
-        Legend.subclass('LEGEND'),
-
+        Legend.subclass("LEGEND"),
         # MAXSIZE [integer]
-        Integer.subclass('MAXSIZE'),
-
+        Integer.subclass("MAXSIZE"),
         # NAME [name]
-        String.subclass('NAME'),
-
+        String.subclass("NAME"),
         # OUTPUTFORMAT
-        OutputFormat.subclass('OUTPUTFORMAT'),
-
+        OutputFormat.subclass("OUTPUTFORMAT"),
         # PROJECTION
-        Projection.subclass('PROJECTION'),
-
+        Projection.subclass("PROJECTION"),
         # QUERYMAP
         # REFERENCE
-
         # RESOLUTION [integer]
-        Integer.subclass('RESOLUTION'),
-
+        Integer.subclass("RESOLUTION"),
         # SCALEDENOM [double]
-        Float.subclass('SCALEDENOM'),
-
+        Float.subclass("SCALEDENOM"),
         # SCALEBAR
-
         # SHAPEPATH [filename]
-        String.subclass('SHAPEPATH'),
-
+        String.subclass("SHAPEPATH"),
         # SIZE [x] [y]
-        Size.subclass('SIZE'),
-
+        Size.subclass("SIZE"),
         # STATUS [on|off]
-        Switch.subclass('STATUS'),
-
+        Switch.subclass("STATUS"),
         # SYMBOLSET [filename]
-        String.subclass('SYMBOLSET'),
-
+        String.subclass("SYMBOLSET"),
         # SYMBOL
-        Symbol.subclass('SYMBOL', single=False),
-
+        Symbol.subclass("SYMBOL", single=False),
         # TEMPLATEPATTERN [regular expression]
-
         # UNITS dd|feet|inches|kilometers|
         #       meters|miles|nauticalmiles
         Enum.subclass(
-            'UNITS',
-            choices=(
-                'dd|feet|inches|kilometers|'
-                'meters|miles|nauticalmiles'
-            ).split('|')
+            "UNITS", choices=("dd|feet|inches|kilometers|meters|miles|nauticalmiles").split("|")
         ),
-
         # WEB
-        Web.subclass('WEB'),
+        Web.subclass("WEB"),
     )

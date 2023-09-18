@@ -4,13 +4,11 @@ from .util import RNG
 
 
 class Primitive(object):
-
     def __init__(self, value):
         self.value = value
 
     @classmethod
     def subclass(cls, **kwargs):
-
         class Subclass(cls):
             pass
 
@@ -21,10 +19,9 @@ class Primitive(object):
 
 
 class Integer(Primitive):
-
     @classmethod
     def isvalid(cls, t):
-        return re.match(r'^[\+\-]{0,1}\d+$', t) is not None
+        return re.match(r"^[\+\-]{0,1}\d+$", t) is not None
 
     @classmethod
     def from_string(cls, t):
@@ -43,10 +40,9 @@ class Integer(Primitive):
 
 
 class Double(Primitive):
-
     @classmethod
     def isvalid(cls, t):
-        return re.match(r'^[\+\-]{0,1}\d+(\.\d+){0,1}$', t) is not None
+        return re.match(r"^[\+\-]{0,1}\d+(\.\d+){0,1}$", t) is not None
 
     @classmethod
     def from_string(cls, t):
@@ -65,21 +61,20 @@ class Double(Primitive):
 
 
 class Boolean(Primitive):
-
     @classmethod
     def isvalid(cls, t):
-        return re.match(r'^(true|false)$', t) is not None
+        return re.match(r"^(true|false)$", t) is not None
 
     @classmethod
     def from_string(cls, t):
-        if t == 'true':
+        if t == "true":
             return cls(True)
 
-        elif t == 'false':
+        elif t == "false":
             return cls(False)
 
     def to_mapfile(self):
-        return 'true' if self.value else 'false'
+        return "true" if self.value else "false"
 
     @classmethod
     def from_xml(cls, e):
@@ -87,7 +82,7 @@ class Boolean(Primitive):
 
     @classmethod
     def xml_schema(cls):
-        return RNG.choice(RNG.value('true'), RNG.value('false'))
+        return RNG.choice(RNG.value("true"), RNG.value("false"))
 
 
 class Enum(Primitive):
@@ -112,7 +107,6 @@ class Enum(Primitive):
 
 
 class String(Primitive):
-
     @classmethod
     def isvalid(cls, t):
         return True
@@ -134,10 +128,9 @@ class String(Primitive):
 
 
 class Attribute(Primitive):
-
     def to_mapfile(self):
         # TODO: Escape!
-        return '[%s]' % self.value
+        return "[%s]" % self.value
 
     @classmethod
     def from_xml(cls, e):
@@ -149,13 +142,12 @@ class Attribute(Primitive):
 
 
 class Composite(Primitive):
-
     def to_mapfile(self):
         a = list()
         for k, p in self.items:
             a.append(self.value[k].to_mapfile())
 
-        return ' '.join(a)
+        return " ".join(a)
 
     @classmethod
     def from_xml(cls, e):

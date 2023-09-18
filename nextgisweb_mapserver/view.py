@@ -5,16 +5,15 @@ from .model import MapserverStyle
 
 class StyleWidget(Widget):
     resource = MapserverStyle
-    operation = ('create', 'update')
-    amdmod = '@nextgisweb/mapserver/editor-widget'
+    operation = ("create", "update")
+    amdmod = "@nextgisweb/mapserver/editor-widget"
 
     def config(self):
         res = super(StyleWidget, self).config()
 
         # TODO: Security
-        if self.operation == 'create':
-            res['initialXml'] = MapserverStyle.default_style_xml(
-                self.obj.parent)
+        if self.operation == "create":
+            res["initialXml"] = MapserverStyle.default_style_xml(self.obj.parent)
 
         return res
 
