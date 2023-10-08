@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
+
 import { Code } from "@nextgisweb/gui/component/code";
-import i18n from "@nextgisweb/pyramid/i18n";
+import { gettext } from "@nextgisweb/pyramid/i18n";
 
 export const EditorWidget = observer(({ store }) => {
     return (
@@ -13,5 +14,5 @@ export const EditorWidget = observer(({ store }) => {
     );
 });
 
-EditorWidget.title = i18n.gettext("MapServer style");
+EditorWidget.title = gettext("MapServer style");
 EditorWidget.activateOn = { create: true };
