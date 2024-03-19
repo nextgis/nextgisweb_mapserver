@@ -362,7 +362,7 @@ PR_READ = ResourceScope.read
 PR_UPDATE = ResourceScope.update
 
 
-class StyleSerializer(Serializer):
+class MapserverStyleSerializer(Serializer):
     identity = MapserverStyle.identity
     resclass = MapserverStyle
 
