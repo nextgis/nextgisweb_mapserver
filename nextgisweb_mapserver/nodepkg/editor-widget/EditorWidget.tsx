@@ -2,13 +2,16 @@ import { observer } from "mobx-react-lite";
 
 import { Code } from "@nextgisweb/gui/component/code";
 import { gettext } from "@nextgisweb/pyramid/i18n";
+import type {
+    EditorWidgetComponent,
+    EditorWidgetProps,
+} from "@nextgisweb/resource/type";
 
 import type { EditorStore } from "./EditorStore";
-import type { EditorWidgetComponent, EditorWidgetProps } from "./type";
 
 export const EditorWidget: EditorWidgetComponent<
     EditorWidgetProps<EditorStore>
-> = observer(({ store }) => {
+> = observer(({ store }: EditorWidgetProps<EditorStore>) => {
     return (
         <Code
             value={store.xml.in || undefined}
