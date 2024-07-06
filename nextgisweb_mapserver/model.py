@@ -14,16 +14,11 @@ from nextgisweb.env import Base, _, env
 from nextgisweb.lib.geometry import Geometry
 
 from nextgisweb.feature_layer import GEOM_TYPE, IFeatureLayer
-from nextgisweb.feature_layer import on_data_change as on_data_change_feature_layer
 from nextgisweb.render import (
     IExtentRenderRequest,
     ILegendableStyle,
     IRenderableStyle,
     ITileRenderRequest,
-    on_style_change,
-)
-from nextgisweb.render import (
-    on_data_change as on_data_change_renderable,
 )
 from nextgisweb.resource import DataScope, Resource, ResourceScope, Serializer
 from nextgisweb.resource import SerializedProperty as SP
@@ -46,13 +41,6 @@ _RNDCOLOR = (
     (204, 235, 197),
     (255, 237, 111),
 )
-
-
-@on_data_change_feature_layer.connect
-def on_data_change_feature_layer(resource, geom):
-    for child in resource.children:
-        if isinstance(child, MapserverStyle):
-            on_data_change_renderable.fire(child, geom)
 
 
 @implementer(IExtentRenderRequest, ITileRenderRequest)
@@ -354,8 +342,6 @@ class _xml_attr(SP):
                         raise ValidationError("{0} within <{1}> tag".format(str(e), tag))
 
         SP.setter(self, srlzr, value)
-
-        on_style_change.fire(srlzr.obj)
 
 
 PR_READ = ResourceScope.read
