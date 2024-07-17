@@ -10,7 +10,7 @@ from lxml.builder import ElementMaker
 from PIL import Image
 from zope.interface import implementer
 
-from nextgisweb.env import Base, _, env
+from nextgisweb.env import Base, env, gettext
 from nextgisweb.lib.geometry import Geometry
 
 from nextgisweb.feature_layer import GEOM_TYPE, IFeatureLayer
@@ -61,7 +61,7 @@ class RenderRequest(object):
 @implementer((IRenderableStyle, ILegendableStyle))
 class MapserverStyle(Base, Resource):
     identity = "mapserver_style"
-    cls_display_name = _("MapServer style")
+    cls_display_name = gettext("MapServer style")
 
     __scope__ = DataScope
 
@@ -327,10 +327,10 @@ class _xml_attr(SP):
             relaxng.assertValid(layer)
 
         except etree.XMLSyntaxError as e:
-            raise ValidationError(_("XML syntax error: %s") % str(e))
+            raise ValidationError(gettext("XML syntax error: %s") % str(e))
 
         except etree.DocumentInvalid as e:
-            raise ValidationError(_("XML schema error: %s") % str(e))
+            raise ValidationError(gettext("XML schema error: %s") % str(e))
 
         for cls in registry:
             if hasattr(cls, "assert_valid"):
