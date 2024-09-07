@@ -20,8 +20,7 @@ from nextgisweb.render import (
     IRenderableStyle,
     ITileRenderRequest,
 )
-from nextgisweb.resource import DataScope, Resource, ResourceScope, Serializer
-from nextgisweb.resource import SerializedProperty as SP
+from nextgisweb.resource import DataScope, Resource, ResourceScope, SColumn, Serializer
 from nextgisweb.resource.exception import ValidationError
 
 from .mapfile import Map, mapfile, registry, schema
@@ -319,8 +318,11 @@ class MapserverStyle(Base, Resource):
 DataScope.read.require(DataScope.read, attr="parent", cls=MapserverStyle)
 
 
-class _xml_attr(SP):
-    def setter(self, srlzr, value):
+class XmlAttr(SColumn, apitype=True):
+    def get(self, srlzr: Serializer) -> str:
+        return super().get(srlzr)
+
+    def set(self, srlzr: Serializer, value: str, *, create: bool):
         try:
             layer = etree.fromstring(value)
             relaxng = schema(Map)
@@ -341,15 +343,8 @@ class _xml_attr(SP):
                     except Exception as e:
                         raise ValidationError("{0} within <{1}> tag".format(str(e), tag))
 
-        SP.setter(self, srlzr, value)
+        super().set(srlzr, value, create=create)
 
 
-PR_READ = ResourceScope.read
-PR_UPDATE = ResourceScope.update
-
-
-class MapserverStyleSerializer(Serializer):
-    identity = MapserverStyle.identity
-    resclass = MapserverStyle
-
-    xml = _xml_attr(read=PR_READ, write=PR_UPDATE)
+class MapserverStyleSerializer(Serializer, resource=MapserverStyle):
+    xml = XmlAttr(read=ResourceScope.read, write=ResourceScope.update)
