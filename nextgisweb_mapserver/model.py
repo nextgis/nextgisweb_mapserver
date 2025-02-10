@@ -318,7 +318,7 @@ class MapserverStyle(Base, Resource):
 DataScope.read.require(DataScope.read, attr="parent", cls=MapserverStyle)
 
 
-class XmlAttr(SColumn, apitype=True):
+class XmlAttr(SColumn):
     def get(self, srlzr: Serializer) -> str:
         return super().get(srlzr)
 
