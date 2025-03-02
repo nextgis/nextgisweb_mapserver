@@ -1,3 +1,4 @@
+from nextgisweb.jsrealm import jsentry
 from nextgisweb.resource import Widget
 
 from .model import MapserverStyle
@@ -6,7 +7,7 @@ from .model import MapserverStyle
 class StyleWidget(Widget):
     resource = MapserverStyle
     operation = ("create", "update")
-    amdmod = "@nextgisweb/mapserver/editor-widget"
+    amdmod = jsentry("@nextgisweb/mapserver/editor-widget")
 
     def config(self):
         res = super(StyleWidget, self).config()
