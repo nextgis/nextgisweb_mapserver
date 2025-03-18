@@ -1,27 +1,68 @@
-import { makeAutoObservable, toJS } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 
-interface Value {
-    xml: string | null;
-}
+import { mapper } from "@nextgisweb/gui/arm";
+import type * as apitype from "@nextgisweb/mapserver/type/api";
+import type { CompositeStore } from "@nextgisweb/resource/composite";
+import type { EditorStore as IEditorStore } from "@nextgisweb/resource/type";
 
-export class EditorStore {
-    identity = "mapserver_style";
-    xml: { in: string | null; out: string | null } = { in: null, out: null };
+const { xml, $load, $error, $dump, $dirty } = mapper<
+    EditorStore,
+    apitype.MapserverStyleRead
+>({
+    validateIf: (o) => o.validate,
+    properties: {
+        xml: { required: true },
+    },
+});
 
-    constructor({ initialXml }: { initialXml: string }) {
-        this.xml.in = this.xml.out = initialXml;
-        makeAutoObservable(this, { identity: false });
+export class EditorStore
+    implements
+        IEditorStore<
+            apitype.MapserverStyleRead,
+            apitype.MapserverStyleCreate,
+            apitype.MapserverStyleUpdate
+        >
+{
+    readonly identity = "mapserver_style";
+    readonly composite: CompositeStore;
+
+    xml = xml.init("", this);
+
+    @observable.ref accessor validate = false;
+
+    constructor({
+        composite,
+        initialXml,
+    }: {
+        composite: CompositeStore;
+        initialXml: string;
+    }) {
+        this.composite = composite;
+        this.xml.load(initialXml);
     }
 
-    load(value: Value) {
-        this.xml.in = value.xml;
+    @action
+    load(value: apitype.MapserverStyleRead) {
+        $load(this, value);
     }
 
-    dump() {
-        return toJS({ xml: this.xml.out });
+    dump(): apitype.MapserverStyleUpdate | undefined {
+        if (!this.dirty && this.composite.operation !== "create") {
+            return undefined;
+        }
+        return $dump(this);
     }
 
-    get isValid() {
-        return true;
+    @computed
+    get dirty() {
+        return $dirty(this);
+    }
+
+    @computed
+    get isValid(): boolean {
+        runInAction(() => {
+            this.validate = true;
+        });
+        return $error(this) === false;
     }
 }

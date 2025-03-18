@@ -10,11 +10,11 @@ export const EditorWidget: IEditorWidget<EditorStore> = observer(
     ({ store }) => {
         return (
             <Code
-                value={store.xml.in || undefined}
-                onChange={(v) => (store.xml.out = v)}
+                value={store.xml.initial}
+                onChange={store.xml.setter}
                 lang="xml"
                 lineNumbers
-            ></Code>
+            />
         );
     }
 );
