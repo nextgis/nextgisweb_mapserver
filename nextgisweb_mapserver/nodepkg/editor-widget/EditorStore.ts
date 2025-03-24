@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable } from "mobx";
 
 import { mapper } from "@nextgisweb/gui/arm";
 import type * as apitype from "@nextgisweb/mapserver/type/api";
@@ -26,7 +26,7 @@ export class EditorStore
     readonly identity = "mapserver_style";
     readonly composite: CompositeStore;
 
-    xml = xml.init("", this);
+    readonly xml = xml.init("", this);
 
     @observable.ref accessor validate = false;
 
@@ -60,9 +60,6 @@ export class EditorStore
 
     @computed
     get isValid(): boolean {
-        runInAction(() => {
-            this.validate = true;
-        });
         return $error(this) === false;
     }
 }
