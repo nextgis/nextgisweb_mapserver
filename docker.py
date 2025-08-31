@@ -6,49 +6,38 @@ from ngwdocker import PackageBase
 from ngwdocker.base import AppImage
 
 
-python_bin = "/usr/bin/python3"
-
-
 class Package(PackageBase):
     pass
 
 
 @AppImage.on_apt.handler
 def on_apt(event):
-    event.package("cmake", "swig", "libfreetype6-dev", "libgeos-dev", "libproj-dev")
-    msver = "7.6.4"
-    source = "mapserver-{0}.tar.gz".format(msver)
-
-    event.pop()
-    event.command(
-        "cd /tmp",
-        "curl -sSL https://download.osgeo.org/mapserver/{0} > {0}".format(source),
-        "tar -zxf {0} && rm {0}".format(source),
-        "mv mapserver-{0} mapserver && cd mapserver".format(msver),
-        "mkdir build && cd build",
-        "cmake -DCMAKE_INSTALL_PREFIX=/usr/local "
-        # Workaround: with dynamic linking _mapserver.so extension gets linked to build directory
-        + "-DCMAKE_POSITION_INDEPENDENT_CODE=ON -DLINK_STATIC_LIBMAPSERVER=ON "
-        + "-DWITH_PROTOBUFC=OFF -DWITH_FRIBIDI=OFF -DWITH_HARFBUZZ=OFF -DWITH_CAIRO=OFF "
-        + "-DWITH_FCGI=OFF -DWITH_POSTGIS=OFF -DWITH_WFS=OFF -DWITH_WCS=OFF -DWITH_LIBXML2=OFF "
-        + "-DWITH_PYTHON=ON -DPYTHON_EXECUTABLE={} ../ ".format(python_bin)
-        + " > ../configure.out.txt",
-        "make && make install",
-        "{} -m pip install mapscript/python".format(python_bin),
-        "cd / && rm -rf /tmp/mapserver",
+    event.package(
+        "cmake",
+        "swig",
+        "libfreetype6-dev",
+        "libgeos-dev",
+        "libproj-dev",
     )
-
-
-@AppImage.on_package_files.handler
-def on_package_files(event):
-    if isinstance(event.package, Package):
-        event.add(event.package.path / "mapscript-to-env")
 
 
 @AppImage.on_virtualenv.handler
 def on_virtualenv(event):
+    version = "7.6.4"
+    archive = "mapserver-{0}.tar.gz".format(version)
     event.before_install(
-        "$NGWROOT/package/nextgisweb_mapserver/mapscript-to-env "
-        + "$NGWROOT/env/bin/python "
-        + python_bin
+        "( : ",
+        "    cd /tmp",
+        "    curl -sSL https://download.osgeo.org/mapserver/{0} > {0}".format(archive),
+        "    tar -zxf {0} && rm {0}".format(archive),
+        "    mv mapserver-{0} mapserver && cd mapserver".format(version),
+        "    mkdir build && cd build",
+        "    cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DLINK_STATIC_LIBMAPSERVER=ON "
+        + "-DWITH_PROTOBUFC=OFF -DWITH_FRIBIDI=OFF -DWITH_HARFBUZZ=OFF -DWITH_CAIRO=OFF "
+        + "-DWITH_FCGI=OFF -DWITH_POSTGIS=OFF -DWITH_WFS=OFF -DWITH_WCS=OFF -DWITH_LIBXML2=OFF "
+        + "-DWITH_PYTHON=ON -DPYTHON_EXECUTABLE={}/bin/python ../ ".format(event.path)
+        + " > ../configure.out.txt && make",
+        "    {}/bin/pip install --no-cache-dir mapscript/python".format(event.path),
+        "    rm -rf /tmp/mapserver",
+        ")",
     )
