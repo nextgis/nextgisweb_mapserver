@@ -23,7 +23,9 @@ def on_apt(event):
 
 @AppImage.on_virtualenv.handler
 def on_virtualenv(event):
-    version = "7.6.4"
+    version = "8.4.0" if event.image.base == "ubuntu:24.04" else "7.6.4"
+    mapscript_path = "src/mapscript/python" if event.image.base == "ubuntu:24.04" else "mapscript/python"
+
     archive = "mapserver-{0}.tar.gz".format(version)
     event.before_install(
         "( : ",
@@ -37,7 +39,7 @@ def on_virtualenv(event):
         + "-DWITH_FCGI=OFF -DWITH_POSTGIS=OFF -DWITH_WFS=OFF -DWITH_WCS=OFF -DWITH_LIBXML2=OFF "
         + "-DWITH_PYTHON=ON -DPYTHON_EXECUTABLE={}/bin/python ../ ".format(event.path)
         + " > ../configure.out.txt && make",
-        "    {}/bin/pip install --no-cache-dir mapscript/python".format(event.path),
+        "    {}/bin/pip install --no-cache-dir {}".format(event.path, mapscript_path),
         "    rm -rf /tmp/mapserver",
         ")",
     )

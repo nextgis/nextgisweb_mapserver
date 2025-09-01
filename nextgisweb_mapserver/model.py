@@ -212,6 +212,7 @@ class MapserverStyle(Base, Resource):
                     E.item(key="ows_title", value="nextgisweb"),
                     E.item(key="wms_enable_request", value="*"),
                     E.item(key="wms_srs", value="EPSG:3857"),
+                    E.item(key="wms_allow_getmap_without_styles", value="true"),
                 )
             ),
             E.extent(minx="-180", miny="-90", maxx="180", maxy="90"),
