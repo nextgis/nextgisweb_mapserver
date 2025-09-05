@@ -538,7 +538,7 @@ class Web(CompositeDirective):
         # TEMPLATE [filename|url]
         String.subclass("TEMPLATE"),
         # TEMPPATH
-        String.subclass("TEMPPATH")
+        String.subclass("TEMPPATH"),
         # VALIDATION
     )
 
