@@ -10,7 +10,7 @@ from lxml.builder import ElementMaker
 from PIL import Image
 from zope.interface import implementer
 
-from nextgisweb.env import Base, env, gettext
+from nextgisweb.env import env, gettext
 from nextgisweb.lib.geometry import Geometry
 
 from nextgisweb.feature_layer import GEOM_TYPE, IFeatureLayer
@@ -58,7 +58,7 @@ class RenderRequest(object):
 
 
 @implementer((IRenderableStyle, ILegendableStyle))
-class MapserverStyle(Base, Resource):
+class MapserverStyle(Resource):
     identity = "mapserver_style"
     cls_display_name = gettext("MapServer style")
 
