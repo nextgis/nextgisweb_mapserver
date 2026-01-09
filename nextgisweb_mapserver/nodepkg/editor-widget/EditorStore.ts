@@ -15,14 +15,11 @@ const { xml, $load, $error, $dump, $dirty } = mapper<
     },
 });
 
-export class EditorStore
-    implements
-        IEditorStore<
-            apitype.MapserverStyleRead,
-            apitype.MapserverStyleCreate,
-            apitype.MapserverStyleUpdate
-        >
-{
+export class EditorStore implements IEditorStore<
+    apitype.MapserverStyleRead,
+    apitype.MapserverStyleCreate,
+    apitype.MapserverStyleUpdate
+> {
     readonly identity = "mapserver_style";
     readonly composite: CompositeStore;
 
