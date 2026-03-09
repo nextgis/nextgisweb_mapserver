@@ -7,16 +7,16 @@ import type { EditorWidget as IEditorWidget } from "@nextgisweb/resource/type";
 import type { EditorStore } from "./EditorStore";
 
 export const EditorWidget: IEditorWidget<EditorStore> = observer(
-    ({ store }) => {
-        return (
-            <Code
-                value={store.xml.initial}
-                onChange={store.xml.setter}
-                lang="xml"
-                lineNumbers
-            />
-        );
-    }
+  ({ store }) => {
+    return (
+      <Code
+        value={store.xml.initial}
+        onChange={store.xml.setter}
+        lang="xml"
+        lineNumbers
+      />
+    );
+  }
 );
 
 EditorWidget.displayName = "EditorWidget";

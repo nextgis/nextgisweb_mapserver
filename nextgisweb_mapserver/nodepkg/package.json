@@ -1,5 +1,5 @@
 {
-    "name": "@nextgisweb/mapserver",
-    "version": "0.0.0",
-    "type": "module"
+  "name": "@nextgisweb/mapserver",
+  "version": "0.0.0",
+  "type": "module"
 }
