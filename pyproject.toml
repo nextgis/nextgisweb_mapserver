@@ -1,6 +1,5 @@
 [tool.ruff]
 line-length = 99
-exclude = ["./docker.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
