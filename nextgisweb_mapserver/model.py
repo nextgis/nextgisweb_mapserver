@@ -12,6 +12,7 @@ from zope.interface import implementer
 
 from nextgisweb.env import env, gettext
 from nextgisweb.lib.geometry import Geometry
+from nextgisweb.lib.saext import Msgspec
 
 from nextgisweb.feature_layer import GEOM_TYPE, IFeatureLayer, IFilterableFeatureLayer
 from nextgisweb.render import (
@@ -19,6 +20,10 @@ from nextgisweb.render import (
     ILegendableStyle,
     IRenderableStyle,
     ITileRenderRequest,
+    PostprocessAttr,
+    RenderPostprocess,
+    apply_postprocess,
+    merge_postprocess,
 )
 from nextgisweb.resource import DataScope, Resource, ResourceScope, SColumn, Serializer
 from nextgisweb.resource.exception import ValidationError
@@ -51,13 +56,15 @@ class RenderRequest:
         if cond is not None:
             if "filter" in cond:
                 self.params["feature_filter"] = cond["filter"]
+            if "postprocess" in cond:
+                self.params["postprocess"] = cond["postprocess"]
 
     def render_extent(self, extent, size):
         return self.style.render_image(self.srs, extent, size, **self.params)
 
     def render_tile(self, tile, size):
         extent = self.srs.tile_extent(tile)
-        params = dict(self.params, padding=size / 2)
+        params = dict(self.params, padding=size // 2)
         return self.style.render_image(self.srs, extent, (size, size), **params)
 
 
@@ -69,6 +76,7 @@ class MapserverStyle(Resource):
     __scope__ = DataScope
 
     xml = sa.Column(sa.Unicode, nullable=False)
+    postprocess = sa.Column(Msgspec(RenderPostprocess), nullable=True)
 
     @classmethod
     def check_parent(cls, parent):
@@ -123,20 +131,34 @@ class MapserverStyle(Resource):
 
         return etree.tostring(root, pretty_print=True, encoding="unicode")
 
-    def render_image(self, srs, extent, size, *, feature_filter=None, padding=0):
-        res_x = (extent[2] - extent[0]) / size[0]
-        res_y = (extent[3] - extent[1]) / size[1]
+    def render_image(
+        self,
+        srs,
+        extent,
+        size,
+        *,
+        feature_filter=None,
+        padding: int | None = None,
+        postprocess=None,
+    ):
+        if postprocess:
+            padding = 64 if padding is None else max(padding, 64)
 
-        extended = (
-            extent[0] - res_x * padding,
-            extent[1] - res_y * padding,
-            extent[2] + res_x * padding,
-            extent[3] + res_y * padding,
-        )
+        if padding is not None:
+            res_x = (extent[2] - extent[0]) / size[0]
+            res_y = (extent[3] - extent[1]) / size[1]
 
-        render_size = (size[0] + 2 * padding, size[1] + 2 * padding)
+            extended = (
+                extent[0] - res_x * padding,
+                extent[1] - res_y * padding,
+                extent[2] + res_x * padding,
+                extent[3] + res_y * padding,
+            )
 
-        target_box = (padding, padding, size[0] + padding, size[1] + padding)
+            render_size = (size[0] + 2 * padding, size[1] + 2 * padding)
+            target_box = (padding, padding, size[0] + padding, size[1] + padding)
+        else:
+            extended, render_size = extent, size
 
         feature_layer = self.parent
         feature_query = feature_layer.feature_query()
@@ -157,7 +179,7 @@ class MapserverStyle(Resource):
         mapobj = self._mapobj(features)
 
         req = mapscript.OWSRequest()
-        req.setParameter("bbox", ",".join(map(str, extended if padding else extent)))
+        req.setParameter("bbox", ",".join(map(str, extended)))
         req.setParameter("width", str(render_size[0]))
         req.setParameter("height", str(render_size[1]))
         req.setParameter("srs", "EPSG:%d" % feature_layer.srs_id)
@@ -175,7 +197,20 @@ class MapserverStyle(Resource):
 
         img = Image.open(buf)
 
-        return img.crop(target_box)
+        img = apply_postprocess(
+            img,
+            merge_postprocess(self.postprocess, postprocess),
+            extent=tuple(extended),
+        )
+
+        if img is None:
+            return None
+
+        if padding is not None:
+            img = img.crop(target_box)
+            assert img.size == tuple(size)
+
+        return img
 
     def render_legend(self):
         mapobj = self._mapobj(features=[])
@@ -355,3 +390,13 @@ class XmlAttr(SColumn):
 
 class MapserverStyleSerializer(Serializer, resource=MapserverStyle):
     xml = XmlAttr(read=ResourceScope.read, write=ResourceScope.update)
+    postprocess = PostprocessAttr(read=ResourceScope.read, write=ResourceScope.update)
+
+
+@sa.event.listens_for(MapserverStyle, "before_update")
+def _clear_tile_cache_on_postprocess_change(mapper, connection, style):
+    if (
+        sa.inspect(style).attrs.postprocess.load_history().has_changes()
+        and style.tile_cache is not None
+    ):
+        style.tile_cache.clear()

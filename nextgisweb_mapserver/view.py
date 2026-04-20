@@ -19,5 +19,11 @@ class StyleWidget(Widget):
         return res
 
 
+class EffectsWidget(Widget):
+    resource = MapserverStyle
+    operation = ("create", "update")
+    amdmod = jsentry("@nextgisweb/mapserver/effects-widget")
+
+
 def setup_pyramid(comp, config):
     pass

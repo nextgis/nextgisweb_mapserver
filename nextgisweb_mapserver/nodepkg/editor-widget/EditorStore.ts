@@ -9,7 +9,7 @@ const { xml, $load, $error, $dump, $dirty } = mapper<
   EditorStore,
   apitype.MapserverStyleRead
 >({
-  validateIf: (o) => o.validate,
+  validateIf: (o: EditorStore) => o.validate,
   properties: {
     xml: { required: true },
   },
