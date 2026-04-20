@@ -21,9 +21,9 @@ from nextgisweb.render import (
     IRenderableStyle,
     ITileRenderRequest,
     PostprocessAttr,
+    PostprocessPresetsAttr,
     RenderPostprocess,
     apply_postprocess,
-    merge_postprocess,
 )
 from nextgisweb.resource import DataScope, Resource, ResourceScope, SColumn, Serializer
 from nextgisweb.resource.exception import ValidationError
@@ -141,7 +141,9 @@ class MapserverStyle(Resource):
         padding: int | None = None,
         postprocess=None,
     ):
-        if postprocess:
+        effective_postprocess = postprocess if postprocess is not None else self.postprocess
+
+        if effective_postprocess:
             padding = 64 if padding is None else max(padding, 64)
 
         if padding is not None:
@@ -199,7 +201,7 @@ class MapserverStyle(Resource):
 
         img = apply_postprocess(
             img,
-            merge_postprocess(self.postprocess, postprocess),
+            effective_postprocess,
             extent=tuple(extended),
         )
 
@@ -391,6 +393,7 @@ class XmlAttr(SColumn):
 class MapserverStyleSerializer(Serializer, resource=MapserverStyle):
     xml = XmlAttr(read=ResourceScope.read, write=ResourceScope.update)
     postprocess = PostprocessAttr(read=ResourceScope.read, write=ResourceScope.update)
+    postprocess_presets = PostprocessPresetsAttr(read=ResourceScope.read, write=None)
 
 
 @sa.event.listens_for(MapserverStyle, "before_update")

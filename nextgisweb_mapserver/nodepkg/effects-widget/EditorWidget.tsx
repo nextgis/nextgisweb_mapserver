@@ -20,8 +20,14 @@ export const EditorWidget: IEditorWidget<EditorStore> = observer(
     return (
       <div className="ngw-mapserver-effects-widget">
         <PostprocessSection
+          presets={store.postprocessPresets}
+          selectedPresetKey={store.selectedPresetKey}
           value={store.postprocess}
           onChange={(key, value) => store.setPostprocess(key, value)}
+          onChangeValue={(value) => store.replacePostprocess(value)}
+          onChangeSelectedPresetKey={(value) =>
+            store.setSelectedPresetKey(value)
+          }
         />
         <EffectsPreview
           resourceId={store.composite.resourceId}
