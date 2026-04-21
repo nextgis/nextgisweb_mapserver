@@ -1,14 +1,15 @@
-#: amd/ngw-mapserver/StyleWidget.js:34 model.py:84
+#: model.py:74 nodepkg/editor-widget/EditorWidget.tsx:23
 msgid "MapServer style"
 msgstr "Стиль MapServer"
 
-#: model.py:401
-#, python-format
+#: model.py:376
 msgid "XML syntax error: %s"
 msgstr "Синтаксическая ошибка XML: %s"
 
-#: model.py:404
-#, python-format
+#: model.py:379
 msgid "XML schema error: %s"
 msgstr "Ошибка схемы XML: %s"
 
+#: nodepkg/effects-widget/EditorWidget.tsx:67
+msgid "Effects"
+msgstr "Эффекты"

@@ -2,11 +2,7 @@ import { isEqual } from "lodash-es";
 import { action, computed, observable } from "mobx";
 
 import type * as apitype from "@nextgisweb/mapserver/type/api";
-import { normalizePostprocessPresets } from "@nextgisweb/render/postprocess-section";
-import type {
-  SelectedPostprocessPresetKey,
-  SharedPostprocessPresetDefinition,
-} from "@nextgisweb/render/postprocess-section";
+import type { SelectedPostprocessPresetKey } from "@nextgisweb/render/postprocess-section";
 import type { CompositeStore } from "@nextgisweb/resource/composite";
 import type { EditorStore as IEditorStore } from "@nextgisweb/resource/type";
 
@@ -23,9 +19,6 @@ export class EditorStore implements IEditorStore<
 
   @observable.ref accessor postprocess: PostprocessValue | null = null;
 
-  @observable.ref
-  accessor postprocessPresets: SharedPostprocessPresetDefinition[] = [];
-
   @observable.ref accessor selectedPresetKey: SelectedPostprocessPresetKey =
     null;
 
@@ -37,16 +30,10 @@ export class EditorStore implements IEditorStore<
 
   @action
   load(value: apitype.MapserverStyleRead) {
-    const readValue = value as apitype.MapserverStyleRead & {
-      postprocess_presets?: unknown;
-    };
     const normalized = normalizePostprocess(value.postprocess);
     this.postprocess = normalized;
     this.loadedPostprocess = normalized;
     this.selectedPresetKey = null;
-    this.postprocessPresets = normalizePostprocessPresets(
-      readValue.postprocess_presets
-    );
   }
 
   dump(): apitype.MapserverStyleUpdate | undefined {
@@ -67,6 +54,11 @@ export class EditorStore implements IEditorStore<
     return true;
   }
 
+  @computed
+  get effectsEnabled() {
+    return this.postprocess !== null;
+  }
+
   @action.bound
   setPostprocess<K extends keyof PostprocessValue>(
     key: K,
@@ -84,6 +76,25 @@ export class EditorStore implements IEditorStore<
   @action.bound
   replacePostprocess(value: PostprocessValue | null) {
     this.postprocess = value;
+    this.selectedPresetKey = null;
+  }
+
+  @action.bound
+  enableEffects(defaults: PostprocessValue) {
+    this.postprocess = defaults;
+    this.selectedPresetKey = null;
+  }
+
+  @action.bound
+  disableEffects() {
+    this.postprocess = null;
+    this.selectedPresetKey = null;
+  }
+
+  @action.bound
+  resetEffects(defaults: PostprocessValue) {
+    this.postprocess = defaults;
+    this.selectedPresetKey = null;
   }
 
   @action.bound

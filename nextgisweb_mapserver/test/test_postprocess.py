@@ -4,6 +4,7 @@ import pytest
 import transaction
 
 from nextgisweb.render import RenderPostprocess
+from nextgisweb.resource.test import ResourceAPI
 from nextgisweb.spatial_ref_sys import SRS
 from nextgisweb.vector_layer import VectorLayer
 
@@ -76,3 +77,22 @@ def test_mapserver_render_tile_applies_postprocess_on_padded_extent(style, monke
         )
     )
     assert captured["postprocess"].contrast == 1.1
+
+
+@pytest.mark.usefixtures("ngw_auth_administrator", "ngw_webtest_app")
+def test_mapserver_style_postprocess_can_be_cleared():
+    with transaction.manager:
+        source = Path(__file__).parent / "data" / "nested_island.geojson"
+        layer = VectorLayer().persist().from_ogr(source)
+        xml = MapserverStyle.default_style_xml(layer, color=(200, 0, 0))
+        style = MapserverStyle(parent=layer, xml=xml).persist()
+
+    rapi = ResourceAPI()
+
+    rapi.update(style.id, {"mapserver_style": {"postprocess": {"contrast": 1.1}}})
+    assert rapi.read(style.id)["mapserver_style"]["postprocess"]["contrast"] == 1.1
+
+    rapi.update(style.id, {"mapserver_style": {"postprocess": None}})
+
+    assert rapi.read(style.id)["mapserver_style"]["postprocess"] is None
+    assert MapserverStyle.filter_by(id=style.id).one().postprocess is None
