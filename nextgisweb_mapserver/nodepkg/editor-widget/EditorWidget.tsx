@@ -21,4 +21,4 @@ export const EditorWidget: IEditorWidget<EditorStore> = observer(
 
 EditorWidget.displayName = "EditorWidget";
 EditorWidget.title = gettext("MapServer style");
-EditorWidget.activateOn = { create: true };
+EditorWidget.activateOn = { create: true, update: true };
