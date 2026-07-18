@@ -72,7 +72,7 @@ class MapserverStyle(Resource):
 
     @classmethod
     def check_parent(cls, parent):
-        return IFeatureLayer.providedBy(parent)
+        return IFeatureLayer.providedBy(parent) and parent.geometry_type != GEOM_TYPE.NONE
 
     @property
     def feature_layer(self):
