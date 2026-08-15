@@ -8,6 +8,7 @@ import sqlalchemy as sa
 from lxml import etree
 from lxml.builder import ElementMaker
 from PIL import Image
+from sqlalchemy.orm import Mapped, mapped_column
 from zope.interface import implementer
 
 from nextgisweb.env import env, gettext
@@ -68,7 +69,7 @@ class MapserverStyle(Resource):
 
     __scope__ = DataScope
 
-    xml = sa.Column(sa.Unicode, nullable=False)
+    xml: Mapped[str] = mapped_column(sa.Unicode)
 
     @classmethod
     def check_parent(cls, parent):
