@@ -3,14 +3,16 @@ from .mapfile import keyword
 
 class Class(keyword.Class):
     members = filter(
-        lambda m: m.name
-        in (
-            "EXPRESSION",
-            "LABEL",
-            "NAME",
-            "STYLE",
-            "MAXSCALEDENOM",
-            "MINSCALEDENOM",
+        lambda m: (
+            m.name
+            in (
+                "EXPRESSION",
+                "LABEL",
+                "NAME",
+                "STYLE",
+                "MAXSCALEDENOM",
+                "MINSCALEDENOM",
+            )
         ),
         keyword.Class.members,
     )
@@ -18,14 +20,16 @@ class Class(keyword.Class):
 
 class Layer(keyword.Layer):
     members = filter(
-        lambda m: m.name
-        in (
-            "CLASS",
-            "CLASSITEM",
-            "OPACITY",
-            "SIZEUNITS",
-            "UNITS",
-            "LABELITEM",
+        lambda m: (
+            m.name
+            in (
+                "CLASS",
+                "CLASSITEM",
+                "OPACITY",
+                "SIZEUNITS",
+                "UNITS",
+                "LABELITEM",
+            )
         ),
         keyword.Layer.members,
     )
