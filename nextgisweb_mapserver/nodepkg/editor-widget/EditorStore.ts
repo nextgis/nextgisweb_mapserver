@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observableRef } from "mobx";
 
 import { mapper } from "@nextgisweb/gui/arm";
 import type * as apitype from "@nextgisweb/mapserver/type/api";
@@ -25,7 +25,7 @@ export class EditorStore implements IEditorStore<
 
   readonly xml = xml.init("", this);
 
-  @observable.ref accessor validate = false;
+  @observableRef accessor validate = false;
 
   constructor({
     composite,
